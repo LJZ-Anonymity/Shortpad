@@ -40,12 +40,17 @@
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="删除"/>
                     </Grid>
                 </Button>
-                <Button x:Name="CheckImformation" ToolTip="查看动作信息" Style="{StaticResource MenuButton}" Click="CheckImformation_Click">
+                <Button x:Name="CheckImformation" ToolTip="查看动作信息" Style="{StaticResource MenuButton}" Click="CheckImformation_Click" MouseEnter="CheckImformation_MouseEnter" MouseLeave="CheckImformation_MouseLeave">
                     <Grid Width="198">
                         <Image Source="/Resources/Images/ActionInformation.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="查看信息"/>
                     </Grid>
                 </Button>
+                <!--<Popup x:Name="Level1Popup" Placement="Right" PlacementTarget="{Binding ElementName=CheckImformation}" StaysOpen="False">
+                    <Grid Background="Black" Height="100" Width="100">
+                        <Button Height="30" Width="30"/>
+                    </Grid>
+                </Popup>-->
                 <Button x:Name="OpenLocation" ToolTip="在资源管理器中找到对应文件或文件夹" Style="{StaticResource MenuButton}" Margin="0,0,0,5" Click="OpenLocation_Click">
                     <Grid Width="194">
                         <Image Source="/Resources/Images/OpenFile.png" Style="{StaticResource MenuButtonImage}"/>

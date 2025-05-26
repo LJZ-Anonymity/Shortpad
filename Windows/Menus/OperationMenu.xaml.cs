@@ -1,8 +1,11 @@
-﻿using System.Runtime.InteropServices;
-using Quicker.Database;
+﻿using Quicker.Database;
 using Quicker.Managers;
-using System.Windows;
+using System.Drawing;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Quicker.Windows
 {
@@ -225,6 +228,18 @@ namespace Quicker.Windows
             GC.Collect(); // 强制垃圾回收
             GC.WaitForPendingFinalizers(); // 等待垃圾回收完成
             GC.Collect(); // 再次强制垃圾回收
+        }
+
+        private void CheckImformation_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            //Button button = sender as Button;
+            //button.Background = new SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FFEAEAEA"));
+            //Level1Popup.IsOpen = true;
+        }
+
+        private void CheckImformation_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            //Level1Popup.IsOpen = false;
         }
     }
 }
