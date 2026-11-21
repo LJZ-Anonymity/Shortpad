@@ -1,5 +1,5 @@
-﻿using Quicker.Helpers;
-using Quicker.Models.Settings;
+﻿using Quicker.Models.Settings;
+using Quicker.Helpers;
 
 namespace Quicker.Managers
 {
@@ -31,12 +31,9 @@ namespace Quicker.Managers
                     case BlacklistMatchType.ProcessName:
                         (isBlack ? _blackProcesses : _whiteProcesses).Add(rule.Target);
                         break;
-
                     case BlacklistMatchType.Folder:
-                        // 补上末尾分隔符，前缀匹配时才能按"路径边界"匹配（C:\Games 不会匹配到 C:\GamesOld）
                         (isBlack ? blackFolders : whiteFolders).Add(WithTrailingSeparator(rule.Target));
                         break;
-
                     case BlacklistMatchType.Unknown:
                         if (isBlack) _blackUnknown = true;
                         else _whiteUnknown = true;
@@ -48,17 +45,15 @@ namespace Quicker.Managers
             _whiteFolders = whiteFolders.ToArray();
         }
 
-        /// <summary> 是否在黑名单中（始终禁用 Quicker） </summary>
-        public bool IsBlacklisted(ProcessIdentity process)
-        {
-            return Match(process, _blackProcesses, _blackFolders, _blackUnknown);
-        }
+        /// <summary>
+        /// 是否在黑名单中（始终禁用 Quicker）
+        /// </summary>
+        public bool IsBlacklisted(ProcessIdentity process) => Match(process, _blackProcesses, _blackFolders, _blackUnknown);
 
-        /// <summary> 是否在白名单中（全屏/最大化禁用时仍启用 Quicker） </summary>
-        public bool IsWhitelisted(ProcessIdentity process)
-        {
-            return Match(process, _whiteProcesses, _whiteFolders, _whiteUnknown);
-        }
+        /// <summary>
+        /// 是否在白名单中（全屏/最大化禁用时仍启用 Quicker）
+        /// </summary>
+        public bool IsWhitelisted(ProcessIdentity process) => Match(process, _whiteProcesses, _whiteFolders, _whiteUnknown);
 
         private static bool Match(ProcessIdentity process, HashSet<string> processes, string[] folders, bool matchUnknown)
         {
@@ -79,9 +74,9 @@ namespace Quicker.Managers
             return false;
         }
 
-        private static string WithTrailingSeparator(string folder)
-        {
-            return folder.EndsWith('\\') ? folder : folder + "\\";
-        }
+        /// <summary>
+        /// 给文件夹路径补上末尾分隔符，前缀匹配时才能按"路径边界"匹配（C:\Games 不会匹配到 C:\GamesOld）
+        /// </summary>
+        private static string WithTrailingSeparator(string folder) => folder.EndsWith('\\') ? folder : folder + "\\";
     }
 }

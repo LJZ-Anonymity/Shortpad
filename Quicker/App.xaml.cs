@@ -388,11 +388,9 @@ namespace Quicker
 
         /// <summary>
         /// 判断是否可以处理钩子
+        /// 如果禁用Quicker或全屏禁用Quicker或鼠标在测试按键区域上，返回
         /// </summary>
-        private bool CanProcessHook()
-        {
-            return !IsBannedFormQuicker() && !FullScreenDisable() && !IsMouseOnTestButton(); // 如果禁用Quicker或全屏禁用Quicker或鼠标在测试按键区域上，返回
-        }
+        private bool CanProcessHook() => !IsBannedFromQuicker() && !FullScreenDisable() && !IsMouseOnTestButton();
 
         /// <summary>
         /// 检查鼠标是否在测试按键区域上
@@ -675,50 +673,45 @@ namespace Quicker
         /// </summary>
         private bool FullScreenDisable()
         {
-            var blacklistSettings = AppStateManager.BlacklistSettings; // 获取设置
-            if (blacklistSettings == null || !blacklistSettings.DisableOnFullScreen) return false; // 如果未开启全屏禁用，返回 false
-
-            if (!WindowHelper.IsFullScreen()) return false; // 如果当前窗口不是全屏，返回 false
-
-            var foreground = ProcessIdentityHelper.GetForeground();
-            var rules = BlacklistRepository.GetAllRules();
-
-            // 如果当前前台程序在白名单中，则全屏时不禁用
-            foreach (var rule in rules.Where(r => r.ListType == BlacklistListType.Whitelist))
+            try
             {
-                if (rule.MatchType == BlacklistMatchType.ProcessName && string.Equals(rule.Target, foreground.Name, StringComparison.OrdinalIgnoreCase))
+                var blacklistSettings = AppStateManager.BlacklistSettings;
+                if (blacklistSettings == null || !blacklistSettings.DisableOnFullScreen)
                     return false;
-                if (rule.MatchType == BlacklistMatchType.Folder && foreground.HasPath && foreground.ExePath.StartsWith(rule.Target, StringComparison.OrdinalIgnoreCase))
-                    return false;
-            }
 
-            return true;
+                if (!WindowHelper.IsFullScreen())
+                    return false;
+
+                var foreground = ProcessIdentityHelper.GetForeground();
+                var ruleSet = AppStateManager.BlacklistRules;
+
+                // 在白名单中则全屏时不禁用
+                if (ruleSet.IsWhitelisted(foreground))
+                    return false;
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
         /// 判断是否禁用Quicker
         /// </summary>
-        private bool IsBannedFormQuicker()
+        private bool IsBannedFromQuicker()
         {
             try
             {
                 var foreground = ProcessIdentityHelper.GetForeground();
-                if (foreground.IsUnknown) return false;
-
-                var rules = BlacklistRepository.GetAllRules();
-                // 检查当前前台程序是否匹配黑名单规则
-                foreach (var rule in rules.Where(r => r.ListType == BlacklistListType.Blacklist))
-                {
-                    if (rule.MatchType == BlacklistMatchType.ProcessName && string.Equals(rule.Target, foreground.Name, StringComparison.OrdinalIgnoreCase))
-                        return true;
-                    if (rule.MatchType == BlacklistMatchType.Folder && foreground.HasPath && foreground.ExePath.StartsWith(rule.Target, StringComparison.OrdinalIgnoreCase))
-                        return true;
-                    if (rule.MatchType == BlacklistMatchType.Unknown && foreground.IsUnknown)
-                        return true;
-                }
+                var ruleSet = AppStateManager.BlacklistRules;
+                return ruleSet.IsBlacklisted(foreground);
+            }
+            catch
+            {
                 return false;
             }
-            catch { return false; }
         }
 
         // 弹出主窗口
