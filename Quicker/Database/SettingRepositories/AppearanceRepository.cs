@@ -83,18 +83,23 @@ namespace Quicker.Database.SettingRepositories
         /// </summary>
         public static List<Appearance> GetAppearanceSettings()
         {
-            // 获取当前主题状态：读取 Convention 表，确定 IsDarkTheme 的值
             var conventions = ConventionRepository.GetAllConventions().FirstOrDefault();
-            bool isDarkTheme = conventions.IsDarkTheme;
-            string themeName = isDarkTheme ? "Dark" : "Light";
+            string themeName = conventions.IsDarkTheme ? "Dark" : "Light";
+            return GetAppearanceSettingsByTheme(themeName);
+        }
 
-            // 执行 Appearance 表的查询
+        /// <summary>
+        /// 通过主题名称获取外观设置
+        /// </summary>
+
+        public static List<Appearance> GetAppearanceSettingsByTheme(string themeName)
+        {
             var appearances = new List<Appearance>();
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted); // 开启只读事务
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction(System.Data.IsolationLevel.ReadCommitted);
             using var command = new SQLiteCommand(SQLStatements.GetAppearanceSettings, connection);
-            command.Parameters.AddWithValue("@ThemeName", themeName);  // 绑定确定的主题名称
-            using var reader = command.ExecuteReader(); // 执行查询并获取数据读取器
+            command.Parameters.AddWithValue("@ThemeName", themeName);
+            using var reader = command.ExecuteReader();
             while (reader.Read())
             {
                 appearances.Add(new Appearance

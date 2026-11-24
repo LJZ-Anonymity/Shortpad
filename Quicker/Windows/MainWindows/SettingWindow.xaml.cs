@@ -1,22 +1,22 @@
-﻿using Microsoft.Win32;
-using Quicker.Database.Core;
-using Quicker.Database.SettingRepositories;
-using Quicker.Helpers;
-using Quicker.Managers;
-using Quicker.Models;
-using Quicker.UserControls.SettingWindow.BasicSettings;
+﻿using Quicker.UserControls.SettingWindow.BasicSettings;
 using Quicker.UserControls.SettingWindow.Tools;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Threading.Tasks;
-using System.Windows;
+using Quicker.Database.SettingRepositories;
+using System.Windows.Threading;
 using System.Windows.Controls;
+using System.Threading.Tasks;
+using Quicker.Database.Core;
+using System.ComponentModel;
+using System.Windows.Shapes;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Windows.Threading;
+using System.Diagnostics;
+using System.Reflection;
+using Quicker.Managers;
+using Microsoft.Win32;
+using Quicker.Helpers;
+using System.Windows;
+using Quicker.Models;
+using System.IO;
 
 namespace Quicker.Windows.MainWindows
 {
@@ -27,12 +27,13 @@ namespace Quicker.Windows.MainWindows
         private const string DefaultButtonColor2 = "#FFF0F0F0"; // 默认按钮类型2颜色
         private const string SelectedButtonColor2 = "#FFFAFAFA"; // 选中按钮类型2颜色
 
-        public readonly SettingManager _settingManager = new(); // 设置管理器
+        public readonly SettingManager _settingManager = new();
         private bool _hasAppliedSettings = false; // 标记是否已经应用过设置
 
         public SettingWindow()
         {
-            InitializeComponent(); // 初始化xaml文件
+            InitializeComponent();
+            AppThemeHelper.AttachWindow(this);
             InitializePageMappings(); // 初始化页面编码与动作的映射
         }
 
@@ -67,9 +68,9 @@ namespace Quicker.Windows.MainWindows
             base.OnClosed(e); // 调用基类的 OnClosed 方法
             foreach (var child in MenuGrid.Children.OfType<StackPanel>()) // 清理用户控件
             {
-                child.Children.Clear(); // 清空 StackPanel 的子元素
+                child.Children.Clear();
             }
-            ResultGrid.Children.Clear(); // 清空 ResultGrid 的子元素
+            ResultGrid.Children.Clear();
 
             Task.Run(() =>
             {
@@ -109,23 +110,28 @@ namespace Quicker.Windows.MainWindows
         /// <summary>
         /// 异步保存设置
         /// </summary>
-        /// <returns>保存结果信息</returns>
-        private async Task<(bool autostartSuccess, bool settingsLoadSuccess)> SaveSettingsAsync()
+        private async Task<(bool autostartSuccess, string? autostartError, bool settingsLoadSuccess)> SaveSettingsAsync()
         {
             return await Task.Run(() =>
             {
                 bool autostartSuccess = true; // 开机自启动设置成功标志
-                var Convention = SettingDatabase.GetAllConventions().FirstOrDefault(); // 获取设置信息
-                bool originalAutoStart = Convention.AutoStart; // 保存原始的开机自启动设置
-                bool newAutoStart = _settingManager.conventions.AutoStart; // 新的开机自启动设置
-                if (originalAutoStart != newAutoStart)// 更新开机自启动设置
-                    autostartSuccess = UpdateAutostart(newAutoStart);
+                string? autostartError = null;
+
+                var convention = SettingDatabase.GetAllConventions().FirstOrDefault(); // 获取设置信息
+                bool originalAutoStart = convention?.AutoStart ?? false; // 保存原始的开机自启动设置
+                bool newAutoStart = _settingManager.conventions?.AutoStart ?? false; // 新的开机自启动设置
+
+                if (originalAutoStart != newAutoStart) // 更新开机自启动设置
+                {
+                    autostartSuccess = AutoStartHelper.SetAutoStart(newAutoStart, out autostartError);
+                }
 
                 if (_settingManager.conventions != null)
+                {
                     SettingDatabase.ApplyConventionSettings(
                         autostartSuccess
                             ? _settingManager.conventions.AutoStart
-                            : Convention.AutoStart,
+                            : originalAutoStart,
                         _settingManager.conventions.ShowNotification,
                         _settingManager.conventions.ShowAddImage,
                         _settingManager.conventions.HideTooltip,
@@ -137,21 +143,26 @@ namespace Quicker.Windows.MainWindows
                         _settingManager.conventions.TrayIconPathRunning,
                         _settingManager.conventions.TrayIconPathPaused,
                         _settingManager.conventions.UseMenuAnimation,
-                        SettingDatabase.GetAllConventions().FirstOrDefault().IsDarkTheme
+                        convention?.IsDarkTheme ?? false
                     ); // 更新常规设置
+                }
+
                 if (_settingManager.openMainWindowConditions != null)
+                {
                     SettingDatabase.ApplyOpenMainWindowSettings(
                         _settingManager.openMainWindowConditions.OpenMainWindowByMiddleMouseClick,
-                    _settingManager.openMainWindowConditions.OpenMainWindowByX1MouseClick,
-                    _settingManager.openMainWindowConditions.OpenMainWindowByX2MouseClick,
-                    _settingManager.openMainWindowConditions.OpenMainWindowByCtrl_MiddleMouseClick,
-                    _settingManager.openMainWindowConditions.OpenMainWindowByCtrl_RightMouseClick,
-                    _settingManager.openMainWindowConditions.OpenMainWindowByMiddleMouseClickLonger,
-                    _settingManager.openMainWindowConditions.OpenMainWindowByRightMouseClickLonger,
-                    _settingManager.openMainWindowConditions.OpenMainWindowByRightMouseClick_Move,
-                    _settingManager.openMainWindowConditions.OpenMainWindowByCtrl,
-                    _settingManager.openMainWindowConditions.WindowStartupLocation
+                        _settingManager.openMainWindowConditions.OpenMainWindowByX1MouseClick,
+                        _settingManager.openMainWindowConditions.OpenMainWindowByX2MouseClick,
+                        _settingManager.openMainWindowConditions.OpenMainWindowByCtrl_MiddleMouseClick,
+                        _settingManager.openMainWindowConditions.OpenMainWindowByCtrl_RightMouseClick,
+                        _settingManager.openMainWindowConditions.OpenMainWindowByMiddleMouseClickLonger,
+                        _settingManager.openMainWindowConditions.OpenMainWindowByRightMouseClickLonger,
+                        _settingManager.openMainWindowConditions.OpenMainWindowByRightMouseClick_Move,
+                        _settingManager.openMainWindowConditions.OpenMainWindowByCtrl,
+                        _settingManager.openMainWindowConditions.WindowStartupLocation
                     ); // 更新弹出面板设置
+                }
+
                 var blacklistSetting = AppStateManager.BlacklistSettings;
                 if (blacklistSetting != null)
                 {
@@ -168,20 +179,21 @@ namespace Quicker.Windows.MainWindows
                     settingsLoadSuccess = false; // 设置加载失败
                 }
 
-                return (autostartSuccess, settingsLoadSuccess);
+                return (autostartSuccess, autostartError, settingsLoadSuccess);
             });
         }
 
         /// <summary>
         /// 显示保存结果消息
         /// </summary>
-        /// <param name="result">保存结果</param>
-        private void ShowSaveResultMessage((bool autostartSuccess, bool settingsLoadSuccess) result)
+        private void ShowSaveResultMessage((bool autostartSuccess, string? autostartError, bool settingsLoadSuccess) result)
         {
             string message;
             if (!result.autostartSuccess)
             {
-                message = "设置开机自启动失败！";
+                message = string.IsNullOrWhiteSpace(result.autostartError)
+                    ? "设置开机自启动失败！"
+                    : $"设置开机自启动失败：{result.autostartError}";
             }
             else if (!result.settingsLoadSuccess)
             {
@@ -191,66 +203,9 @@ namespace Quicker.Windows.MainWindows
             {
                 message = "已保存设置！";
             }
-            
+
             var toast = new ToastManager(); // 消息提醒管理器
             toast.Show(message, ToastType.Common); // 弹出消息提醒
-        }
-
-        /// <summary>
-        /// 更新开机自启动设置
-        /// </summary>
-        /// <param name="autostart"> 开机自启动设置 </param>
-        private bool UpdateAutostart(bool autostart)
-        {
-            try
-            {
-                // 获取应用程序可执行文件路径
-                string appPath = Process.GetCurrentProcess().MainModule.FileName;
-                string keyName = "Quicker"; // 注册表中的键名            
-                string registryPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run"; // 获取注册表路径
-
-                // 使用HKEY_CURRENT_USER，不需要管理员权限
-                using (RegistryKey currentUser = Registry.CurrentUser.OpenSubKey(registryPath, true))
-                {
-                    if (currentUser != null)
-                    {
-                        if (autostart)
-                        {
-                            // 检查路径是否有效
-                            if (File.Exists(appPath))
-                            {
-                                currentUser.SetValue(keyName, appPath); // 设置开机自启动
-                            }
-                            else
-                            {
-                                // 如果主模块路径不存在，尝试使用程序集路径
-                                string assemblyPath = Assembly.GetExecutingAssembly().Location;
-                                if (File.Exists(assemblyPath))
-                                {
-                                    currentUser.SetValue(keyName, assemblyPath);
-                                }
-                                else
-                                {
-                                    return false; // 无法找到有效的应用程序路径
-                                }
-                            }
-                        }
-                        else
-                        {
-                            currentUser.DeleteValue(keyName, false); // 移除开机自启动
-                        }
-                    }
-                    else 
-                    {
-                        return false; // 如果无法打开注册表，返回失败
-                    }
-                }
-                return true; // 返回设置成功
-            }
-            catch (Exception ex)
-            {
-                return false; // 出现异常，返回失败
-            }
         }
 
         /// <summary>

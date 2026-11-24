@@ -126,6 +126,23 @@ namespace Quicker.Managers
             }; // 加载设置数据到缓存
         }
 
+        /// <summary>
+        /// 切换到指定主题（"Light" / "Dark"）的外观设置，并同步更新原始基准
+        /// </summary>
+        public bool SwitchAppearanceTheme(string themeName)
+        {
+            var row = SettingDatabase.GetAppearanceSettingsByTheme(themeName).FirstOrDefault();
+            if (row == null) return false;
+
+            // 预览开关是全局的用户选择，不随主题切换，沿用当前值
+            row.EnablePreview = appearanceConditions?.EnablePreview ?? row.EnablePreview;
+            row.ThemeName = themeName; // 决定之后 UpdateAppearance 的 WHERE 条件，必须正确
+
+            appearanceConditions = CloneSettingsCache(row);
+            _originalAppearanceConditions = CloneSettingsCache(row); // 重置按钮的基准改为该主题
+            return true;
+        }
+
         // 异步加载外观设置信息
         public async Task LoadAppearanceAsync()
         {

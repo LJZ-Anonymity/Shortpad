@@ -1,5 +1,6 @@
 ﻿using Quicker.Database.Core;
 using System.Windows.Input;
+using Quicker.Helpers;
 using Quicker.Models;
 using System.Windows;
 
@@ -13,6 +14,7 @@ namespace Quicker.Windows.EditWindows
         public EditSceneWindow(string sceneType)
         {
             InitializeComponent();
+            AppThemeHelper.AttachWindow(this);
             SceneType = sceneType; // 设置场景类型
         }
 

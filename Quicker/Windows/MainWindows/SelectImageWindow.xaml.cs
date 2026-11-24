@@ -23,6 +23,7 @@ namespace Quicker.Windows.MainWindows
         public SelectImageWindow()
         {
             InitializeComponent();
+            AppThemeHelper.AttachWindow(this);
         }
 
         // 窗口加载事件

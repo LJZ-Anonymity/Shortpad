@@ -1,7 +1,8 @@
 ﻿using Quicker.Windows.MainWindows;
 using Quicker.Database.Core;
-using System.Windows;
+using Quicker.Helpers;
 using Quicker.Models;
+using System.Windows;
 
 namespace Quicker.Windows.EditWindows
 {
@@ -15,6 +16,7 @@ namespace Quicker.Windows.EditWindows
         public EditActionPageInfoWindow(string actionPageType, string actionPageIndex)
         {
             InitializeComponent();
+            AppThemeHelper.AttachWindow(this);
             this.actionPageType = actionPageType; // 设置动作页类型
             this.actionPageIndex = actionPageIndex; // 设置动作页索引
             actionPage = db3.GetActionPageData(actionPageType, int.Parse(actionPageIndex)); // 获取动作页信息

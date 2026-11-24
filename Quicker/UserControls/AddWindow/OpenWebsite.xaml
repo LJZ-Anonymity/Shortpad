@@ -7,7 +7,6 @@
     x:Class="Quicker.UserControls.AddWindow.OpenWebsite"
     mc:Ignorable="d" 
     
-    Background="White"
     d:DesignHeight="289"
     d:DesignWidth="493"
     

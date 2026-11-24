@@ -1367,12 +1367,39 @@ namespace Quicker.UserControls.SettingWindow.BasicSettings
         {
             DarkThemeSettingButton.BorderThickness = new Thickness(0);
             DefaultAppearanceSettingButton.BorderThickness = new Thickness(0, 0, 0, 2);
+            SwitchThemeTab("Light");
         }
 
         private void DarkThemeSettingButton_Click(object sender, RoutedEventArgs e)
         {
             DefaultAppearanceSettingButton.BorderThickness = new Thickness(0);
             DarkThemeSettingButton.BorderThickness = new Thickness(0, 0, 0, 2);
+            SwitchThemeTab("Dark");
+        }
+
+        private void SwitchThemeTab(string themeName)
+        {
+            if (settingManager == null) return;
+
+            // 先把防抖中还没落库的修改写入当前主题，避免切换后丢失
+            FlushSettingsChange(reloadPreview: false);
+
+            if (!settingManager.SwitchAppearanceTheme(themeName)) return;
+
+            ResetAppearanceButton.Visibility = Visibility.Collapsed;
+
+            _suppressWrites++;
+            try
+            {
+                RefreshInterfaceDisplay();
+            }
+            finally
+            {
+                _suppressWrites--;
+            }
+
+            if (settingManager.appearanceConditions.EnablePreview)
+                LoadGlobalButtonsForPreview();
         }
 
         private void ColorPickerPopup_Closed(object sender, EventArgs e)

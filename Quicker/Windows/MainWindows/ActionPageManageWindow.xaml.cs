@@ -209,6 +209,7 @@ namespace Quicker.Windows.MainWindows
         {
             InitAppearanceBrushes(); // 加载 Appearance 颜色
             InitializeComponent(); // 初始化窗口
+            AppThemeHelper.AttachWindow(this);
             SubscribeStateEvents();
             GenerateSceneButtons(); // 加载按钮前缀
             TypeChanged(type); // 默认加载通用场景

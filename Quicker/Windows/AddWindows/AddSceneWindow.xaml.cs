@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Windows.Input;
 using System.Diagnostics;
 using Quicker.Managers;
+using Quicker.Helpers;
 using System.Windows;
 using Quicker.Models;
 using System.IO;
@@ -24,6 +25,7 @@ namespace Quicker.Windows.AddWindows
         public AddSceneWindow()
         {
             InitializeComponent();
+            AppThemeHelper.AttachWindow(this);
             LoadProcessesAsync();
         }
 

@@ -13,7 +13,7 @@
                     <ControlTemplate.Triggers>
                         <!-- 鼠标悬停或高亮时高亮背景 -->
                         <Trigger Property="IsHighlighted" Value="True">
-                            <Setter TargetName="Bd" Property="Background" Value="#F3F3F3"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource PopupHighlightedItemBrush}"/>
                         </Trigger>
                         <!-- 禁用时降低透明度 -->
                         <Trigger Property="IsEnabled" Value="False">
@@ -42,8 +42,8 @@
 
     <!-- 自定义滚动条右键菜单的整体样式，包含阴影和圆角 -->
     <Style x:Key="CustomContextMenuStyle" TargetType="ContextMenu">
+        <Setter Property="Background" Value="{DynamicResource PopupSurfaceBrush}" />
         <Setter Property="BorderBrush" Value="{x:Null}"/>
-        <Setter Property="Background" Value="White"/>
         <Setter Property="Width" Value="160"/>
         <Setter Property="Template">
             <Setter.Value>

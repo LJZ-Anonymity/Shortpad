@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using Quicker.Helpers;
 using System.Windows;
 using System;
 
@@ -14,6 +15,7 @@ namespace Quicker.Windows.ToolWindows
         public MessageWindow(string tytle, string message)
         {
             InitializeComponent();
+            AppThemeHelper.AttachWindow(this);
             TitileTextBlock.Text = tytle; // 设置标题
             MessageTextBlock.Text = message; // 设置消息
             if (tytle == "Quicker")

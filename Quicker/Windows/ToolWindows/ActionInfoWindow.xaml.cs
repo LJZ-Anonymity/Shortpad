@@ -18,6 +18,7 @@ namespace Quicker.Windows.ToolWindows
         public ActionInfoWindow(int buttonID, string tableName)
         {
             InitializeComponent();
+            AppThemeHelper.AttachWindow(this);
             ButtonID = buttonID; // 设置当前按钮ID
             TableName = tableName; // 设置表名
             InitializeWindow(); // 初始化窗口

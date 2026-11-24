@@ -69,6 +69,7 @@ namespace Quicker.Windows.AddWindows
             Choice = choice; // 选择添加动作类型
             _appearance = SettingDatabase.GetAppearanceSettings().FirstOrDefault(); // 获取外观设置
             InitializeComponent(); // 初始化窗口组件
+            AppThemeHelper.AttachWindow(this);
             SetButtonViewBackground(); // 设置初始背景色
             ExecuteChoiceAction(); // 执行对应命令
         }

@@ -1,0 +1,19 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+>
+    <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="PopupSurfaceBrush" Color="#FFF" />
+    <SolidColorBrush x:Key="PopupHighlightedItemBrush" Color="#EAEAEA" />
+    
+    <!-- 设置窗口 -->
+    <SolidColorBrush x:Key="MainStackPanelBrush" Color="#FFE0E0E0"/>
+    <SolidColorBrush x:Key="MenuGridBrush" Color="#FFF0F0F0"/>
+
+    <SolidColorBrush x:Key="Button1HoverBrush" Color="#FFECECEC"/>
+    <SolidColorBrush x:Key="Button1SelectedBrush" Color="#FFF4F4F4"/>
+
+    <SolidColorBrush x:Key="Button2DefaultBrush" Color="#FFF0F0F0"/>
+    <SolidColorBrush x:Key="Button2HoverBrush" Color="#FFFAFAFA"/>
+    <SolidColorBrush x:Key="Button2SelectedBrush" Color="#FFFAFAFA"/>
+</ResourceDictionary>

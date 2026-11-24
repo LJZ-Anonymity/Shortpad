@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Quicker.Helpers;
+using System.Windows;
 
 namespace Quicker.Windows.ToolWindows
 {
@@ -7,6 +8,7 @@ namespace Quicker.Windows.ToolWindows
         public LoadingWindow()
         {
             InitializeComponent();
+            AppThemeHelper.AttachWindow(this);
         }
 
         // 关闭窗口前释放资源

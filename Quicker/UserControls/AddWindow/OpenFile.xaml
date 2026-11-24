@@ -8,7 +8,6 @@
     x:Class="Quicker.UserControls.AddWindow.OpenFile"
     mc:Ignorable="d" 
     
-    Background="White"
     d:DesignHeight="289"
     d:DesignWidth="493"
     

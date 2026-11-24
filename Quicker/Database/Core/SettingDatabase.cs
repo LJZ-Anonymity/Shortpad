@@ -87,5 +87,9 @@ namespace Quicker.Database.Core
         [Obsolete("请改用 AppearanceRepository.UpdateAppearance")]
         public static void UpdateAppearance(Appearance appearance)
             => AppearanceRepository.UpdateAppearance(appearance);
+
+        [Obsolete("请改用 AppearanceRepository.GetAppearanceSettingsByTheme")]
+        public static List<Appearance> GetAppearanceSettingsByTheme(string themeName)
+            => AppearanceRepository.GetAppearanceSettingsByTheme(themeName);
     }
 }

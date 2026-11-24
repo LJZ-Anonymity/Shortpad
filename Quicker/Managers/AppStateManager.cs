@@ -22,9 +22,9 @@ namespace Quicker.Managers
 
         #region 设置缓存与访问器
 
-        private static BlacklistRuleSet _blacklistRules; // 黑名单/白名单规则集（只读，重建时整体替换）
         private static OpenMainWindow _openMainWindowConditions; // 打开主窗口条件
         private static BlacklistSetting _blacklistSettings; // 黑名单设置
+        private static BlacklistRuleSet _blacklistRules; // 黑名单/白名单规则集（只读，重建时整体替换）
         private static Convention _conventions; // 基础设置
 
         /// <summary>
@@ -86,15 +86,31 @@ namespace Quicker.Managers
         public static MainWindow? MainWindowInstance { get; set; } = null; // 常驻主窗口实例（唯一）
 
         // 窗口状态
-        public static bool Locked { get; set; } = false; // 锁定状态
-        public static bool MainWindowPinned { get; set; } = false; // 订住状态
         public static bool SearchWindowPinned { get; set; } = false; // 搜索窗口订住状态
+        public static bool MainWindowPinned { get; set; } = false; // 订住状态
+        public static bool Locked { get; set; } = false; // 锁定状态
         public static bool Pause { get; set; } = false; // 暂停状态
 
         // 其他状态
         public static bool EnableMemoryOptimization { get; set; } = false; // 启用内存优化
         public static string CommonState { get; set; } = "common"; // 普通状态
-        public static bool HasNewVersion { get; set; } = false; // 是否有新版本
+
+        private static bool _isDarkMode = true; // 是否为深色模式（内部字段）
+
+        /// <summary>
+        /// 是否为深色模式
+        /// </summary>
+        public static bool IsDarkMode
+        {
+            get => _isDarkMode;
+            set
+            {
+                if (_isDarkMode == value) return;
+                _isDarkMode = value;
+                IsDarkModeChanged?.Invoke(value);
+            }
+        }
+
         public static float Left { get; set; } = 0; // 左
         public static float Top { get; set; } = 0; // 上
 
@@ -114,6 +130,11 @@ namespace Quicker.Managers
         #endregion
 
         #region 事件与通知
+
+        /// <summary>
+        /// IsDarkMode 变化时触发，参数为新的值
+        /// </summary>
+        public static event Action<bool> IsDarkModeChanged;
 
         // 托盘图标改变事件
         public static event Action<string, string> TrayIconChanged;

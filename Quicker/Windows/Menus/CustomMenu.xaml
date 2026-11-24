@@ -17,7 +17,7 @@
     Height="190"
     Width="235"
 >
-    <Grid Width="200" Height="159">
+    <Grid Width="200" Height="184">
         <!-- 窗口阴影 -->
         <Border Background="White" CornerRadius="5">
             <Border.Effect>
@@ -86,6 +86,12 @@
                         <TextBlock Text="终止动作" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>-->
+                <Button Click="SwitchTheme" ToolTip="切换主题" Style="{StaticResource MenuButton}">
+                    <Grid Width="194">
+                        <Image x:Name="switchTheme" Source="/Resources/Images/Quicker_Enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                        <TextBlock Text="切换主题模式" Style="{StaticResource MenuButtonTextBlock}"/>
+                    </Grid>
+                </Button>
                 <Button Click="Restart" ToolTip="退出并重新启动" Style="{StaticResource MenuButton}">
                     <Grid Width="194">
                         <Image x:Name="restart" Source="/Resources/Images/RestartQuicker.png" Style="{StaticResource MenuButtonImage}"/>

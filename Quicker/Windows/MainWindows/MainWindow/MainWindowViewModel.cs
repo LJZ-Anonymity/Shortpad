@@ -1,10 +1,10 @@
 ﻿using Quicker.Models.Settings;
+using Quicker.UI.Converters;
 using System.ComponentModel;
 using Quicker.Database.Core;
 using System.Windows.Media;
 using Quicker.Managers;
 using System.Windows;
-using Quicker.UI.Converters;
 
 namespace Quicker.Windows.MainWindows.MainWindow
 {
@@ -295,7 +295,7 @@ namespace Quicker.Windows.MainWindows.MainWindow
         public MainWindowViewModel()
         {
             // 加载数据库数据
-            var appearance = SettingDatabase.GetAppearanceSettings()?.FirstOrDefault();
+            var appearance = GetCurrentThemeAppearance();
             if (appearance != null)
             {
                 BackgroundImagePath = appearance.BackgroundImagePath;
@@ -336,6 +336,15 @@ namespace Quicker.Windows.MainWindows.MainWindow
         protected void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         /// <summary>
+        /// 根据 AppStateManager.IsDarkMode 读取当前主题的外观设置
+        /// </summary>
+        private static Appearance GetCurrentThemeAppearance()
+        {
+            string themeName = AppStateManager.IsDarkMode ? "Dark" : "Light";
+            return SettingDatabase.GetAppearanceSettingsByTheme(themeName).FirstOrDefault();
+        }
+
+        /// <summary>
         /// 直接应用指定的外观设置（供事件实时刷新）
         /// </summary>
         public void ApplyAppearance(Appearance appearance)
@@ -366,7 +375,7 @@ namespace Quicker.Windows.MainWindows.MainWindow
         // 保留原来的 ReloadAppearance，改成调用 ApplyAppearance
         public void ReloadAppearance()
         {
-            var appearance = SettingDatabase.GetAppearanceSettings()?.FirstOrDefault();
+            var appearance = GetCurrentThemeAppearance();
             ApplyAppearance(appearance);
         }
     }

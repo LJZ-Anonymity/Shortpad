@@ -252,6 +252,7 @@ namespace Quicker.Windows.MainWindows.MainWindow
             AppStateManager.ActionPageChanged += OnActionPageChanged;
             AppStateManager.SceneListChanged += OnSceneListChanged;
             AppStateManager.LockStateChanged += OnLockStateChanged;
+            AppStateManager.IsDarkModeChanged += OnIsDarkModeChanged;
         }
 
         private void UnsubscribeStateEvents()
@@ -261,6 +262,7 @@ namespace Quicker.Windows.MainWindows.MainWindow
             AppStateManager.ActionPageChanged -= OnActionPageChanged;
             AppStateManager.SceneListChanged -= OnSceneListChanged;
             AppStateManager.LockStateChanged -= OnLockStateChanged;
+            AppStateManager.IsDarkModeChanged -= OnIsDarkModeChanged;
         }
 
         private void OnAppearanceChanged(Quicker.Models.Settings.Appearance appearance)
@@ -275,6 +277,13 @@ namespace Quicker.Windows.MainWindows.MainWindow
         {
             if (_isSelfTriggered) return;
             MarkDirty($"page:{table}");
+            ScheduleRefresh();
+        }
+
+        private void OnIsDarkModeChanged(bool isDark)
+        {
+            buttonManager.InvalidateAppearance(); // 清除按钮外观缓存
+            MarkDirty("appearance");
             ScheduleRefresh();
         }
 

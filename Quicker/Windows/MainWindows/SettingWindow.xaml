@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     x:Class="Quicker.Windows.MainWindows.SettingWindow"
+    xmlns:helpers="clr-namespace:Quicker.Helpers"
     mc:Ignorable="d"
 
     Icon="/Resources/Images/SettingWindow.png"
@@ -18,6 +19,58 @@
 >
     <Window.Resources>
         <conv:SearchHintVisibilityConverter x:Key="SearchHintVisibilityConverter"/>
+        <!-- 侧边栏1的Button --><!--
+        <Style x:Key="Button1" TargetType="Button">
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="{DynamicResource MainStackPanelBrush}"/>
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=(helpers:ButtonHelper.IsSelected), RelativeSource={RelativeSource Self}}" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Button1SelectedBrush}"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </DataTrigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Button1HoverBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        --><!-- 侧边栏2的Button --><!--
+        <Style x:Key="Button2" TargetType="Button">
+            <Setter Property="BorderBrush" Value="{x:Null}"/>
+            <Setter Property="Background" Value="{DynamicResource Button2DefaultBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=(helpers:ButtonHelper.IsSelected), RelativeSource={RelativeSource Self}}" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Button2SelectedBrush}"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </DataTrigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource Button2HoverBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>-->
     </Window.Resources>
 
     <Grid x:Name="MainGrid">
@@ -27,19 +80,19 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <!-- 侧边栏1 -->
-        <StackPanel x:Name="MainStackPanel" Background="#FFE0E0E0" Width="49" HorizontalAlignment="Center">
+        <StackPanel x:Name="MainStackPanel" Background="{DynamicResource MainStackPanelBrush}" Width="49" HorizontalAlignment="Center">
             <Button x:Name="BasicSettings" Style="{StaticResource Button1}" ToolTip="基础设置" Background="#FFF4F4F4" Click="BasicSettings_Click" MouseLeave="BasicSettings_MouseLeave">
                 <Image Source="/Resources/Images/BasicSettingsButton.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
             </Button>
-            <Button Visibility="Collapsed" x:Name="Auxiliary_Functions" Style="{StaticResource Button1}" ToolTip="辅助功能" Background="#FFE0E0E0" Click="Auxiliary_Functions_Click" MouseLeave="Auxiliary_Functions_MouseLeave">
+            <Button Visibility="Collapsed" x:Name="Auxiliary_Functions" Style="{StaticResource Button1}" ToolTip="辅助功能" Background="{DynamicResource MainStackPanelBrush}" Click="Auxiliary_Functions_Click" MouseLeave="Auxiliary_Functions_MouseLeave">
                 <!--<Image Source="/Resources/Images/Quicker_Enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>-->
             </Button>
-            <Button x:Name="Tools" Style="{StaticResource Button1}" ToolTip="工具" Background="#FFE0E0E0" Click="Tools_Click" MouseLeave="Tools_MouseLeave">
+            <Button x:Name="Tools" Style="{StaticResource Button1}" ToolTip="工具" Background="{DynamicResource MainStackPanelBrush}" Click="Tools_Click" MouseLeave="Tools_MouseLeave">
                 <Image Source="/Resources/Images/Quicker_Enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
             </Button>
         </StackPanel>
         <!-- 侧边栏2 -->
-        <Grid x:Name="MenuGrid" Background="#FFF0F0F0" HorizontalAlignment="Center" Grid.Column="1">
+        <Grid x:Name="MenuGrid" Background="{DynamicResource MenuGridBrush}" HorizontalAlignment="Center" Grid.Column="1">
             <Grid Height="60" VerticalAlignment="Top">
                 <Label Content="筛选..." Foreground="#FFABADB3" Visibility="{Binding ElementName=SearchBox, Path=Text, Converter={StaticResource SearchHintVisibilityConverter}}" HorizontalAlignment="Left" Margin="22,0,0,0" VerticalAlignment="Center"/>
                 <TextBox x:Name="SearchBox" Margin="22,0" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource RoundedTextBox}" TextChanged="SearchBox_TextChanged"/>

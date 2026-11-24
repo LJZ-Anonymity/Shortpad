@@ -79,6 +79,7 @@ namespace Quicker
             EnsureSingleInstance(); // 确保单例运行
             CheckAndUpdateDatabase(); // 检查并升级数据库
             RestoreGlobalFontFamilyFromDatabase(); // 恢复全局字体设置
+            ApplyDefaultWindowStyle();
             InitializeMainWindow();
             InitializeTimer(); // 初始化定时器
             InitializeTaskbar(); // 初始化托盘图标
@@ -177,6 +178,20 @@ namespace Quicker
                 await Task.WhenAny(idle, Task.Delay(1500));
                 ShowNotification();
             }));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private static void ApplyDefaultWindowStyle()
+        {
+            // 取出应用级资源中 TargetType 为 Window 的那个样式
+            var windowStyle = (Style)Current.FindResource(typeof(Window));
+            FrameworkElement.StyleProperty.OverrideMetadata(
+                typeof(Window),
+                new FrameworkPropertyMetadata(windowStyle));
+
+            AppThemeHelper.Initialize(AppStateManager.IsDarkMode);
         }
 
         /// <summary>

@@ -1,16 +1,17 @@
-﻿using Quicker.UserControls.AddWindow;
-using System.Collections.ObjectModel;
-using Quicker.Windows.ToolWindows;
-using Quicker.Windows.AddWindows;
-using System.Windows.Controls;
-using System.ComponentModel;
-using System.Windows.Media;
-using System.Windows.Data;
-using Quicker.Database;
+﻿using Quicker.Database;
+using Quicker.Helpers;
 using Quicker.Managers;
 using Quicker.Models;
-using System.Windows;
+using Quicker.UserControls.AddWindow;
+using Quicker.Windows.AddWindows;
+using Quicker.Windows.ToolWindows;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Media;
 
 namespace Quicker.Windows.MainWindows
 {
@@ -55,6 +56,7 @@ namespace Quicker.Windows.MainWindows
         public FindAppsWindow()
         {
             InitializeComponent(); // 初始化窗口的UI组件
+            AppThemeHelper.AttachWindow(this);
             SearchTextBox.Focus(); // 让搜索框获得焦点
             _applicationView = CollectionViewSource.GetDefaultView(_allApplications); // 创建视图
             ApplicationsListView.ItemsSource = _applicationView; // 绑定 ItemsSource
