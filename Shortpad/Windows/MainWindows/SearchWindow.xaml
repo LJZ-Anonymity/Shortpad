@@ -1,0 +1,135 @@
+﻿<Window
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Shortpad.Windows.MainWindows"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="Shortpad.Windows.MainWindows.SearchWindow"
+    xmlns:helpers="clr-namespace:Shortpad.Helpers"
+    mc:Ignorable="d"
+
+    WindowStartupLocation="CenterScreen"
+    AllowsTransparency="True"
+    SizeToContent="Height"
+    ShowInTaskbar="False"
+    ResizeMode="NoResize"
+    Background="{x:Null}"
+    WindowStyle="None"
+    Topmost="True"
+
+    Deactivated="SearchWindow_Deactivated"
+    Loaded="SearchWindow_Loaded"
+>
+    <Window.Resources>
+        <!-- 图片资源 -->
+        <BitmapImage x:Key="button_unpin_from_desktop.pngSource" UriSource="pack://application:,,,/Resources/Images/button_unpin_from_desktop.png"/>
+        <BitmapImage x:Key="PinToDesktopSource" UriSource="pack://application:,,,/Resources/Images/button_pin_to_desktop.png"/>
+        <!-- 按钮样式 -->
+        <Style x:Key="SearchButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Tag" Value="DefaultButton"/>
+            <Setter Property="Height" Value="53"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" RecognizesAccessKey="True"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#EEEEEE"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid MaxHeight="476" MinHeight="{Binding ElementName=SearchBoxGrid, Path=ActualHeight, Mode=OneWay}" Width="719" Margin="10">
+        <!-- 窗口阴影 -->
+        <Border x:Name="ShadowBorder" Margin="0.6" Background="#FFF3F3F3" CornerRadius="5">
+            <Border.Effect>
+                <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="20" RenderingBias="Quality" ShadowDepth="1"/>
+            </Border.Effect>
+        </Border>
+        <Border x:Name="SearchBorder" Margin="0.6" Background="White" CornerRadius="5" helpers:ClipHelper.ClipToBounds="True">
+            <Grid>
+                <Grid x:Name="SearchBoxGrid" Height="50" VerticalAlignment="Top">
+                    <TextBox x:Name="SearchBox" Text="开始搜索..." ToolTip="请输入关键词进行搜索" Width="700" Height="40" FontSize="28" GotFocus="SearchBox_GotFocus" LostFocus="SearchBox_LostFocus" KeyDown="SearchBox_KeyDown" TextChanged="SearchBox_TextChanged" VerticalContentAlignment="Center" BorderThickness="0" Foreground="LightGray" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}"/>
+                        </TextBox.Style>
+                    </TextBox>
+                    <Button x:Name="PinToggle" Margin="5" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Background="Transparent" Click="PinToggle_Click" ToolTip="订住：固定位置，不自动隐藏">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <!-- 命名Border并设置初始背景 -->
+                                <Border x:Name="Border" CornerRadius="4" Background="{TemplateBinding Background}">
+                                    <Image x:Name="IconImage" Source="{StaticResource button_unpin_from_desktop.pngSource}" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <DataTrigger Binding="{Binding IsPinned, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                        <Setter TargetName="IconImage" Property="Source" Value="{StaticResource PinToDesktopSource}"/>
+                                    </DataTrigger>
+
+                                    <!-- 鼠标悬停效果 -->
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="Border" Property="Background" Value="#EFEFEF"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+                <Grid MouseEnter="Grid_MouseEnter" MouseLeave="Grid_MouseLeave">
+                    <ScrollViewer x:Name="ScrollViewer" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,50,0,0" Width="719" ScrollChanged="ScrollViewer_ScrollChanged">
+                        <StackPanel x:Name="stackPanel">
+                            <Button x:Name="RunasCommandButton" Style="{StaticResource SearchButtonStyle}" Click="RunasCommandButton_Click" Visibility="Collapsed">
+                                <Grid>
+                                    <Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="38" Width="36" Margin="10,0,0,0"/>
+                                    <TextBlock Text="作为命令运行" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="51,8,0,0"/>
+                                    <TextBlock Text="运行命令" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="51,0,0,9" FontSize="10" Foreground="LightGray"/>
+                                    <TextBlock Text="{Binding Text, ElementName=SearchBox, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="96,0,0,9" FontSize="10" Foreground="LightGray"/>
+                                </Grid>
+                            </Button>
+                            <Button x:Name="OpenUrlCommandButton" Style="{StaticResource SearchButtonStyle}" Click="OpenUrlCommandButton_Click" Visibility="Collapsed">
+                                <Grid>
+                                    <Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="36" Width="36" Margin="10,0,0,0"/>
+                                    <TextBlock Text="打开网址" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="51,8,0,0"/>
+                                    <TextBlock x:Name="OpenUrlCommandButton_Text" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="51,0,0,9" FontSize="10" Foreground="LightGray"/>
+                                    <TextBlock x:Name="OpenUrlCommandButton_Title" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,8,0,0" FontSize="16"/>
+                                </Grid>
+                            </Button>
+                            <Button x:Name="SearchBingCommandButton" Style="{StaticResource SearchButtonStyle}" Click="SearchBingCommandButton_Click" Visibility="Collapsed">
+                                <Grid>
+                                    <Image Source="/Resources/Images/SearchBing.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="36" Width="36" Margin="10,0,0,0"/>
+                                    <TextBlock Text="必应搜索" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="51,8,0,0"/>
+                                    <TextBlock x:Name="SearchBingCommandButton_Text" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="51,0,0,9" FontSize="10" Foreground="LightGray"/>
+                                    <TextBlock Text="{Binding Text, ElementName=SearchBox, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,8,0,0" FontSize="16"/>
+                                </Grid>
+                            </Button>
+                            <Button x:Name="SearchGoogleCommandButton" Style="{StaticResource SearchButtonStyle}" Click="SearchGoogleCommandButton_Click" Visibility="Collapsed">
+                                <Grid>
+                                    <Image Source="/Resources/Images/SearchGoogle.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="36" Width="36" Margin="10,0,0,0"/>
+                                    <TextBlock Text="谷歌搜索" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="51,8,0,0"/>
+                                    <TextBlock x:Name="SearchGoogleCommandButton_Text" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="51,0,0,9" FontSize="10" Foreground="LightGray"/>
+                                    <TextBlock Text="{Binding Text, ElementName=SearchBox, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,8,0,0" FontSize="16"/>
+                                </Grid>
+                            </Button>
+                            <Button x:Name="SearchBilibiliCommandButton" Style="{StaticResource SearchButtonStyle}" Click="SearchBaiduCommandButton_Click" Visibility="Collapsed">
+                                <Grid>
+                                    <Image Source="/Resources/Images/SearchBilibili.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="36" Width="36" Margin="10,0,0,0"/>
+                                    <TextBlock Text="B站搜索" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="51,8,0,0"/>
+                                    <TextBlock x:Name="SearchBilibiliCommandButton_Text" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="51,0,0,9" FontSize="10" Foreground="LightGray"/>
+                                    <TextBlock Text="{Binding Text, ElementName=SearchBox, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,8,0,0" FontSize="16"/>
+                                </Grid>
+                            </Button>
+                        </StackPanel>
+                    </ScrollViewer>
+                    <ScrollBar x:Name="ScrollBar" Height="424" Visibility="Collapsed" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="705,50,0,0" ValueChanged="ScrollBar_ValueChanged"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

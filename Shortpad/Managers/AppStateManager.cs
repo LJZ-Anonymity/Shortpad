@@ -1,0 +1,212 @@
+﻿using Shortpad.Windows.MainWindows.MainWindow;
+using Shortpad.Database.SettingRepositories;
+using System.Collections.Concurrent;
+using System.Windows.Media.Imaging;
+using System.Windows.Threading;
+using Shortpad.Models.Settings;
+using Shortpad.Database.Core;
+using Shortpad.Managers;
+using System.Windows;
+using System.IO;
+
+namespace Shortpad.Managers
+{
+    public static class AppStateManager
+    {
+        #region 内部缓存
+
+        private static readonly ConcurrentDictionary<string, object> _cache = new(); // 缓存
+        private static readonly object _cacheLock = new(); // 缓存锁
+
+        #endregion
+
+        #region 设置缓存与访问器
+
+        private static OpenMainWindow _openMainWindowConditions; // 打开主窗口条件
+        private static BlacklistSetting _blacklistSettings; // 黑名单设置
+        private static BlacklistRuleSet _blacklistRules; // 黑名单/白名单规则集（只读，重建时整体替换）
+        private static Convention _conventions; // 基础设置
+
+        /// <summary>
+        /// 黑白名单规则集：判断前台程序是否在黑名单/白名单中。
+        /// 只读结构，LoadSettings 时重建并整体替换引用，判断线程无需加锁。
+        /// </summary>
+        public static BlacklistRuleSet BlacklistRules =>
+            _blacklistRules ??= new BlacklistRuleSet(BlacklistRepository.GetAllRules()); // 获取黑白名单规则集
+
+        public static OpenMainWindow OpenMainWindowConditions
+        {
+            get => _openMainWindowConditions ??= SettingDatabase.GetAllOpenMainWindowConditions().FirstOrDefault(); // 获取打开主窗口条件
+            set => _openMainWindowConditions = value; // 设置打开主窗口条件
+        }
+
+        public static BlacklistSetting BlacklistSettings =>
+            _blacklistSettings ??= BlacklistRepository.GetSetting(); // 获取黑名单设置
+
+        public static Convention Conventions
+        {
+            get => _conventions ??= SettingDatabase.GetAllConventions().FirstOrDefault(); // 获取基础设置
+            set => _conventions = value; // 设置基础设置
+        }
+
+        #endregion
+
+        #region 图标资源
+
+        // 支持外部传入路径的托盘图标获取
+        public static BitmapImage GetTrayIcon(string runningPath = null, string pausedPath = null, bool? pause = null)
+        {
+            string path;
+            bool isPaused = pause ?? Pause;
+            if (isPaused)
+                path = !string.IsNullOrWhiteSpace(pausedPath) ? pausedPath : (Conventions?.TrayIconPathPaused ?? "");
+            else
+                path = !string.IsNullOrWhiteSpace(runningPath) ? runningPath : (Conventions?.TrayIconPathRunning ?? "");
+            if (!string.IsNullOrWhiteSpace(path))
+            {
+                try
+                {
+                    if (path.StartsWith("pack://")) // 支持pack://资源
+                        return new BitmapImage(new Uri(path, UriKind.Absolute));
+                    if (File.Exists(path)) // 支持本地文件
+                        return new BitmapImage(new Uri(path, UriKind.Absolute));
+                }
+                catch { }
+            }
+            return null;
+        }
+
+        public static BitmapImage TrayIcon => GetTrayIcon(); // 当前托盘图标
+
+        #endregion
+
+        #region 核心状态属性
+
+        // 窗口操作对象
+        public static MainWindow? MainWindowInstance { get; set; } = null; // 常驻主窗口实例（唯一）
+
+        // 窗口状态
+        public static bool SearchWindowPinned { get; set; } = false; // 搜索窗口订住状态
+        public static bool MainWindowPinned { get; set; } = false; // 订住状态
+        public static bool Locked { get; set; } = false; // 锁定状态
+        public static bool Pause { get; set; } = false; // 暂停状态
+
+        // 其他状态
+        public static bool EnableMemoryOptimization { get; set; } = false; // 启用内存优化
+        public static string CommonState { get; set; } = "common"; // 普通状态
+
+        private static bool _isDarkMode = true; // 是否为深色模式（内部字段）
+
+        /// <summary>
+        /// 是否为深色模式
+        /// </summary>
+        public static bool IsDarkMode
+        {
+            get => _isDarkMode;
+            set
+            {
+                if (_isDarkMode == value) return;
+                _isDarkMode = value;
+                IsDarkModeChanged?.Invoke(value);
+            }
+        }
+
+        public static float Left { get; set; } = 0; // 左
+        public static float Top { get; set; } = 0; // 上
+
+        // 时间记录
+        public static DateTime RecordedTime { get; set; } = DateTime.Now; // 记录时间
+        public static DateTime StartTime { get; set; } = DateTime.Now; // 开始时间
+
+        // 鼠标与按键操作变量
+        public static System.Windows.Point StartPosition { get; set; } = new(); // 开始位置
+        public static DateTime? MousePressStartTime { get; set; } = null; // 鼠标按下时间
+        public static DateTime? KeyPressStartTime { get; set; } = null; // 按键按下时间
+
+        // 定时器
+        public static DispatcherTimer PressTimer { get; } = new(); // 按键按下定时器
+        public static DispatcherTimer Timer { get; } = new(); // 定时器
+
+        #endregion
+
+        #region 事件与通知
+
+        /// <summary>
+        /// IsDarkMode 变化时触发，参数为新的值
+        /// </summary>
+        public static event Action<bool> IsDarkModeChanged;
+
+        // 托盘图标改变事件
+        public static event Action<string, string> TrayIconChanged;
+
+        // UI 变更事件，供 MainWindow 打脏位，避免事件回调中直接改 UI（可能在后台线程触发）
+        public static event Action<Shortpad.Models.Settings.Appearance> AppearanceChanged; // 外观变更（颜色/字号/圆角/背景图/Blur/尺寸）
+        public static event Action ConventionsChanged; // 行为设置变更（循环翻页/隐藏提示等）
+        public static event Action<string> ActionPageChanged; // 页面数据变更，参数为表名
+        public static event Action<string> SceneListChanged; // 场景页数变更，参数为表名
+        public static event Action LockStateChanged; // 锁定状态变更
+
+        public static void NotifyTrayIconChanged(string runningPath = null, string pausedPath = null)
+        {
+            TrayIconChanged?.Invoke(runningPath, pausedPath);
+        }
+
+        // 修改通知方法，支持传入外观对象
+        public static void NotifyAppearanceChanged(Shortpad.Models.Settings.Appearance appearance = null)
+            => AppearanceChanged?.Invoke(appearance);
+        public static void NotifyConventionsChanged() => ConventionsChanged?.Invoke();
+        public static void NotifyActionPageChanged(string tableName) => ActionPageChanged?.Invoke(tableName);
+        public static void NotifySceneListChanged(string tableName) => SceneListChanged?.Invoke(tableName);
+        public static void NotifyLockStateChanged() => LockStateChanged?.Invoke();
+
+        #endregion
+
+        #region 生命周期与初始化
+
+        static AppStateManager()
+        {
+            LoadSettings(); // 加载设置
+        }
+
+        public static void LoadSettings()
+        {
+            Conventions = SettingDatabase.GetAllConventions().FirstOrDefault(); // 获取基础设置
+            OpenMainWindowConditions = SettingDatabase.GetAllOpenMainWindowConditions().FirstOrDefault(); // 获取打开主窗口条件
+            _blacklistSettings = BlacklistRepository.GetSetting(); // 获取黑名单设置
+            _blacklistRules = new BlacklistRuleSet(BlacklistRepository.GetAllRules()); // 重建黑白名单规则集
+            EnableMemoryOptimization = Conventions?.EnableMemoryOptimization ?? false; // 启用内存优化
+            if (EnableMemoryOptimization) // 如果启用内存优化
+            {
+                ClearCachedData(); // 清除缓存数据
+            }
+        }
+
+        // 清除缓存数据
+        private static void ClearCachedData()
+        {
+            _conventions = null; // 基础设置
+            _openMainWindowConditions = null; // 打开主窗口条件
+            _blacklistSettings = null; // 黑名单设置
+            _blacklistRules = null; // 黑白名单规则集
+            _cache.Clear();
+        }
+
+        // 释放资源
+        public static void Dispose()
+        {
+            // 停止所有定时器
+            PressTimer?.Stop();
+            Timer?.Stop();
+
+            // 关闭并清空常驻主窗口
+            try { MainWindowInstance?.Close(); } catch { }
+            MainWindowInstance = null;
+
+            // 清除缓存数据
+            ClearCachedData();
+            _cache.Clear();
+        }
+
+        #endregion
+    }
+}

@@ -1,0 +1,153 @@
+﻿<Window
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:conv="clr-namespace:Shortpad.UI.Converters;assembly=Shortpad.UI"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctl="clr-namespace:Shortpad.Windows.MainWindows"
+    x:Class="Shortpad.Windows.MainWindows.SettingWindow"
+    mc:Ignorable="d"
+
+    Icon="/Resources/Images/window_settings.png"
+    WindowStartupLocation="CenterScreen"
+    Title="Shortpad设置"
+    MinWidth="863"
+    Width="1211"
+    Height="870"
+
+    Loaded="SettingWindow_Loaded"
+>
+    <Window.Resources>
+        <conv:SearchHintVisibilityConverter x:Key="SearchHintVisibilityConverter"/>
+        <!-- 公共基样式:模板只写一次 -->
+        <Style x:Key="SideBarRadioButtonBase" TargetType="RadioButton">
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="0">
+                            <Grid>
+                                <Image Source="{Binding Path=(ctl:SideBarButton.Icon), RelativeSource={RelativeSource TemplatedParent}}" Width="24" Height="24" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{Binding Path=(ctl:SideBarButton.SelectedBrush), RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{Binding Path=(ctl:SideBarButton.HoverBrush), RelativeSource={RelativeSource TemplatedParent}}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- 侧边栏1:纯图标,居中 -->
+        <Style x:Key="Button1" TargetType="RadioButton" BasedOn="{StaticResource SideBarRadioButtonBase}">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="ctl:SideBarButton.HoverBrush" Value="{DynamicResource Button1HoverBrush}"/>
+            <Setter Property="ctl:SideBarButton.SelectedBrush" Value="{DynamicResource Button2HoverBrush}"/>
+        </Style>
+
+        <!-- 侧边栏2:图标 + 文字 -->
+        <Style x:Key="Button2" TargetType="RadioButton" BasedOn="{StaticResource SideBarRadioButtonBase}">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="39,0,0,0"/>
+            <Setter Property="ctl:SideBarButton.HoverBrush" Value="{DynamicResource Button2HoverBrush}"/>
+            <Setter Property="ctl:SideBarButton.SelectedBrush" Value="{DynamicResource Button2HoverBrush}"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid x:Name="MainGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="49"/>
+            <ColumnDefinition Width="180"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <!-- 侧边栏1 -->
+        <StackPanel x:Name="MainStackPanel" Background="{DynamicResource MainStackPanelBrush}" Width="49" HorizontalAlignment="Center">
+            <RadioButton x:Name="BasicSettings" Style="{StaticResource Button1}" ToolTip="基础设置" Click="BasicSettings_Click">
+                <Image Source="/Resources/Images/settings_tab_basic.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
+            </RadioButton>
+            <RadioButton Visibility="Collapsed" x:Name="Auxiliary_Functions" Style="{StaticResource Button1}" ToolTip="辅助功能" Click="Auxiliary_Functions_Click">
+                <!--<Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>-->
+            </RadioButton>
+            <RadioButton x:Name="Tools" Style="{StaticResource Button1}" ToolTip="工具" Click="Tools_Click">
+                <Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
+            </RadioButton>
+        </StackPanel>
+        <!-- 侧边栏2 -->
+        <Grid x:Name="MenuGrid" Background="{DynamicResource MenuGridBrush}" HorizontalAlignment="Center" Grid.Column="1">
+            <Grid Height="60" VerticalAlignment="Top">
+                <Label Content="筛选..." Foreground="#FFABADB3" Visibility="{Binding ElementName=SearchBox, Path=Text, Converter={StaticResource SearchHintVisibilityConverter}}" HorizontalAlignment="Left" Margin="22,0,0,0" VerticalAlignment="Center"/>
+                <TextBox x:Name="SearchBox" Margin="22,0" Background="{DynamicResource MenuGridBrush}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Style="{StaticResource RoundedTextBox}" TextChanged="SearchBox_TextChanged"/>
+                <Button x:Name="ClearSearchTextBoxButton" Margin="140,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="16" Height="16" Click="ClearSearchTextBoxButton_Click">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource ClearSearchTextBoxButton}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding IsMouseOver, ElementName=SearchBox}" Value="True"/>
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Popup x:Name="SearchResultPopup" PlacementTarget="{Binding ElementName=SearchBox}" Placement="Bottom" StaysOpen="False" AllowsTransparency="True" PopupAnimation="Fade" Width="180">
+                    <Grid>
+                        <Border Background="White" CornerRadius="3" Margin="3">
+                            <Border.Effect>
+                                <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
+                            </Border.Effect>
+                        </Border>
+                        <Border CornerRadius="3" Margin="3" Padding="0,3">
+                            <StackPanel x:Name="SearchResultPanel"/>
+                        </Border>
+                    </Grid>
+                </Popup>
+            </Grid>
+            <!-- 基础设置 -->
+            <StackPanel x:Name="BasicSettingsStackPanel" Visibility="Visible" Width="192" Margin="0,60,0,0">
+                <RadioButton x:Name="Convention" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="自动启动、鼠标挂钩、版本等" Content="常规" ctl:SideBarButton.Icon="/Resources/Images/window_settings.png" Click="Convention_Click"/>
+                <RadioButton x:Name="OpenMainWindow" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="面板弹出方式" Content="弹出面板" ctl:SideBarButton.Icon="/Resources/Images/settings_tab_main_window.png" Click="OpenMainWindow_Click"/>
+                <RadioButton Visibility="Collapsed" x:Name="FunctionShortcutKeys" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="Shortpad功能快捷键" Content="功能快捷键" ctl:SideBarButton.Icon="/Resources/Images/app_enabled.png" Click="FunctionShortcutKeys_Click"/>
+                <RadioButton x:Name="Blacklist" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="在某些应用上停止使用Shortpad" Content="黑名单" ctl:SideBarButton.Icon="/Resources/Images/settings_tab_blacklist.png" Click="Blacklist_Click"/>
+                <RadioButton x:Name="Appearance" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="颜色、字体等样式设置" Content="外观" ctl:SideBarButton.Icon="/Resources/Images/app_enabled.png" Click="Appearance_Click"/>
+                <RadioButton x:Name="AboutShortpad" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="应用等相关信息" Content="关于Shortpad" ctl:SideBarButton.Icon="/Resources/Images/icon_info.png" Click="AboutShortpad_Click"/>
+            </StackPanel>
+            <!-- 辅助功能 -->
+            <StackPanel x:Name="Auxiliary_FunctionsStackPanel" Margin="0,60,0,0" Visibility="Hidden"/>
+            <!-- 工具 -->
+            <StackPanel x:Name="ToolsStackPanel" Width="192" Margin="0,60,0,0" Visibility="Hidden">
+                <RadioButton x:Name="ManageExtensions" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="进行扩展管理" Content="管理扩展" ctl:SideBarButton.Icon="/Resources/Images/app_enabled.png" Click="ManageExtensions_Click"/>
+            </StackPanel>
+        </Grid>
+        <!-- 设置菜单 -->
+        <Grid x:Name="ResultGrid" Margin="4,0,0,0" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="14*"/>
+                <ColumnDefinition Width="953*"/>
+            </Grid.ColumnDefinitions>
+            <!-- 保存设置 -->
+            <Rectangle Fill="#FFD5D5D5" VerticalAlignment="Top" Height="1" Margin="0,43,0,0" Grid.Column="1" Panel.ZIndex="1"/>
+            <Grid x:Name="SettingButtonsGrid" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Height="42" Width="188" Margin="0,0,50,30" Panel.ZIndex="1">
+                <Button x:Name="ApplySettingsButton" Content="应用设置" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="59,0,0,0" Click="ApplySettings" FontSize="16" Width="129" Height="42"/>
+                <Button x:Name="CancelSettingsButton" ToolTip="撤销修改" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" VerticalAlignment="Center" Height="42" Width="43" Click="CancelSettingsButton_Click"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

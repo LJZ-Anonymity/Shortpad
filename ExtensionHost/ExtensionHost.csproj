@@ -11,8 +11,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Quicker.Contracts\Quicker.Contracts.csproj" />
-		<ProjectReference Include="..\Quicker.UI\Quicker.UI.csproj" />
+	  <ProjectReference Include="..\Shortpad.Contracts\Shortpad.Contracts.csproj" />
+	  <ProjectReference Include="..\Shortpad.UI\Shortpad.UI.csproj" />
 	</ItemGroup>
 
 </Project>

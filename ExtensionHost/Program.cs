@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
-using Quicker.Contracts.Extensions;
+using Shortpad.Contracts.Extensions;
+using Shortpad.Contracts.Hosting;
 using System.Threading.Channels;
-using Quicker.Contracts.Hosting;
 using System.Runtime.Loader;
 using System.Reflection;
 using System.Text.Json;
@@ -249,7 +249,7 @@ internal static class Program
     /// </summary>
     private static bool ImplementsExtensionInterface(Type type)
     {
-        return type.GetInterfaces().Any(i => i.FullName == "Quicker.Contracts.Extensions.IExtensionModule");
+        return type.GetInterfaces().Any(i => i.FullName == "Shortpad.Contracts.Extensions.IExtensionModule");
     }
 
     /// <summary>
@@ -281,7 +281,7 @@ internal static class Program
         {
             // 优先从接口取方法，避免被 Window.Activate() 之类的基类同名方法抢先匹配
             var iface = moduleType.GetInterfaces()
-                .FirstOrDefault(i => i.FullName == "Quicker.Contracts.Extensions.IExtensionModule");
+                .FirstOrDefault(i => i.FullName == "Shortpad.Contracts.Extensions.IExtensionModule");
             var method = iface?.GetMethod(methodName);
 
             // 兜底：保持原来的查找逻辑
