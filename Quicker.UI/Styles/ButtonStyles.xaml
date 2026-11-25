@@ -407,12 +407,12 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="White" BorderBrush="#FFD5D5D5" BorderThickness="1" CornerRadius="5">
+                    <Border x:Name="border" Background="{DynamicResource WhiteButtonBrush}" BorderBrush="{DynamicResource WhiteButtonBorderBrush}" BorderThickness="1" CornerRadius="5">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#F3F3F3"/>
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource WhiteButtonHoverBrush}"/>
                         </Trigger>
                         
                         <Trigger Property="IsEnabled" Value="False">

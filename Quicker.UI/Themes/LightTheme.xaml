@@ -13,4 +13,9 @@
 
     <SolidColorBrush x:Key="Button1HoverBrush" Color="#FFF4F4F4"/>
     <SolidColorBrush x:Key="Button2HoverBrush" Color="#FFFAFAFA"/>
+    
+    <!-- 按钮 -->
+    <SolidColorBrush x:Key="WhiteButtonBrush" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="WhiteButtonBorderBrush" Color="#FFD5D5D5"/>
+    <SolidColorBrush x:Key="WhiteButtonHoverBrush" Color="#FFF3F3F3"/>
 </ResourceDictionary>
