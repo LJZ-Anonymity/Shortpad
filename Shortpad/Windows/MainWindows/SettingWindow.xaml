@@ -126,7 +126,7 @@
                 <RadioButton x:Name="OpenMainWindow" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="面板弹出方式" Content="弹出面板" ctl:SideBarButton.Icon="/Resources/Images/settings_tab_main_window.png" Click="OpenMainWindow_Click"/>
                 <RadioButton Visibility="Collapsed" x:Name="FunctionShortcutKeys" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="Shortpad功能快捷键" Content="功能快捷键" ctl:SideBarButton.Icon="/Resources/Images/app_enabled.png" Click="FunctionShortcutKeys_Click"/>
                 <RadioButton x:Name="Blacklist" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="在某些应用上停止使用Shortpad" Content="黑名单" ctl:SideBarButton.Icon="/Resources/Images/settings_tab_blacklist.png" Click="Blacklist_Click"/>
-                <RadioButton x:Name="Appearance" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="颜色、字体等样式设置" Content="外观" ctl:SideBarButton.Icon="/Resources/Images/app_enabled.png" Click="Appearance_Click"/>
+                <RadioButton x:Name="Appearance" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="颜色、字体等样式设置" Content="外观" ctl:SideBarButton.Icon="/Resources/Images/settings_tab_appearance.png" Click="Appearance_Click"/>
                 <RadioButton x:Name="AboutShortpad" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="应用等相关信息" Content="关于Shortpad" ctl:SideBarButton.Icon="/Resources/Images/icon_info.png" Click="AboutShortpad_Click"/>
             </StackPanel>
             <!-- 辅助功能 -->

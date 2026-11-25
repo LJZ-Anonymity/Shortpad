@@ -36,6 +36,7 @@
 | `scene_locked.png` | `lock` |
 | `scene_taskbar.png` | `panel-bottom` |
 | `scene_unlocked.png` | `lock-open` |
+| `settings_tab_appearance.png`| `shirt` |
 | `settings_tab_basic.png` | `sliders-horizontal` |
 | `settings_tab_blacklist.png` | `ban` |
 | `settings_tab_main_window.png` | `smartphone` |
