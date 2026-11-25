@@ -53,23 +53,29 @@
             <!-- 全局默认控件字体样式 -->
             <Style TargetType="TextBlock">
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
             </Style>
             <Style TargetType="TextBox">
                 <Setter Property="ContextMenu" Value="{DynamicResource TextBoxCustomContextMenu}"/>
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
             </Style>
             <Style TargetType="Label">
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
             </Style>
             <Style TargetType="Button">
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
             </Style>
             <Style x:Key="{x:Type Window}" TargetType="{x:Type Window}">
                 <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
             </Style>
             <Style x:Key="{x:Type UserControl}" TargetType="{x:Type UserControl}">
                 <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextColor}"/>
             </Style>
 
         </ResourceDictionary>

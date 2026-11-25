@@ -10,11 +10,6 @@ namespace Quicker.Managers
 {
     public class SettingManager
     {
-        private const string DefaultButtonColor1 = "#FFE0E0E0"; // 默认按钮颜色
-        private const string SelectedButtonColor1 = "#FFF4F4F4"; // 选中按钮颜色
-        private const string DefaultButtonColor2 = "#FFF0F0F0"; // 默认按钮颜色
-        private const string SelectedButtonColor2 = "#FFFAFAFA"; // 选中按钮颜色
-
         public OpenMainWindow openMainWindowConditions; // 弹出面板设置缓存对象
         public Appearance appearanceConditions; // 外观设置缓存对象
         public Convention conventions; // 常规设置缓存对象
@@ -205,37 +200,19 @@ namespace Quicker.Managers
         /// </summary>
         /// <param name="targetStackPanel"> 目标StackPanel </param>
         /// <param name="targetButton"> 目标Button </param>
-        /// <param name="fatherStackPanel"> 父级StackPanel </param>
-        public void ButtonStyle1_Click(StackPanel targetStackPanel, Button targetButton, StackPanel fatherStackPanel, Grid fathergrid)
+        public void ButtonStyle1_Click(StackPanel targetStackPanel, RadioButton targetButton, Grid fathergrid)
         {
-            if (targetStackPanel.Visibility == Visibility.Visible) return; // 如果目标面板已经打开，则不执行任何操作
+            targetButton.IsChecked = true; // 设置目标Button为选中状态
             foreach (var stackpanel in fathergrid.Children.OfType<StackPanel>())
                 stackpanel.Visibility = stackpanel == targetStackPanel ? Visibility.Visible : Visibility.Collapsed; // 设置StackPanel可见性
-
-            foreach (var button in fatherStackPanel.Children.OfType<Button>())
-                button.Background = button == targetButton
-                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString(SelectedButtonColor1))
-                    : new SolidColorBrush((Color)ColorConverter.ConvertFromString(DefaultButtonColor1)); // 设置Button类型1颜色
-        }
-
-        /// <summary>
-        /// 设置Button类型1背景色
-        /// </summary>
-        /// <param name="sender"> 目标Button </param>
-        /// <param name="stackPanel"> 目标StackPanel </param>
-        public void ButtonStyle1_MouseLeave(object sender, StackPanel stackPanel)
-        {
-            Button button = sender as Button; // 获取Button
-            button.Background = stackPanel.Visibility == Visibility.Visible ?
-                new SolidColorBrush((Color)ColorConverter.ConvertFromString(SelectedButtonColor1)) :
-                new SolidColorBrush((Color)ColorConverter.ConvertFromString(DefaultButtonColor1)); // 设置Button颜色
         }
 
         /// <summary>
         /// 改变Button类型2样式
         /// </summary>
-        public async Task ButtonStyle2_Click(Button targetButton, UserControl targetGrid, Grid fatherGrid, Grid stackPanelGrid)
+        public async Task ButtonStyle2_Click(RadioButton targetButton, UserControl targetGrid, Grid fatherGrid)
         {
+            targetButton.IsChecked = true; // 设置目标Button为选中状态
             var existingGrid = fatherGrid.Children.OfType<UserControl>().FirstOrDefault(); // 获取第一个 UserControl 子元素
             if (existingGrid == null || existingGrid.Name != targetGrid.Name)
             {
@@ -243,29 +220,6 @@ namespace Quicker.Managers
                 targetGrid.SetValue(Grid.ColumnSpanProperty, 2); // 设置目标Grid列跨度为2
                 fatherGrid.Children.Add(targetGrid); // 添加目标Grid子元素
             }
-            else return; // 如果目标面板已经打开，则不执行任何操作
-
-            foreach(var childStackpanel in stackPanelGrid.Children.OfType<StackPanel>())
-            {
-                foreach (var button in childStackpanel.Children.OfType<Button>())
-                {
-                    button.Background = button == targetButton
-                        ? new SolidColorBrush((Color)ColorConverter.ConvertFromString(SelectedButtonColor2))
-                        : new SolidColorBrush((Color)ColorConverter.ConvertFromString(DefaultButtonColor2)); // 设置Button类型2颜色
-                    button.FontWeight = button == targetButton ? FontWeights.Bold : FontWeights.Normal; // 设置Button类型2粗体
-                } // 设置Button类型2颜色&&粗体
-            }
-        }
-
-        /// <summary>
-        /// 设置Button类型2背景色
-        /// </summary>
-        public void ButtonStyle2_MouseLeave(object sender, UserControl targetGrid, Grid fatherGrid)
-        {
-            Button button = sender as Button; // 获取Button
-            var existingGrid = fatherGrid.Children.OfType<UserControl>().FirstOrDefault(); // 获取第一个 UserControl 子元素
-            if (existingGrid.Name == targetGrid.Name)
-                button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(SelectedButtonColor2)); // 设置Button颜色
         }
 
         /// <summary>

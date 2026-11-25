@@ -22,11 +22,6 @@ namespace Quicker.Windows.MainWindows
 {
     public partial class SettingWindow : Window
     {
-        private const string DefaultButtonColor1 = "#FFE0E0E0"; // 默认按钮类型1颜色
-        private const string SelectedButtonColor1 = "#FFF4F4F4"; // 选中按钮类型1颜色
-        private const string DefaultButtonColor2 = "#FFF0F0F0"; // 默认按钮类型2颜色
-        private const string SelectedButtonColor2 = "#FFFAFAFA"; // 选中按钮类型2颜色
-
         public readonly SettingManager _settingManager = new();
         private bool _hasAppliedSettings = false; // 标记是否已经应用过设置
 
@@ -432,16 +427,11 @@ namespace Quicker.Windows.MainWindows
         /// <summary>
         /// 通用打开自定义控件方法（辅助工具方法）
         /// </summary>
-        /// <typeparam name="T">控件类型（如 ConventionGrid）</typeparam>
-        /// <param name="button">按钮</param>
-        /// <param name="stackPanel">StackPanel</param>
-        /// <param name="resultGrid">ResultGrid</param>
-        /// <param name="settingButtonsGridVisibility">SettingButtonsGrid 的可见性</param>
-        private void OpenCustomGrid(Button button, UserControl grid, Grid resultGrid, Visibility settingButtonsGridVisibility = Visibility.Visible)
+        private void OpenCustomGrid(RadioButton button, UserControl grid, Grid resultGrid, Visibility settingButtonsGridVisibility = Visibility.Visible)
         {
             if (grid is FrameworkElement fe) // 如果grid是FrameworkElement类型
                 fe.Name = grid.GetType().Name; // 设置grid的名称
-            _settingManager.ButtonStyle2_Click(button, grid, resultGrid, MenuGrid); // 设置Button类型2样式
+            _settingManager.ButtonStyle2_Click(button, grid, resultGrid); // 设置Button类型2样式
             SettingButtonsGrid.Visibility = settingButtonsGridVisibility; // 设置SettingButtonsGrid的可见性
         }
 
@@ -454,12 +444,7 @@ namespace Quicker.Windows.MainWindows
         // 基础设置
         private void BasicSettings_Click(object sender, RoutedEventArgs e)
         {
-            _settingManager.ButtonStyle1_Click(BasicSettingsStackPanel, BasicSettings, MainStackPanel, MenuGrid); // 设置Button类型1样式
-        }
-        // 鼠标移出Button恢复Background
-        private void BasicSettings_MouseLeave(object sender, MouseEventArgs e)
-        {
-            _settingManager.ButtonStyle1_MouseLeave(sender, BasicSettingsStackPanel); // 鼠标移出Button恢复Background
+            _settingManager.ButtonStyle1_Click(BasicSettingsStackPanel, BasicSettings, MenuGrid); // 设置Button类型1样式
         }
 
 
@@ -467,12 +452,6 @@ namespace Quicker.Windows.MainWindows
         private void Convention_Click(object sender, RoutedEventArgs e)
         {
             OpenCustomGrid(Convention, new ConventionControl(this), ResultGrid);
-        }
-        // 鼠标移出Button恢复Background
-        private void Convention_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var ConventionControl = new ConventionControl(this) { Name = "ConventionControl" }; // 创建常规设置Grid  
-            _settingManager.ButtonStyle2_MouseLeave(sender, ConventionControl, ResultGrid); // 鼠标移出Button恢复Background
         }
 
         // 基础设置-弹出面板
@@ -482,23 +461,11 @@ namespace Quicker.Windows.MainWindows
             OpenCustomGrid(OpenMainWindow, OpenMainWindowControl, ResultGrid); // 设置Button类型2样式
             SettingButtonsGrid.Visibility = Visibility.Visible; // 设置SettingButtonsGrid可见性
         }
-        // 鼠标移出Button恢复Background
-        private void OpenMainWindow_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var OpenMainWindowControl = new OpenMainWindowControl(this) { Name = "OpenMainWindowControl" };
-            _settingManager.ButtonStyle2_MouseLeave(sender, OpenMainWindowControl, ResultGrid); // 鼠标移出Button恢复Background
-        }
 
         // 基础设置-功能快捷键
         private void FunctionShortcutKeys_Click(object sender, RoutedEventArgs e)
         {
             OpenCustomGrid(FunctionShortcutKeys, new FunctionShortcutKeysControl(this), ResultGrid);
-        }
-        // 鼠标移出Button恢复Background
-        private void FunctionShortcutKeys_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var FunctionShortcutKeysControl = new FunctionShortcutKeysControl(this) { Name = "FunctionShortcutKeysControl" };
-            _settingManager.ButtonStyle2_MouseLeave(sender, FunctionShortcutKeysControl, ResultGrid); // 鼠标移出Button恢复Background
         }
 
         // 基础设置-黑名单
@@ -506,23 +473,11 @@ namespace Quicker.Windows.MainWindows
         {
             OpenCustomGrid(Blacklist, new BlacklistControl(this), ResultGrid);
         }
-        // 鼠标移出Button恢复Background
-        private void Blacklist_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var BlacklistControl = new BlacklistControl(this) { Name = "BlacklistControl" };
-            _settingManager.ButtonStyle2_MouseLeave(sender, BlacklistControl, ResultGrid); // 鼠标移出Button恢复Background
-        }
 
         // 基础设置-外观
         private void Appearance_Click(object sender, RoutedEventArgs e)
         {
             OpenCustomGrid(Appearance,  new AppearanceControl(this), ResultGrid);
-        }
-        // 鼠标移出Button恢复Background
-        private void Appearance_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var AppearanceControl = new AppearanceControl(this) { Name = "AppearanceControl" };
-            _settingManager.ButtonStyle2_MouseLeave(sender, AppearanceControl, ResultGrid); // 鼠标移出Button恢复Background
         }
 
         // 基础设置-关于Quicker
@@ -537,12 +492,6 @@ namespace Quicker.Windows.MainWindows
                     aboutControl.Privacy_StatementButton_Click(null, null); // 显示隐私声明
             }
         }
-        // 鼠标移出Button恢复Background
-        private void AboutQuicker_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var AboutQuickerControl = new AboutQuickerControl(this) { Name = "AboutQuickerControl" };
-            _settingManager.ButtonStyle2_MouseLeave(sender, AboutQuickerControl, ResultGrid); // 鼠标移出Button恢复Background
-        }
 
         #endregion
 
@@ -551,12 +500,7 @@ namespace Quicker.Windows.MainWindows
         // 辅助功能
         private void Auxiliary_Functions_Click(object sender, RoutedEventArgs e)
         {
-            _settingManager.ButtonStyle1_Click(Auxiliary_FunctionsStackPanel, Auxiliary_Functions, MainStackPanel, MenuGrid); // 设置Button类型1样式
-        }
-        // 鼠标移出Button恢复Background
-        private void Auxiliary_Functions_MouseLeave(object sender, MouseEventArgs e)
-        {
-            _settingManager.ButtonStyle1_MouseLeave(sender, Auxiliary_FunctionsStackPanel); // 鼠标移出Button恢复Background
+            _settingManager.ButtonStyle1_Click(Auxiliary_FunctionsStackPanel, Auxiliary_Functions, MenuGrid); // 设置Button类型1样式
         }
 
         #endregion
@@ -565,24 +509,13 @@ namespace Quicker.Windows.MainWindows
         // 工具
         private void Tools_Click(object sender, RoutedEventArgs e)
         {
-            _settingManager.ButtonStyle1_Click(ToolsStackPanel, Tools, MainStackPanel, MenuGrid); // 设置Button类型1样式
-        }
-        // 鼠标移出Button恢复Background
-        private void Tools_MouseLeave(object sender, MouseEventArgs e)
-        {
-            _settingManager.ButtonStyle1_MouseLeave(sender, ToolsStackPanel); // 鼠标移出Button恢复Background
+            _settingManager.ButtonStyle1_Click(ToolsStackPanel, Tools, MenuGrid); // 设置Button类型1样式
         }
 
         // 工具-管理扩展
         private void ManageExtensions_Click(object sender, RoutedEventArgs e)
         {
             OpenCustomGrid(ManageExtensions, new ExtensionManagementControl(), ResultGrid, Visibility.Visible);
-        }
-        // 鼠标移出Button恢复Background
-        private void ManageExtensions_MouseLeave(object sender, MouseEventArgs e)
-        {
-            var ExtensionManagementControl = new ExtensionManagementControl() { Name = "ExtensionManagementControl" };
-            _settingManager.ButtonStyle2_MouseLeave(sender, ExtensionManagementControl, ResultGrid); // 鼠标移出Button恢复Background
         }
 
         #endregion
@@ -596,30 +529,11 @@ namespace Quicker.Windows.MainWindows
         }
 
         /// <summary>
-        /// 查找按钮内的TextBlock
+        /// 克隆一个按钮（用于Popup搜索结果），并设置高亮关键字
         /// </summary>
-        /// <param name="btn">按钮</param>
-        private TextBlock FindTextBlockInButton(Button btn)
+        private RadioButton CloneButton(RadioButton original, string keyword = "")
         {
-            if (btn.Content is Grid grid)
-            {
-                foreach (var child in grid.Children)
-                {
-                    if (child is TextBlock tb)
-                        return tb; // 返回文本框
-                }
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// 克隆一个按钮（用于Popup搜索结果），并设置高亮关键字。
-        /// </summary>
-        /// <param name="original">原始按钮</param>
-        /// <param name="keyword">需要高亮的关键字</param>
-        private Button CloneButton(Button original, string keyword = "")
-        {
-            var newBtn = new Button // 新建一个Button实例
+            var newBtn = new RadioButton
             {
                 Content = CloneButtonContent(original.Content, keyword), // 克隆Content并高亮
                 HorizontalAlignment = original.HorizontalAlignment,
@@ -627,27 +541,36 @@ namespace Quicker.Windows.MainWindows
                 ToolTip = original.ToolTip,
                 Padding = original.Padding,
                 Margin = original.Margin,
-                Style = original.Style, // 沿用原按钮的样式
+                Style = original.Style, // 沿用原按钮的样式（悬停色、选中色随样式带过来）
                 Tag = original.Name // 用于后续识别按钮类型
             };
+            SideBarButton.SetIcon(newBtn, SideBarButton.GetIcon(original)); // 附加属性不会随样式复制，图标要单独复制
             newBtn.Click += SearchResultButton_Click; // 绑定点击事件，点击后跳转到对应设置页
-            return newBtn; // 返回按钮
+            return newBtn;
         }
 
         /// <summary>
-        /// 克隆按钮的Content（主入口，根据类型分发）。
+        /// 克隆按钮的Content（主入口，根据类型分发）
         /// </summary>
-        /// <param name="content">原始按钮的Content</param>
-        /// <param name="keyword">需要高亮的关键字</param>
         private object CloneButtonContent(object content, string keyword = "")
         {
-            if (content is Grid grid) // 如果是Grid类型，调用专用克隆方法
+            if (content is string text) // 现在的按钮内容是纯文字：生成带高亮的TextBlock
+            {
+                var tb = new TextBlock();
+                TextBlockHelper.SetHighlight(tb, new HighlightTextData
+                {
+                    Text = text,
+                    Keyword = keyword
+                });
+                return tb;
+            }
+            if (content is Grid grid) // 兼容旧写法
                 return CloneGridContent(grid, keyword);
             return content; // 其它类型直接返回
         }
 
         /// <summary>
-        /// 克隆Grid及其所有子元素（Image、TextBlock等）。
+        /// 克隆Grid及其所有子元素（Image、TextBlock等）
         /// </summary>
         /// <param name="grid">原始Grid</param>
         /// <param name="keyword">需要高亮的关键字</param>
@@ -665,7 +588,7 @@ namespace Quicker.Windows.MainWindows
         }
 
         /// <summary>
-        /// 克隆Image控件，复制其常用属性。
+        /// 克隆Image控件，复制其常用属性
         /// </summary>
         /// <param name="img">原始Image控件</param>
         private Image CloneImageContent(Image img)
@@ -682,7 +605,7 @@ namespace Quicker.Windows.MainWindows
         }
 
         /// <summary>
-        /// 克隆TextBlock控件，并用TextBlockHelper高亮关键字。
+        /// 克隆TextBlock控件，并用TextBlockHelper高亮关键字
         /// </summary>
         /// <param name="tb">原始TextBlock控件</param>
         /// <param name="keyword">需要高亮的关键字</param>
@@ -703,10 +626,10 @@ namespace Quicker.Windows.MainWindows
             return newTb;
         }
 
-        // Popup中副本按钮的点击事件，根据Tag跳转到对应设置页面。
+        // Popup中副本按钮的点击事件，根据Tag跳转到对应设置页面
         private void SearchResultButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.Tag is string btnName)
+            if (sender is RadioButton btn && btn.Tag is string btnName)
             {
                 SearchResultPopup.IsOpen = false; // 关闭Popup
                 int pageCode = 0;
@@ -721,7 +644,9 @@ namespace Quicker.Windows.MainWindows
             }
         }
 
-        // 搜索框内容变化事件，动态生成高亮的按钮副本并显示在Popup中。
+        /// <summary>
+        /// 搜索框内容变化事件，动态生成高亮的按钮副本并显示在Popup中
+        /// </summary>
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             string keyword = SearchBox.Text.Trim(); // 获取搜索框输入的关键字
@@ -736,9 +661,8 @@ namespace Quicker.Windows.MainWindows
             {
                 foreach (var child in stackPanel.Children) // 遍历StackPanel的子元素
                 {
-                    Button btn = child as Button; // 获取Button
-                    var textBlock = FindTextBlockInButton(btn); // 获取Button内的TextBlock
-                    string text = textBlock?.Text ?? ""; // 获取Button内的文本
+                    RadioButton btn = (RadioButton)child; // 获取Button
+                    string text = btn.Content as string; // 获取Button内的文本
                     if (text.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0) // 如果文本包含关键字，克隆按钮并添加到Popup中
                     {
                         var clone = CloneButton(btn, keyword); // 克隆按钮并高亮关键字
@@ -750,5 +674,25 @@ namespace Quicker.Windows.MainWindows
         }
 
         #endregion
+    }
+    public static class SideBarButton
+    {
+        // 图标
+        public static readonly DependencyProperty IconProperty =
+            DependencyProperty.RegisterAttached("Icon", typeof(ImageSource), typeof(SideBarButton), new PropertyMetadata(null));
+        public static ImageSource GetIcon(DependencyObject obj) => (ImageSource)obj.GetValue(IconProperty);
+        public static void SetIcon(DependencyObject obj, ImageSource value) => obj.SetValue(IconProperty, value);
+
+        // 悬停色
+        public static readonly DependencyProperty HoverBrushProperty =
+            DependencyProperty.RegisterAttached("HoverBrush", typeof(Brush), typeof(SideBarButton), new PropertyMetadata(null));
+        public static Brush GetHoverBrush(DependencyObject obj) => (Brush)obj.GetValue(HoverBrushProperty);
+        public static void SetHoverBrush(DependencyObject obj, Brush value) => obj.SetValue(HoverBrushProperty, value);
+
+        // 选中色
+        public static readonly DependencyProperty SelectedBrushProperty =
+            DependencyProperty.RegisterAttached("SelectedBrush", typeof(Brush), typeof(SideBarButton), new PropertyMetadata(null));
+        public static Brush GetSelectedBrush(DependencyObject obj) => (Brush)obj.GetValue(SelectedBrushProperty);
+        public static void SetSelectedBrush(DependencyObject obj, Brush value) => obj.SetValue(SelectedBrushProperty, value);
     }
 }
