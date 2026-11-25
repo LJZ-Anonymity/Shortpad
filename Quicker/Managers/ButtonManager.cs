@@ -11,6 +11,7 @@ using Quicker.Database.Core;
 using Quicker.Windows.Menus;
 using System.Windows.Media;
 using System.Windows.Input;
+using System.Windows.Data;
 using Quicker.Extensions;
 using Quicker.Windows;
 using Quicker.Helpers;
@@ -348,6 +349,8 @@ namespace Quicker.Managers
             button.Tag = buttonInformation;
             var grid = CreateButtonGrid(buttonInformation, buttonSize, titleMaxWidth);
             button.Content = grid;
+            foreach (var tb in grid.Children.OfType<TextBlock>())
+                tb.SetBinding(TextBlock.ForegroundProperty, new Binding("Foreground") { Source = button });
             LoadActionTooltip(button, buttonInformation);
         }
 
