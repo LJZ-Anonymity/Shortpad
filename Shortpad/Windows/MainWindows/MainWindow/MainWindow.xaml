@@ -198,7 +198,7 @@
                 <Image x:Name="BackgroundImage" Stretch="Fill" Opacity="{Binding BackgroundImageOpacity}" Width="{Binding ActualWidth, ElementName=ViewBorder}" Height="{Binding ActualHeight, ElementName=ViewBorder}" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Row="0" Grid.RowSpan="4"/>
                 <!-- 标题栏 -->
                 <Grid x:Name="TitleBarGrid" Grid.RowSpan="1" Background="{Binding ToolbarColor}">
-                    <Label Content="Shortpad" Margin="2" Width="58" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="13"/>
+                    <TextBlock Text="Shortpad" Margin="6" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}" FontSize="13"/>
                     <Button Style="{StaticResource Task}" Click="OpenSettingWindow" ToolTip="打开设置窗口" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="58,0,0,0">
                         <Rectangle Width="16" Height="16" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>

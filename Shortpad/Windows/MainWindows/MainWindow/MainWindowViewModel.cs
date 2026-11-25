@@ -104,12 +104,17 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         }
 
         /// <summary>
-        /// 外观设置中的工具栏颜色（如 #00F3F3F3）
+        /// 外观设置中的工具栏颜色
         /// </summary>
         public string ToolbarColor
         {
             get => _toolbarColor;
-            set { _toolbarColor = value; OnPropertyChanged(nameof(ToolbarColor)); }
+            set
+            {
+                _toolbarColor = value;
+                OnPropertyChanged(nameof(ToolbarColor));
+                OnPropertyChanged(nameof(UnSelectedBrush));
+            }
         }
 
         /// <summary>
@@ -217,26 +222,46 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         public string ToolbarIconColor
         {
             get => _toolbarIconColor;
-            set { _toolbarIconColor = value; OnPropertyChanged(nameof(ToolbarIconColor)); OnPropertyChanged(nameof(SelectedBrush)); OnPropertyChanged(nameof(UnSelectedBrush)); }
+            set
+            {
+                _toolbarIconColor = value;
+                OnPropertyChanged(nameof(ToolbarIconColor));
+                OnPropertyChanged(nameof(SelectedBrush));
+            }
         }
 
         /// <summary>
         /// 选中页面按钮颜色（动态绑定 ToolbarIconColor）
         /// </summary>
-        public SolidColorBrush SelectedBrush =>
-            string.IsNullOrEmpty(ToolbarIconColor)
-                ? new SolidColorBrush(Colors.Transparent)
-                : new SolidColorBrush((Color)ColorConverter.ConvertFromString(ToolbarIconColor));
+        public SolidColorBrush SelectedBrush
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(ToolbarIconColor))
+                    return CreateFrozenBrush(Colors.Transparent);
+
+                try
+                {
+                    var color = (Color)ColorConverter.ConvertFromString(ToolbarIconColor);
+                    return CreateFrozenBrush(color);
+                }
+                catch
+                {
+                    return CreateFrozenBrush(Colors.Transparent);
+                }
+            }
+        }
 
         /// <summary>
-        /// 未选中页面按钮颜色（动态绑定 ToolbarIconColor 的浅色）
+        /// 未选中页面按钮颜色（基于 ToolbarColor 计算暗色）
         /// </summary>
         public SolidColorBrush UnSelectedBrush
         {
             get
             {
-                if (string.IsNullOrEmpty(ToolbarColor))
-                    return new SolidColorBrush(Colors.Transparent);
+                if (string.IsNullOrWhiteSpace(ToolbarColor))
+                    return CreateFrozenBrush(Colors.Transparent);
+
                 try
                 {
                     var color = (Color)ColorConverter.ConvertFromString(ToolbarColor);
@@ -244,13 +269,21 @@ namespace Shortpad.Windows.MainWindows.MainWindow
                     byte r = (byte)(color.R * factor);
                     byte g = (byte)(color.G * factor);
                     byte b = (byte)(color.B * factor);
-                    return new SolidColorBrush(Color.FromArgb(color.A, r, g, b));
+                    return CreateFrozenBrush(Color.FromArgb(color.A, r, g, b));
                 }
                 catch
                 {
-                    return new SolidColorBrush(Colors.Transparent);
+                    return CreateFrozenBrush(Colors.Transparent);
                 }
             }
+        }
+
+        private static SolidColorBrush CreateFrozenBrush(Color color)
+        {
+            var brush = new SolidColorBrush(color);
+            if (brush.CanFreeze)
+                brush.Freeze();
+            return brush;
         }
 
         /// <summary>
