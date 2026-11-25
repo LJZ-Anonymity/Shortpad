@@ -88,7 +88,7 @@
                 </Button>-->
                 <Button Click="SwitchTheme" ToolTip="切换主题" Style="{StaticResource MenuButton}">
                     <Grid Width="194">
-                        <Image x:Name="switchTheme" Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                        <Image x:Name="switchTheme" Source="/Resources/Images/menu_toggle_theme.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Text="切换主题模式" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>

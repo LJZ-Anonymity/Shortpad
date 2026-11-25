@@ -1,9 +1,10 @@
 ﻿<Window
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:conv="clr-namespace:Shortpad.UI.Converters;assembly=Shortpad.UI"
+    xmlns:styles="clr-namespace:Shortpad.UI.Styles;assembly=Shortpad.UI"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     x:Class="Shortpad.Windows.MainWindows.ActionPageManageWindow"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Shortpad.Windows.MainWindows"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     mc:Ignorable="d"
@@ -38,10 +39,18 @@
         <Border Margin="9,44,0,39" CornerRadius="4" HorizontalAlignment="Left" Width="221" BorderBrush="#FFB4B4B4" BorderThickness="1">
             <StackPanel x:Name="ActionPagesButtonPanel"/>
         </Border>
-        <Button x:Name="AddSceneButton" Style="{StaticResource AddSceneButton}" ToolTip="添加场景" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="50" Click="AddSceneButton_Click"/>
-        <Button x:Name="EditSceneButton" Style="{StaticResource EditSceneButton}" ToolTip="修改场景设置" HorizontalAlignment="Left" Margin="59,0,0,10" VerticalAlignment="Bottom" Width="50" Click="EditSceneButton_Click"/>
-        <Button x:Name="DeleteSceneButton" Style="{StaticResource DeleteSceneButton}" ToolTip="删除场景" HorizontalAlignment="Left" Margin="108,0,0,10" VerticalAlignment="Bottom" Width="50" Click="DeleteSceneButton_Click"/>
-        <Button x:Name="ToTopSceneButton" Style="{StaticResource WhiteButton}" ToolTip="到顶部" HorizontalAlignment="Left" Margin="200,0,0,10" VerticalAlignment="Bottom" Width="30" Click="ToTopSceneButton_Click"/>
+        <Button x:Name="AddSceneButton" Style="{StaticResource BaseRoundedButton}" styles:ButtonStyles.CornerRadius="5,0,0,5" ToolTip="添加场景" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="50" Click="AddSceneButton_Click">
+            <Image Source="/Resources/Images/button_add_scene.png" Height="16" Width="16"/>
+        </Button>
+        <Button x:Name="EditSceneButton" Style="{StaticResource BaseRoundedButton}" styles:ButtonStyles.CornerRadius="0" ToolTip="修改场景设置" HorizontalAlignment="Left" Margin="59,0,0,10" VerticalAlignment="Bottom" Width="50" Click="EditSceneButton_Click">
+            <Image Source="/Resources/Images/button_edit_scene.png" Height="16" Width="16"/>
+        </Button>
+        <Button x:Name="DeleteSceneButton" Style="{StaticResource BaseRoundedButton}" styles:ButtonStyles.CornerRadius="0,5,5,0" ToolTip="删除场景" HorizontalAlignment="Left" Margin="108,0,0,10" VerticalAlignment="Bottom" Width="50" Click="DeleteSceneButton_Click">
+            <Image Source="/Resources/Images/button_delete_scene.png" Height="16" Width="16"/>
+        </Button>
+        <Button x:Name="ToTopSceneButton" Style="{StaticResource WhiteButton}" ToolTip="到顶部" HorizontalAlignment="Left" Margin="200,0,0,10" VerticalAlignment="Bottom" Width="30" Click="ToTopSceneButton_Click">
+            <Image Source="/Resources/Images/button_jump_to_pinned.png" Height="16" Width="16"/>
+        </Button>
 
         <Image x:Name="SceneImage" HorizontalAlignment="Left" Height="16" Margin="240,10,0,0" VerticalAlignment="Top" Width="16"/>
         <StackPanel x:Name="SceneTitleStackPanel" Margin="262,8,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" Height="18" Orientation="Horizontal"/>
