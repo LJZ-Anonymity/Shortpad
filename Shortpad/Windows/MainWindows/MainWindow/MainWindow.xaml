@@ -273,7 +273,7 @@
                     <Button Style="{StaticResource Task}" Click="HideMainWindow" ToolTip="关闭面板窗口" HorizontalAlignment="Right" Margin="0,0,3,0" AllowDrop="True" Drop="CloseMainWindowButton_Drop">
                         <Rectangle Width="20" Height="20" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="/Resources/Images/x.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/button_close.png"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>
@@ -301,7 +301,7 @@
                     <Button x:Name="SearchButton" HorizontalAlignment="Right" Margin="0,0,58,0" Style="{StaticResource Task}" Click="SearchButton_Click" ToolTip="搜索">
                         <Rectangle Width="14" Height="14" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>
-                                <!--<ImageBrush ImageSource="/Resources/Images/search.png"/>-->
+                                <!--<ImageBrush ImageSource="/Resources/Images/button_search.png"/>-->
                                 <ImageBrush/>
                             </Rectangle.OpacityMask>
                         </Rectangle>

@@ -46,7 +46,7 @@
                 </Button>
                 <Button Click="PauseShortpad" ToolTip="暂停和恢复Shortpad触发" Style="{StaticResource MenuButton}">
                     <Grid Width="194">
-                        <Image x:Name="pauseShortpad" Source="/Resources/Images/pause.png" Style="{StaticResource MenuButtonImage}" Margin="7,0,7,0"/>
+                        <Image x:Name="pauseShortpad" Source="/Resources/Images/state_pause.png" Style="{StaticResource MenuButtonImage}" Margin="7,0,7,0"/>
                         <TextBlock x:Name="PauseShortpadTextBlock" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>

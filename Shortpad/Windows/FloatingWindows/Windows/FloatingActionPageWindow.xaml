@@ -229,7 +229,7 @@
                     <Button Style="{StaticResource Task}" Click="CloseWindow" ToolTip="关闭面板窗口" HorizontalAlignment="Right" Margin="0,0,3,0">
                         <Rectangle Width="20" Height="20" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="/Resources/Images/x.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/button_close.png"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>

@@ -1209,7 +1209,7 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             double imageSize = buttonSize / 2.0;
             btn.Content = new Image
             {
-                Source = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/Add.png")),
+                Source = new BitmapImage(new Uri("pack://application:,,,/Resources/Images/button_add.png")),
                 Stretch = Stretch.Uniform,
                 Height = imageSize,
                 Width = imageSize,
