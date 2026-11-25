@@ -64,7 +64,7 @@
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
                 <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
             </Style>
-            <Style TargetType="Button">
+            <Style TargetType="{x:Type Button}">
                 <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
                 <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
             </Style>

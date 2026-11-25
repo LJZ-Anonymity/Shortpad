@@ -9,7 +9,7 @@
     <conv:SmartHoverColorConverter x:Key="SmartHoverColorConverter" DarkerFactor="0.8" LighterFactor="1.2"/>
     <conv:LighterColorConverter x:Key="LighterColorConverter" Factor="1.2"/>
 
-    <!-- MainWindow -->    
+    <!-- MainWindow -->
     <!-- 切换动作页面的按钮 -->
     <Style x:Key="ActionPageChangeButton" TargetType="Button">
         <Setter Property="Background" Value="{Binding ToolbarColor, Converter={StaticResource SmartHoverColorConverter}}"/>
@@ -32,49 +32,36 @@
         </Setter>
     </Style>
 
-
-    <!-- AddWindow -->
-    <!--“选择”Button -->
-    <Style x:Key="Select" TargetType="Button">
+    <!-- 基础圆角按钮：默认白底灰边，24×24，圆角由 styles:ButtonStyles.CornerRadius 控制 -->
+    <Style x:Key="BaseRoundedButton" TargetType="Button">
+        <Setter Property="BorderBrush" Value="{DynamicResource WhiteButtonBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource WhiteButtonBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="styles:ButtonStyles.CornerRadius" Value="5"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,0,0,0"/>
-        <Setter Property="Height" Value="28"/>
-        <Setter Property="Width" Value="39"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="White" BorderBrush="#FFD5D5D5" BorderThickness="1" CornerRadius="0,3,3,0">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#F3F3F3"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-    
-    <!-- “选择图片”的按钮样式 -->
-    <Style x:Key="ImageButton" TargetType="Button">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="BorderBrush" Value="{x:Null}"/>
-        <Setter Property="Background" Value="White"/>
         <Setter Property="Margin" Value="0,0,0,0"/>
         <Setter Property="Height" Value="24"/>
         <Setter Property="Width" Value="24"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="White" BorderBrush="White" BorderThickness="1" CornerRadius="3">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
+                    <Border x:Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{Binding Path=(styles:ButtonStyles.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="Center"
+                                          RecognizesAccessKey="True"/>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#FFF3F3F3"/>
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource WhiteButtonHoverBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.55"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -82,8 +69,26 @@
         </Setter>
     </Style>
 
+    <!-- 白色背景，灰色边框圆角Button -->
+    <Style x:Key="WhiteButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
+        <Setter Property="styles:ButtonStyles.CornerRadius" Value="5"/>
+    </Style>
 
-    <!-- SettingWindow -->    
+    <!-- AddWindow -->
+    <!--“选择”Button -->
+    <Style x:Key="Select" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
+        <Setter Property="styles:ButtonStyles.CornerRadius" Value="0,3,3,0"/>
+        <Setter Property="Height" Value="28"/>
+        <Setter Property="Width" Value="39"/>
+    </Style>
+
+    <!-- “选择图片”的按钮样式 -->
+    <Style x:Key="ImageButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
+        <Setter Property="styles:ButtonStyles.CornerRadius" Value="3"/>
+        <Setter Property="BorderThickness" Value="0"/>
+    </Style>
+
+    <!-- SettingWindow -->
     <!-- 设置菜单的Button -->
     <Style x:Key="Button3" TargetType="Button">
         <Setter Property="BorderThickness" Value="0,0,0,1.3"/>
@@ -112,32 +117,16 @@
     </Style>
 
     <!-- 移除黑名单进程的Button -->
-    <Style x:Key="DeleteBlacklistItem" TargetType="Button">
+    <Style x:Key="DeleteBlacklistItem" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
         <Setter Property="HorizontalAlignment" Value="Right"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="{x:Null}"/>
         <Setter Property="ToolTip" Value="删除此应用"/>
+        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Margin" Value="0,0,2,0"/>
         <Setter Property="Height" Value="20"/>
         <Setter Property="Width" Value="20"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="5">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#FFE1E0E0"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
-    
     <!-- ActionPageManageWindow -->
     <!-- 动作 Button -->
     <Style x:Key="ActionButton" TargetType="Button">
@@ -161,21 +150,13 @@
     </Style>
 
     <!-- 动作场景的 Button -->
-    <Style x:Key="SceneButton" TargetType="Button">
-        <Setter Property="Background" Value="White"/>
+    <Style x:Key="SceneButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
+        <Setter Property="styles:ButtonStyles.CornerRadius" Value="4"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="AllowDrop" Value="True"/>
+        <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="36"/>
         <Setter Property="Margin" Value="1"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="4">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
     <!-- 动作页标题的更改动作页的 Button -->
@@ -194,7 +175,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
     <!-- 动作页标题的编辑动作页的 Button -->
     <Style x:Key="ActionPageEditButton" TargetType="Button">
@@ -234,33 +214,8 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-
-    <!-- 下载窗口 -->
-    <!-- 取消下载和清理下载按钮 -->
-    <Style x:Key="DownloadWindowButton" TargetType="Button">
-        <Setter Property="HorizontalAlignment" Value="Right"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="Background" Value="{x:Null}"/>
-        <Setter Property="Height" Value="16"/>
-        <Setter Property="Width" Value="16"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="0">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#EFEFEF"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
     
-    
+
     <!-- 消息弹窗 -->
     <!-- 标题栏关闭窗口按钮 -->
     <Style x:Key="CloseMessageButton" TargetType="Button">
@@ -285,7 +240,6 @@
             </Setter.Value>
         </Setter>
     </Style>
-
 
     <!-- 其他 Button -->
     <!-- 蓝色背景圆角Button -->
@@ -315,63 +269,12 @@
         </Setter>
     </Style>
 
-    <!-- 基础圆角按钮：白底灰边，24×24，圆角由 styles:ButtonStyles.CornerRadius 控制 -->
-    <Style x:Key="BaseRoundedButton" TargetType="Button">
-        <Setter Property="BorderBrush" Value="{DynamicResource WhiteButtonBorderBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource WhiteButtonBrush}"/>
-        <Setter Property="styles:ButtonStyles.CornerRadius" Value="5"/>
-        <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,0,0,0"/>
-        <Setter Property="Height" Value="24"/>
-        <Setter Property="Width" Value="24"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="{Binding Path=(styles:ButtonStyles.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{DynamicResource WhiteButtonHoverBrush}"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Opacity" Value="0.55"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <!-- 白色背景，灰色边框圆角Button -->
-    <Style x:Key="WhiteButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
-        <Setter Property="styles:ButtonStyles.CornerRadius" Value="5"/>
-    </Style>
-
     <!-- “菜单按钮”的按钮样式 -->
-    <Style x:Key="MenuButton" TargetType="Button">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="Background" Value="White"/>
+    <Style x:Key="MenuButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
+        <Setter Property="styles:ButtonStyles.CornerRadius" Value="0"/>
         <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="25"/>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
-                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" RecognizesAccessKey="True"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="#FFEAEAEA"/>
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Opacity" Value="0.55"/>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
     </Style>
 
     <!-- 清空搜索文本框的按钮样式 -->
