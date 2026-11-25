@@ -545,28 +545,28 @@
                             <Button Style="{StaticResource Task}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="58,0,0,0">
                                 <Rectangle Width="16" Height="16" Fill="{Binding ElementName=ToolbarIconColorButton, Path=Background}">
                                     <Rectangle.OpacityMask>
-                                        <ImageBrush ImageSource="/Resources/Images/SettingImage2.png"/>
+                                        <ImageBrush ImageSource="/Resources/Images/window_settings.png"/>
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>
                             <Button x:Name="ActionPageManager" Style="{StaticResource Task}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="82,0,0,0">
                                 <Rectangle Width="16" Height="16" Fill="{Binding ElementName=ToolbarIconColorButton, Path=Background}">
                                     <Rectangle.OpacityMask>
-                                        <ImageBrush ImageSource="/Resources/Images/MoreSelection.png"/>
+                                        <ImageBrush ImageSource="/Resources/Images/button_more.png"/>
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>
                             <Button Style="{StaticResource Task}" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,26,0">
                                 <Rectangle Width="20" Height="20" Fill="{Binding ElementName=ToolbarIconColorButton, Path=Background}">
                                     <Rectangle.OpacityMask>
-                                        <ImageBrush ImageSource="/Resources/Images/UnpinFromDesktop.png"/>
+                                        <ImageBrush ImageSource="/Resources/Images/button_unpin_from_desktop.png"/>
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>
                             <Button Style="{StaticResource Task}" HorizontalAlignment="Right" Margin="0,0,3,0">
                                 <Rectangle Width="20" Height="20" Fill="{Binding ElementName=ToolbarIconColorButton, Path=Background}">
                                     <Rectangle.OpacityMask>
-                                        <ImageBrush ImageSource="/Resources/Images/CloseWindow.png"/>
+                                        <ImageBrush ImageSource="/Resources/Images/x.png"/>
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>
@@ -630,7 +630,7 @@
                             <Button Style="{StaticResource Task}" HorizontalAlignment="Right" Margin="0,0,34,0">
                                 <Rectangle Width="14" Height="14" Fill="{Binding ElementName=ToolbarIconColorButton, Path=Background}">
                                     <Rectangle.OpacityMask>
-                                        <ImageBrush ImageSource="/Resources/Images/UnLocked.png"/>
+                                        <ImageBrush ImageSource="/Resources/Images/scene_locked.png"/>
                                     </Rectangle.OpacityMask>
                                 </Rectangle>
                             </Button>

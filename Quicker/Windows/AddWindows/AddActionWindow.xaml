@@ -27,19 +27,19 @@
         <ComboBox x:Name="ChoiceComboBox" HorizontalAlignment="Left" Margin="162,40,0,0" VerticalAlignment="Top" Width="270" SelectedIndex="0" BorderBrush="#FFFBFBFB" Height="26" Background="White" SelectionChanged="ChoiceComboBox_SelectionChanged" VerticalContentAlignment="Center">
             <ComboBoxItem>
                 <Grid>
-                    <Image Source="/Resources/Images/OpenFileImage.png" Style="{StaticResource MenuButtonImage}"/>
+                    <Image Source="/Resources/Images/action_run.png" Style="{StaticResource MenuButtonImage}"/>
                     <TextBlock Text="运行程序或打开文件" Margin="25,0" VerticalAlignment="Center"/>
                 </Grid>
             </ComboBoxItem>
             <ComboBoxItem>
                 <Grid>
-                    <Image Source="/Resources/Images/OpenWebsiteImage.png" Style="{StaticResource MenuButtonImage}"/>
+                    <Image Source="/Resources/Images/action_open_web.png" Style="{StaticResource MenuButtonImage}"/>
                     <TextBlock Text="打开网址" Margin="25,0" VerticalAlignment="Center"/>
                 </Grid>
             </ComboBoxItem>
             <ComboBoxItem>
                 <Grid>
-                    <Image Source="/Resources/Images/Quicker_Enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                    <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                     <TextBlock Text="加载扩展" Margin="25,0" VerticalAlignment="Center"/>
                 </Grid>
             </ComboBoxItem>
@@ -72,13 +72,13 @@
         </Button>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="553,103,0,0">
             <Button Style="{StaticResource ImageButton}" ToolTip="选择已有图标" Click="ManageLocalIcons">
-                <Image/>
+                <Image Source="/Resources/Images/button_select_local_image.png"/>
             </Button>
             <Button Style="{StaticResource ImageButton}" ToolTip="修改图标" Click="ModifyImage">
                 <Image/>
             </Button>
             <Button Style="{StaticResource ImageButton}" ToolTip="去除图标" Click="DeleteImage">
-                <Image Source="/Resources/Images/DeleteImage.png"/>
+                <Image Source="/Resources/Images/x.png"/>
             </Button>
         </StackPanel>
         <Grid x:Name="ActionInfoGrid" Margin="0,66,207,80" Panel.ZIndex="-1"/>

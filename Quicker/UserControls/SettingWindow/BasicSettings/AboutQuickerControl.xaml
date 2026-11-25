@@ -24,7 +24,7 @@
                 <ColumnDefinition Width="647*"/>
                 <ColumnDefinition Width="300*"/>
             </Grid.ColumnDefinitions>
-            <Image HorizontalAlignment="Left" Height="48" Margin="4,12,0,0" VerticalAlignment="Top" Width="48" Source="/Resources/Images/Quicker_Enabled.png"/>
+            <Image HorizontalAlignment="Left" Height="48" Margin="4,12,0,0" VerticalAlignment="Top" Width="48" Source="/Resources/Images/app_enabled.png"/>
             <Label Content="Quicker" HorizontalAlignment="Left" Margin="57,16,0,0" VerticalAlignment="Top" FontSize="24" FontWeight="Bold"/>
             <Label x:Name="VersionLabel" Content="版本：" HorizontalAlignment="Left" Margin="4,65,0,0" VerticalAlignment="Top" FontSize="16"/>
             <TextBlock x:Name="UpdateHistory" Style="{StaticResource HoverTextBlock}" Text="更新历史" Margin="109,70,0,0" FontSize="16" MouseLeftButtonDown="OpenUpdateHistory">

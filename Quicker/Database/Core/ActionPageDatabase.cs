@@ -67,10 +67,10 @@ namespace Quicker.Database.Core
         {
             public static readonly Dictionary<string, (string Process, string ActionPageName, string IconPath, string Tag)> Configs = new()
             {
-                ["_global"] = ("Default", "默认全局动作页", "/Resources/Images/GlobalSceneImage.png", "_global"),
-                ["common"] = ("Default", "默认", "/Resources/Images/CommonSceneImage.png", "common"),
-                ["desktop"] = ("Windows桌面", "桌面", "/Resources/Images/DesktopSceneImage.png", "desktop"),
-                ["taskbar"] = ("Windows任务栏", "任务栏", "/Resources/Images/TaskbarSceneImage.png", "taskbar")
+                ["_global"] = ("Default", "默认全局动作页", "/Resources/Images/scene_global.png", "_global"),
+                ["common"] = ("Default", "默认", "/Resources/Images/scene_common.png", "common"),
+                ["desktop"] = ("Windows桌面", "桌面", "/Resources/Images/scene_desktop.png", "desktop"),
+                ["taskbar"] = ("Windows任务栏", "任务栏", "/Resources/Images/scene_taskbar.png", "taskbar")
             };
         }
 

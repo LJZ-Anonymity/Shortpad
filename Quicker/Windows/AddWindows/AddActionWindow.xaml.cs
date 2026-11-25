@@ -24,9 +24,9 @@ namespace Quicker.Windows.AddWindows
 {
     public partial class AddActionWindow : Window
     {
-        private const string OPEN_FILE_IMAGE_PATH = "pack://application:,,,/Resources/Images/OpenFileImage.png";
-        private const string OPEN_WEBSITE_IMAGE_PATH = "pack://application:,,,/Resources/Images/OpenWebSiteImage.png";
-        private const string DEFAULT_IMAGE_PATH = "pack://application:,,,/Resources/Images/Quicker_Enabled.png";
+        private const string OPEN_FILE_IMAGE_PATH = "pack://application:,,,/Resources/Images/action_run.png";
+        private const string OPEN_WEBSITE_IMAGE_PATH = "pack://application:,,,/Resources/Images/action_open_web.png";
+        private const string DEFAULT_IMAGE_PATH = "pack://application:,,,/Resources/Images/app_enabled.png";
 
         private readonly ActionManager actionManager = new();
         private readonly ButtonManager buttonManager = new();

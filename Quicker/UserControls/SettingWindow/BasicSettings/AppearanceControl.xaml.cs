@@ -580,7 +580,7 @@ namespace Quicker.UserControls.SettingWindow.BasicSettings
                 ButtonID = 11,
                 Title = "Quicker",
                 Location = "",
-                ImagePath = "pack://application:,,,/Resources/Images/Quicker_Enabled.png",
+                ImagePath = "pack://application:,,,/Resources/Images/app_enabled.png",
                 Data1 = "",
                 Data2 = "",
                 Data3 = "",
@@ -911,7 +911,7 @@ namespace Quicker.UserControls.SettingWindow.BasicSettings
             }
             else
             {
-                var resourceUri = new Uri("pack://application:,,,/Resources/Images/Quicker_Enabled.png");
+                var resourceUri = new Uri("pack://application:,,,/Resources/Images/app_enabled.png");
                 var streamInfo = Application.GetResourceStream(resourceUri);
                 string tempPath = Path.Combine(Path.GetTempPath(), $"QuickerTemp_{Guid.NewGuid()}.png");
                 _tempFiles.Add(tempPath);

@@ -102,7 +102,7 @@
                     <Button x:Name="BlacklistDragButton" Style="{StaticResource WhiteButton}" ToolTip="点击或按住拖动。点击进入选择模式时可最小化当前窗口。" HorizontalAlignment="Left" Margin="4,199,0,0" VerticalAlignment="Top" Width="204" Height="27" Click="BlacklistDragButton_Click">
                         <Grid Width="204">
                             <TextBlock Text="拖动到要禁用Quicker的窗口上" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="12" Margin="30,0,0,0"/>
-                            <Image Source="/Resources/Images/Target.png" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0" Height="18" Width="18"/>
+                            <Image Source="/Resources/Images/pick_window.png" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0" Height="18" Width="18"/>
                         </Grid>
                     </Button>
                     <Button x:Name="BlacklistAddButton" Content="添加..." Style="{StaticResource WhiteButton}" ToolTip="增加特殊的应用" HorizontalAlignment="Left" Margin="216,199,0,0" VerticalAlignment="Top" Width="57" Height="27" Click="BlacklistAddButton_Click"/>

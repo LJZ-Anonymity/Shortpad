@@ -6,11 +6,11 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>True</UseWPF>
-		<ApplicationIcon>Quicker.ico</ApplicationIcon>
+		<ApplicationIcon>icon.ico</ApplicationIcon>
 		<SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<UseWindowsForms>False</UseWindowsForms>
-		<PackageIcon>Quicker_Enabled.png</PackageIcon>
+		<PackageIcon>app_enabled.png</PackageIcon>
 		<NeutralLanguage>zh-CN</NeutralLanguage>
 		<EnableNETAnalyzers>True</EnableNETAnalyzers>
 		<RunAnalyzersDuringLiveAnalysis>True</RunAnalyzersDuringLiveAnalysis>
@@ -80,7 +80,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Content Include="Quicker.ico" />
+		<Content Include="icon.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -115,7 +115,7 @@
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
-		<None Update="Resources\Images\Quicker_Enabled.png">
+		<None Update="Resources\Images\app_enabled.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>

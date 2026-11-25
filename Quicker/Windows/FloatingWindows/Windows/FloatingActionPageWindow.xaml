@@ -24,8 +24,8 @@
 >
     <Window.Resources>
         <!-- 图片资源 -->
-        <ImageSource x:Key="UnpinFromDesktopSource">pack://application:,,,/Resources/Images/UnpinFromDesktop.png</ImageSource>
-        <ImageSource x:Key="PinToDesktopSource">pack://application:,,,/Resources/Images/PinToDesktop.png</ImageSource>
+        <ImageSource x:Key="button_unpin_from_desktop.pngSource">pack://application:,,,/Resources/Images/button_unpin_from_desktop.png</ImageSource>
+        <ImageSource x:Key="PinToDesktopSource">pack://application:,,,/Resources/Images/button_pin_to_desktop.png</ImageSource>
         <!-- 转换器 -->
         <conv:SmartHoverColorConverter x:Key="SmartHoverColorConverter" DarkerFactor="0.8" LighterFactor="1.2"/>
         <conv:IntToCornerRadiusConverter x:Key="IntToCornerRadiusConverter"/>
@@ -210,7 +210,7 @@
                                 <Style TargetType="Rectangle">
                                     <Setter Property="OpacityMask">
                                         <Setter.Value>
-                                            <ImageBrush ImageSource="{StaticResource UnpinFromDesktopSource}"/>
+                                            <ImageBrush ImageSource="{StaticResource button_unpin_from_desktop.pngSource}"/>
                                         </Setter.Value>
                                     </Setter>
                                     <Style.Triggers>
@@ -229,7 +229,7 @@
                     <Button Style="{StaticResource Task}" Click="CloseWindow" ToolTip="关闭面板窗口" HorizontalAlignment="Right" Margin="0,0,3,0">
                         <Rectangle Width="20" Height="20" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="/Resources/Images/CloseWindow.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/x.png"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>

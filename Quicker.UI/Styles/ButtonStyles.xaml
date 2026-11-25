@@ -271,7 +271,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Image Source="/Resources/Images/Quicker_Enabled.png" Margin="1"/>
+                    <Image Source="/Resources/Images/app_enabled.png" Margin="1"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -289,7 +289,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Image Source="/Resources/Images/Quicker_Enabled.png" Margin="1"/>
+                    <Image Source="/Resources/Images/app_enabled.png" Margin="1"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -462,7 +462,7 @@
                     <Border x:Name="border" Background="{x:Null}" BorderThickness="0" CornerRadius="5">
                         <Rectangle Width="16" Height="16" Fill="#FFABADB3">
                             <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="/Resources/Images/CloseWindow.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/x.png"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Border>

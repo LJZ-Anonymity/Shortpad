@@ -28,10 +28,10 @@
         <!-- 动态页面切换按钮颜色 -->
         <SolidColorBrush x:Key="UnSelectedBrush" Color="{Binding ToolbarColor, Converter={StaticResource SmartHoverColorConverter}, Mode=OneWay}"/>
         <!-- 图片资源 -->
-        <BitmapImage x:Key="UnpinFromDesktopSource" UriSource="pack://application:,,,/Resources/Images/UnpinFromDesktop.png"/>
-        <BitmapImage x:Key="PinToDesktopSource" UriSource="pack://application:,,,/Resources/Images/PinToDesktop.png"/>
-        <BitmapImage x:Key="UnLockIconSource" UriSource="pack://application:,,,/Resources/Images/UnLocked.png"/>
-        <BitmapImage x:Key="LockIconSource" UriSource="pack://application:,,,/Resources/Images/Locked.png"/>
+        <BitmapImage x:Key="button_unpin_from_desktop.pngSource" UriSource="pack://application:,,,/Resources/Images/button_unpin_from_desktop.png"/>
+        <BitmapImage x:Key="PinToDesktopSource" UriSource="pack://application:,,,/Resources/Images/button_pin_to_desktop.png"/>
+        <BitmapImage x:Key="UnLockIconSource" UriSource="pack://application:,,,/Resources/Images/scene_unlocked.png"/>
+        <BitmapImage x:Key="LockIconSource" UriSource="pack://application:,,,/Resources/Images/scene_locked.png"/>
         <!-- 转换器 -->
         <conv:SmartHoverColorConverter x:Key="SmartHoverColorConverter" DarkerFactor="0.8" LighterFactor="1.2"/>
         <conv:PathToImageSourceConverter x:Key="PathToImageSourceConverter"/>
@@ -202,14 +202,14 @@
                     <Button Style="{StaticResource Task}" Click="OpenSettingWindow" ToolTip="打开设置窗口" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="58,0,0,0">
                         <Rectangle Width="16" Height="16" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="/Resources/Images/SettingImage2.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/window_settings.png"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>
                     <Button x:Name="ActionPageManager" Style="{StaticResource Task}" Click="OpenTitleMenu" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="82,0,0,0">
                         <Rectangle Width="16" Height="16" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="/Resources/Images/MoreSelection.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/button_more.png"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>
@@ -224,14 +224,14 @@
                                 <StackPanel>
                                     <Button Style="{StaticResource MenuButton}" ToolTip="为应用程序创建场景设置，管理动作页" Click="OpenActionPageManageWindow">
                                         <Grid Width="176">
-                                            <Image Source="/Resources/Images/ActionPagesManager.jpg" Style="{StaticResource SelectButtonImage}"/>
+                                            <Image Source="/Resources/Images/scene_actions.png" Style="{StaticResource SelectButtonImage}"/>
                                             <TextBlock Text="场景与动作" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                         </Grid>
                                     </Button>
                                     <Rectangle Height="1" Width="176" Fill="#FFF0F0F0" Margin="0,3"/>
                                     <Button Style="{StaticResource MenuButton}" ToolTip="关闭Quicker软件" Click="QuitQuicker">
                                         <Grid Width="176">
-                                            <Image Source="/Resources/Images/CloseQuicker.png" Style="{StaticResource SelectButtonImage}"/>
+                                            <Image Source="/Resources/Images/menu_quit_app.png" Style="{StaticResource SelectButtonImage}"/>
                                             <TextBlock Text="退出" TextAlignment="Left" Margin="26,0,0,0" FontSize="13" VerticalAlignment="Center"/>
                                         </Grid>
                                     </Button>
@@ -254,7 +254,7 @@
                                 <Style TargetType="Rectangle">
                                     <Setter Property="OpacityMask">
                                         <Setter.Value>
-                                            <ImageBrush ImageSource="{StaticResource UnpinFromDesktopSource}"/>
+                                            <ImageBrush ImageSource="{StaticResource button_unpin_from_desktop.pngSource}"/>
                                         </Setter.Value>
                                     </Setter>
                                     <Style.Triggers>
@@ -273,7 +273,7 @@
                     <Button Style="{StaticResource Task}" Click="HideMainWindow" ToolTip="关闭面板窗口" HorizontalAlignment="Right" Margin="0,0,3,0" AllowDrop="True" Drop="CloseMainWindowButton_Drop">
                         <Rectangle Width="20" Height="20" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>
-                                <ImageBrush ImageSource="/Resources/Images/CloseWindow.png"/>
+                                <ImageBrush ImageSource="/Resources/Images/x.png"/>
                             </Rectangle.OpacityMask>
                         </Rectangle>
                     </Button>
@@ -301,7 +301,7 @@
                     <Button x:Name="SearchButton" HorizontalAlignment="Right" Margin="0,0,58,0" Style="{StaticResource Task}" Click="SearchButton_Click" ToolTip="搜索">
                         <Rectangle Width="14" Height="14" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
                             <Rectangle.OpacityMask>
-                                <!--<ImageBrush ImageSource="/Resources/Images/Search.png"/>-->
+                                <!--<ImageBrush ImageSource="/Resources/Images/search.png"/>-->
                                 <ImageBrush/>
                             </Rectangle.OpacityMask>
                         </Rectangle>

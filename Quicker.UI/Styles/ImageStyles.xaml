@@ -49,7 +49,7 @@
 
     <!-- 黑名单项删除图标 -->
     <Style x:Key="BlacklistItemDeleteIcon" TargetType="Image">
-        <Setter Property="Source" Value="/Resources/Images/DeleteImage.png"/>
+        <Setter Property="Source" Value="/Resources/Images/x.png"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Height" Value="20"/>

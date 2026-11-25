@@ -13,8 +13,8 @@ namespace Quicker.UserControls.SettingWindow.BasicSettings
 {
     public partial class ConventionControl : UserControl, INotifyPropertyChanged
     {
-        private const string DefaultTrayIconPathRunning = "pack://application:,,,/Resources/Images/Quicker_Enabled.png"; // 运行时托盘图标路径
-        private const string DefaultTrayIconPathPaused = "pack://application:,,,/Resources/Images/Quicker_Disabled.png"; // 暂停时托盘图标路径
+        private const string DefaultTrayIconPathRunning = "pack://application:,,,/Resources/Images/app_enabled.png"; // 运行时托盘图标路径
+        private const string DefaultTrayIconPathPaused = "pack://application:,,,/Resources/Images/app_disabled.png"; // 暂停时托盘图标路径
         private WeakReference<Quicker.Windows.MainWindows.SettingWindow> weakSettingWindow; // 弱引用设置窗口
         private double currentSessionTime; // 当次应用使用时长
         SettingManager settingManager; // 设置管理器

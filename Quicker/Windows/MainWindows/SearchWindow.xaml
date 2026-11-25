@@ -22,8 +22,8 @@
 >
     <Window.Resources>
         <!-- 图片资源 -->
-        <BitmapImage x:Key="UnpinFromDesktopSource" UriSource="pack://application:,,,/Resources/Images/UnpinFromDesktop.png"/>
-        <BitmapImage x:Key="PinToDesktopSource" UriSource="pack://application:,,,/Resources/Images/PinToDesktop.png"/>
+        <BitmapImage x:Key="button_unpin_from_desktop.pngSource" UriSource="pack://application:,,,/Resources/Images/button_unpin_from_desktop.png"/>
+        <BitmapImage x:Key="PinToDesktopSource" UriSource="pack://application:,,,/Resources/Images/button_pin_to_desktop.png"/>
         <!-- 按钮样式 -->
         <Style x:Key="SearchButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
@@ -66,7 +66,7 @@
                             <ControlTemplate TargetType="Button">
                                 <!-- 命名Border并设置初始背景 -->
                                 <Border x:Name="Border" CornerRadius="4" Background="{TemplateBinding Background}">
-                                    <Image x:Name="IconImage" Source="{StaticResource UnpinFromDesktopSource}" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Image x:Name="IconImage" Source="{StaticResource button_unpin_from_desktop.pngSource}" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
                                     <DataTrigger Binding="{Binding IsPinned, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
@@ -87,7 +87,7 @@
                         <StackPanel x:Name="stackPanel">
                             <Button x:Name="RunasCommandButton" Style="{StaticResource SearchButtonStyle}" Click="RunasCommandButton_Click" Visibility="Collapsed">
                                 <Grid>
-                                    <Image Source="/Resources/Images/Quicker_Enabled.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="38" Width="36" Margin="10,0,0,0"/>
+                                    <Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="38" Width="36" Margin="10,0,0,0"/>
                                     <TextBlock Text="作为命令运行" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="51,8,0,0"/>
                                     <TextBlock Text="运行命令" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="51,0,0,9" FontSize="10" Foreground="LightGray"/>
                                     <TextBlock Text="{Binding Text, ElementName=SearchBox, Mode=OneWay}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="96,0,0,9" FontSize="10" Foreground="LightGray"/>
@@ -95,7 +95,7 @@
                             </Button>
                             <Button x:Name="OpenUrlCommandButton" Style="{StaticResource SearchButtonStyle}" Click="OpenUrlCommandButton_Click" Visibility="Collapsed">
                                 <Grid>
-                                    <Image Source="/Resources/Images/Quicker_Enabled.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="36" Width="36" Margin="10,0,0,0"/>
+                                    <Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Left" VerticalAlignment="Center" Height="36" Width="36" Margin="10,0,0,0"/>
                                     <TextBlock Text="打开网址" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="51,8,0,0"/>
                                     <TextBlock x:Name="OpenUrlCommandButton_Text" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="51,0,0,9" FontSize="10" Foreground="LightGray"/>
                                     <TextBlock x:Name="OpenUrlCommandButton_Title" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="120,8,0,0" FontSize="16"/>

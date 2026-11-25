@@ -375,7 +375,7 @@ namespace Quicker.Windows.MainWindows
         /// <param name="sceneData"> 场景数据 </param>
         private Image CreateSceneImage(SceneData sceneData)
         {
-            const string defaultImagePath = "pack://application:,,,/Resources/Images/Quicker_Enabled.png";
+            const string defaultImagePath = "pack://application:,,,/Resources/Images/app_enabled.png";
             const string resourcePrefix = "/Resources/Images/";
             const string packPrefix = "pack://application:,,,";
             try // 如果场景图标路径为空则使用默认图片，否则尝试加载指定图片

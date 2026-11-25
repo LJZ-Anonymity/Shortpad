@@ -8,7 +8,7 @@
     x:Class="Quicker.Windows.MainWindows.SettingWindow"
     mc:Ignorable="d"
 
-    Icon="/Resources/Images/SettingWindow.png"
+    Icon="/Resources/Images/window_settings.png"
     WindowStartupLocation="CenterScreen"
     Title="Quicker设置"
     MinWidth="863"
@@ -78,13 +78,13 @@
         <!-- 侧边栏1 -->
         <StackPanel x:Name="MainStackPanel" Background="{DynamicResource MainStackPanelBrush}" Width="49" HorizontalAlignment="Center">
             <RadioButton x:Name="BasicSettings" Style="{StaticResource Button1}" ToolTip="基础设置" Click="BasicSettings_Click">
-                <Image Source="/Resources/Images/BasicSettingsButton.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
+                <Image Source="/Resources/Images/settings_tab_basic.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
             </RadioButton>
             <RadioButton Visibility="Collapsed" x:Name="Auxiliary_Functions" Style="{StaticResource Button1}" ToolTip="辅助功能" Click="Auxiliary_Functions_Click">
-                <!--<Image Source="/Resources/Images/Quicker_Enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>-->
+                <!--<Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>-->
             </RadioButton>
             <RadioButton x:Name="Tools" Style="{StaticResource Button1}" ToolTip="工具" Click="Tools_Click">
-                <Image Source="/Resources/Images/Quicker_Enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
+                <Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
             </RadioButton>
         </StackPanel>
         <!-- 侧边栏2 -->
@@ -122,18 +122,18 @@
             </Grid>
             <!-- 基础设置 -->
             <StackPanel x:Name="BasicSettingsStackPanel" Visibility="Visible" Width="192" Margin="0,60,0,0">
-                <RadioButton x:Name="Convention" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="自动启动、鼠标挂钩、版本等" Content="常规" ctl:SideBarButton.Icon="/Resources/Images/SettingImage2.png" Click="Convention_Click"/>
-                <RadioButton x:Name="OpenMainWindow" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="面板弹出方式" Content="弹出面板" ctl:SideBarButton.Icon="/Resources/Images/OpenMainWindow2.png" Click="OpenMainWindow_Click"/>
-                <RadioButton Visibility="Collapsed" x:Name="FunctionShortcutKeys" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="Quicker功能快捷键" Content="功能快捷键" ctl:SideBarButton.Icon="/Resources/Images/Quicker_Enabled.png" Click="FunctionShortcutKeys_Click"/>
-                <RadioButton x:Name="Blacklist" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="在某些应用上停止使用Quicker" Content="黑名单" ctl:SideBarButton.Icon="/Resources/Images/BlackList.png" Click="Blacklist_Click"/>
-                <RadioButton x:Name="Appearance" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="颜色、字体等样式设置" Content="外观" ctl:SideBarButton.Icon="/Resources/Images/Quicker_Enabled.png" Click="Appearance_Click"/>
-                <RadioButton x:Name="AboutQuicker" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="应用等相关信息" Content="关于Quicker" ctl:SideBarButton.Icon="/Resources/Images/AboutQuicker.png" Click="AboutQuicker_Click"/>
+                <RadioButton x:Name="Convention" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="自动启动、鼠标挂钩、版本等" Content="常规" ctl:SideBarButton.Icon="/Resources/Images/window_settings.png" Click="Convention_Click"/>
+                <RadioButton x:Name="OpenMainWindow" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="面板弹出方式" Content="弹出面板" ctl:SideBarButton.Icon="/Resources/Images/settings_tab_main_window.png" Click="OpenMainWindow_Click"/>
+                <RadioButton Visibility="Collapsed" x:Name="FunctionShortcutKeys" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="Quicker功能快捷键" Content="功能快捷键" ctl:SideBarButton.Icon="/Resources/Images/app_enabled.png" Click="FunctionShortcutKeys_Click"/>
+                <RadioButton x:Name="Blacklist" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="在某些应用上停止使用Quicker" Content="黑名单" ctl:SideBarButton.Icon="/Resources/Images/settings_tab_blacklist.png" Click="Blacklist_Click"/>
+                <RadioButton x:Name="Appearance" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="颜色、字体等样式设置" Content="外观" ctl:SideBarButton.Icon="/Resources/Images/app_enabled.png" Click="Appearance_Click"/>
+                <RadioButton x:Name="AboutQuicker" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="应用等相关信息" Content="关于Quicker" ctl:SideBarButton.Icon="/Resources/Images/icon_info.png" Click="AboutQuicker_Click"/>
             </StackPanel>
             <!-- 辅助功能 -->
             <StackPanel x:Name="Auxiliary_FunctionsStackPanel" Margin="0,60,0,0" Visibility="Hidden"/>
             <!-- 工具 -->
             <StackPanel x:Name="ToolsStackPanel" Width="192" Margin="0,60,0,0" Visibility="Hidden">
-                <RadioButton x:Name="ManageExtensions" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="进行扩展管理" Content="管理扩展" ctl:SideBarButton.Icon="/Resources/Images/Quicker_Enabled.png" Click="ManageExtensions_Click"/>
+                <RadioButton x:Name="ManageExtensions" GroupName="Menu2" Style="{StaticResource Button2}" ToolTip="进行扩展管理" Content="管理扩展" ctl:SideBarButton.Icon="/Resources/Images/app_enabled.png" Click="ManageExtensions_Click"/>
             </StackPanel>
         </Grid>
         <!-- 设置菜单 -->

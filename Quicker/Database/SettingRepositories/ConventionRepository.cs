@@ -29,7 +29,7 @@ namespace Quicker.Database.SettingRepositories
         private static void InsertDefaultConventionData()
         {
             using var connection = OpenConnection(); // 打开数据库连接
-            var defaults = (false, true, true, 0.0, false, 300, 50, true, false, 111, true, "pack://application:,,,/Resources/Images/Quicker_Enabled.png", "pack://application:,,,/Resources/Images/Quicker_Disabled.ico", true, false); // 使用参数元组封装默认值
+            var defaults = (false, true, true, 0.0, false, 300, 50, true, false, 111, true, "pack://application:,,,/Resources/Images/app_enabled.png", "pack://application:,,,/Resources/Images/app_disabled.png", true, false); // 使用参数元组封装默认值
             var parameters = new Dictionary<string, object>
             {
                 ["@AutoStart"] = defaults.Item1,
