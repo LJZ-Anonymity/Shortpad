@@ -347,7 +347,8 @@ namespace Shortpad.Windows.MainWindows
             var button = new Button()
             {
                 Style = (Style)FindResource("SceneButton"), // 应用样式
-                Name = sceneData.SceneTag
+                Name = sceneData.SceneTag,
+                AllowDrop = true
             };
             Grid buttonContent = CreateButtonContent(sceneData, filter); // 使用模块化方法创建按钮内容
             button.Content = buttonContent; // 设置按钮内容
@@ -472,13 +473,75 @@ namespace Shortpad.Windows.MainWindows
         private void SetupButtonEvents(Button button)
         {
             button.MouseDoubleClick += EditSceneButton_Click; // 双击编辑场景信息
-            button.DragEnter += ChangeSceneButtonBackground; // 设置拖拽事件
-            button.DragLeave += ResetSceneButtonBackground; // 还原背景色
+            button.DragEnter += SceneButton_DragEnterTrigger; // 拖拽进入触发高亮
+            button.DragLeave += SceneButton_DragLeaveTrigger; // 拖拽离开恢复背景
             button.MouseRightButtonDown += OpenContextMenu; // 右键菜单
             button.MouseEnter += HightLightBlacklistItem; // 鼠标移入高亮显示
+            button.DragOver += SceneButton_DragOver; // 控制拖拽是否允许放置
             button.Click += ChanceSceneButton_Click; // 设置按钮点击事件
             button.MouseLeave += FadeBlacklistItem; // 鼠标移出恢复原状
             button.Drop += ChangeActionPageScene; // 设置拖拽事件
+        }
+
+        // 拖拽进入触发器
+        private void SceneButton_DragEnterTrigger(object sender, DragEventArgs e)
+            => TriggerSceneButtonDragState(sender as Button, isDragEnter: true);
+
+        // 拖拽离开触发器
+        private void SceneButton_DragLeaveTrigger(object sender, DragEventArgs e)
+            => TriggerSceneButtonDragState(sender as Button, isDragEnter: false);
+
+        // 统一触发场景按钮拖拽视觉状态
+        private void TriggerSceneButtonDragState(Button button, bool isDragEnter)
+        {
+            if (button == null || button.Name == type) return;
+
+            if (isDragEnter)
+            {
+                var targetSceneData = db3.GetSceneData(button.Name);
+                if (targetSceneData != null && targetSceneData.SceneCount >= 10) return;
+
+                button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E9E9E9"));
+            }
+            else
+            {
+                button.Background = Brushes.Transparent;
+            }
+        }
+
+        private void SceneButton_DragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+
+            if (sender is not Button button)
+            {
+                e.Effects = DragDropEffects.None;
+                return;
+            }
+
+            var targetSceneData = db3.GetSceneData(button.Name);
+            if (button.Name == type || (targetSceneData != null && targetSceneData.SceneCount >= 10))
+            {
+                e.Effects = DragDropEffects.None;
+                return;
+            }
+
+            if (e.Data.GetDataPresent(ButtonManager.ButtonDataFormat))
+            {
+                e.Effects = DragDropEffects.Move;
+            }
+            else if (e.Data.GetDataPresent(typeof(ButtonData)))
+            {
+                e.Effects = App.GetCtrlKeyState() ? DragDropEffects.Copy : DragDropEffects.Move;
+            }
+            else if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effects = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effects = DragDropEffects.None;
+            }
         }
 
         // 右键打开菜单
@@ -488,37 +551,6 @@ namespace Shortpad.Windows.MainWindows
             if(new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(button.Name)) return; // 禁止编辑默认场景
             EditSceneMenu editSceneMenu = new(button.Name); // 创建菜单
             editSceneMenu.Show(); // 显示菜单
-        }
-
-        // 设置场景按钮背景色
-        private void ChangeSceneButtonBackground(object sender, DragEventArgs e)
-        {
-            Button button = sender as Button; // 转换为按钮
-            if (button.Name == type)
-                button.AllowDrop = false; // 不允许拖拽
-            else
-                button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E9E9E9")); // 设置按钮背景色
-
-            var targetSceneData = db3.GetSceneData(button.Name); // 获取目标场景数据
-            if (targetSceneData != null && targetSceneData.SceneCount == 10)
-            {
-                button.AllowDrop = false; // 不允许拖拽
-            }
-        }
-
-        // 还原背景色
-        private void ResetSceneButtonBackground(object sender, DragEventArgs e)
-        {
-            Button button = sender as Button; // 转换为按钮
-            if (button.Name != type)
-            {
-                button.Background = Brushes.Transparent; // 还原背景色
-                var targetSceneData = db3.GetSceneData(button.Name); // 添加场景数量检查，只有未达到上限时才允许拖拽
-                if (targetSceneData != null && targetSceneData.SceneCount < 10)
-                {
-                    button.AllowDrop = true; // 允许拖拽
-                }
-            }
         }
 
         // 设置场景标题
@@ -1370,12 +1402,13 @@ namespace Shortpad.Windows.MainWindows
                 {
                     // 解绑所有事件
                     button.MouseDoubleClick -= EditSceneButton_Click;
-                    button.DragEnter -= ChangeSceneButtonBackground;
-                    button.DragLeave -= ResetSceneButtonBackground;
+                    button.DragEnter -= SceneButton_DragEnterTrigger;
+                    button.DragLeave -= SceneButton_DragLeaveTrigger;
                     button.MouseRightButtonDown -= OpenContextMenu;
                     button.MouseEnter -= HightLightBlacklistItem;
-                    button.MouseLeave -= FadeBlacklistItem;
+                    button.DragOver -= SceneButton_DragOver;
                     button.Click -= ChanceSceneButton_Click;
+                    button.MouseLeave -= FadeBlacklistItem;
                     button.Drop -= ChangeActionPageScene;
 
                     // 清理按钮资源

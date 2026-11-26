@@ -36,6 +36,7 @@ namespace Shortpad.Managers
         public const double ManageWindowTitleMaxWidth = 60;
 
         public bool isClosing = false, isDragging, shouldHideTooltip;
+        public const string ButtonDataFormat = "ButtonData";
         private readonly IconManager iconManager = new();
         private readonly ButtonDatabase db2 = new();
         private Point initialMousePosition;
@@ -65,7 +66,11 @@ namespace Shortpad.Managers
             bool isCtrlPressed = App.GetCtrlKeyState();
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
-                e.Effects = button.Tag == null ? DragDropEffects.Copy : DragDropEffects.None;
+                e.Effects = button?.Tag == null ? DragDropEffects.Copy : DragDropEffects.None;
+            }
+            else if (e.Data.GetDataPresent(ButtonDataFormat))
+            {
+                e.Effects = DragDropEffects.Move;
             }
             else if (e.Data.GetDataPresent(typeof(ButtonData)))
             {
@@ -83,7 +88,7 @@ namespace Shortpad.Managers
         public void Button_Drop(object sender, DragEventArgs e, double buttonSize, double titleMaxWidth, string tableName)
         {
             Button TargetButton = sender as Button;
-            if (TargetButton == SourceButton) return;
+            if (TargetButton == null || TargetButton == SourceButton) return;
             if (e.Data.GetDataPresent(typeof(ButtonData)))
                 ProcessButtonDrop(TargetButton, SourceTableName, tableName, buttonSize, titleMaxWidth);
             else if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -593,8 +598,8 @@ namespace Shortpad.Managers
                     else
                     {
                         string buttonName = button.Name;
-                        DataObject data = new DataObject();
-                        data.SetData("ButtonData", buttonName);
+                        DataObject data = new();
+                        data.SetData(ButtonDataFormat, buttonName);
                         DragDrop.DoDragDrop(button, data, DragDropEffects.Move);
                     }
                 }
