@@ -73,20 +73,17 @@
             <GroupBox Header="第三方组件" Style="{StaticResource SettingGroupBox}" Margin="10,10,0,0" Grid.Column="1">
                 <Grid>
                     <Button x:Name="ViewOpenSourceButton" Style="{StaticResource WhiteButton}" Content="查看开源组件及许可协议信息" Margin="10,10,0,0" VerticalAlignment="Top" Width="167" Foreground="#468FFC" Click="ViewOpenSourceButton_Click" FontSize="12" HorizontalAlignment="Left"/>
-                    <GroupBox Header="图标资源" Style="{StaticResource LinkGroupBox}" Margin="5,45,0,0">
-                        <Grid>
-                            <TextBlock x:Name="www_iconfont_cn" ToolTip="点击前往" Style="{StaticResource HoverTextBlock}" Text="www.iconfont.cn" MouseLeftButtonDown="www_iconfont_cn_MouseLeftButtonDown" Margin="5,0,0,0"/>
-                            <TextBlock x:Name="fontawesome_com" ToolTip="点击前往" Style="{StaticResource HoverTextBlock}" Margin="5,18,0,0" Text="Font Awesome" MouseLeftButtonDown="fontawesome_com_MouseLeftButtonDown"/>
-                            <TextBlock x:Name="icons8_com" ToolTip="点击前往" Style="{StaticResource HoverTextBlock}" Text="icons8.com" MouseLeftButtonDown="icons8_com_MouseLeftButtonDown" Margin="5,36,0,0"/>
-                            <TextBlock x:Name="icon11_community_github_io" Style="{StaticResource HoverTextBlock}" ToolTip="点击前往" Margin="5,54,0,0" Text="icon11-community.github.io" MouseLeftButtonDown="icon11_community_github_io_MouseLeftButtonDown"/>
-                        </Grid>
-                    </GroupBox>
+                    <TextBlock Text="图标资源" Margin="5,45,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="www_iconfont_cn" ToolTip="点击前往" Style="{StaticResource HoverTextBlock}" Text="www.iconfont.cn" MouseLeftButtonDown="www_iconfont_cn_MouseLeftButtonDown" Margin="10,69,0,0"/>
+                    <TextBlock x:Name="fontawesome_com" ToolTip="点击前往" Style="{StaticResource HoverTextBlock}" Margin="10,87,0,0" Text="Font Awesome" MouseLeftButtonDown="fontawesome_com_MouseLeftButtonDown"/>
+                    <TextBlock x:Name="icons8_com" ToolTip="点击前往" Style="{StaticResource HoverTextBlock}" Text="icons8.com" MouseLeftButtonDown="icons8_com_MouseLeftButtonDown" Margin="10,105,0,0"/>
+                    <TextBlock x:Name="icon11_community_github_io" Style="{StaticResource HoverTextBlock}" ToolTip="点击前往" Margin="10,123,0,0" Text="icon11-community.github.io" MouseLeftButtonDown="icon11_community_github_io_MouseLeftButtonDown"/>
                 </Grid>
             </GroupBox>
             <!-- 支持 -->
             <GroupBox Header="支持" Style="{StaticResource SettingGroupBox}" Margin="10,203,0,0" Grid.Column="1">
                 <Grid>
-                    <TextBlock x:Name="FeedBack" ToolTip="点击前往" Style="{StaticResource HoverTextBlock}" Text="BUG反馈、需求" MouseLeftButtonDown="FeedBack_MouseLeftButtonDown" Margin="4,0,0,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="FeedBack" ToolTip="点击前往" Style="{StaticResource HoverTextBlock}" Text="BUG反馈、需求" MouseLeftButtonDown="FeedBack_MouseLeftButtonDown" Margin="10,0,0,0" VerticalAlignment="Center"/>
                 </Grid>
             </GroupBox>
         </Grid>

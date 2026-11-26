@@ -51,26 +51,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
-    <Style x:Key="LinkGroupBox" TargetType="GroupBox">
-        <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="FontSize" Value="14" />
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="GroupBox">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-                        <ContentPresenter Grid.Row="0" Margin="0,0,0,8" ContentSource="Header" TextElement.FontSize="16"/>
-                        <Border Grid.Row="1" Background="{TemplateBinding Background}" BorderThickness="0">
-                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
-                        </Border>
-                    </Grid>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>
 </ResourceDictionary>
