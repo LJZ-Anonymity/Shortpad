@@ -13,10 +13,22 @@
     <SolidColorBrush x:Key="ScrollThumbBrush" Color="#BABBBB"/>
     <SolidColorBrush x:Key="SliderBrush" Color="{StaticResource BorderColor}"/>
 
+    <!-- 查找应用窗口 -->
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFECECEC"/>
+    <SolidColorBrush x:Key="ListItemHoverBrush" Color="#FF2D2D2D"/>
+    <SolidColorBrush x:Key="ListItemSelectedBrush" Color="#FF3A3A3A"/>
+    <SolidColorBrush x:Key="ListHeaderHoverBrush" Color="#14FFFFFF"/>
+    <SolidColorBrush x:Key="ListItemSelectedInactiveBrush" Color="#FF303030"/>
+    <SolidColorBrush x:Key="ListItemSelectedHoverBrush" Color="#FF454545"/>
+
+    <!-- 搜索窗口 -->
+    <SolidColorBrush x:Key="SearchBoxForegroundBrush" Color="#FFFFFFFF"/>
+    <SolidColorBrush x:Key="SearchBoxPlaceholderBrush" Color="#FF9E9E9E"/>
+    <SolidColorBrush x:Key="PinButtonHoverBrush" Color="#FF3A3A3A"/>
+
     <!-- 设置窗口 -->
     <SolidColorBrush x:Key="MainStackPanelBrush" Color="#FF3A3A3A"/>
     <SolidColorBrush x:Key="MenuGridBrush" Color="#FF2A2A2A"/>
-
     <SolidColorBrush x:Key="Button1HoverBrush" Color="#FF2B2B2B"/>
     <SolidColorBrush x:Key="Button2HoverBrush" Color="#FF1F1F1F"/>
 

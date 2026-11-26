@@ -30,12 +30,13 @@ namespace Shortpad.Windows.MainWindows
             DependencyProperty.Register("IsPinned", typeof(bool), typeof(SearchWindow),
                 new PropertyMetadata(false));
 
+        private const string PlaceholderText = "开始搜索...";
+        private const string PlaceholderTag = "Placeholder";
         private ActionManager actionManager = new();
         private ButtonManager buttonManager = new();
         private ButtonDatabase db2 = new();
         private bool _isLoaded = false;
         public Button targetButton;
-
         public SearchWindow()
         {
             InitializeComponent();
@@ -86,10 +87,10 @@ namespace Shortpad.Windows.MainWindows
         private void SearchBox_GotFocus(object sender, RoutedEventArgs e)
         {
             var tb = (TextBox)sender;
-            if (tb != null && tb.Text == "开始搜索...")
+            if (tb != null && tb.Text == PlaceholderText)
             {
-                tb.Text = ""; //清空文本
-                tb.Foreground = Brushes.Black; //恢复默认样式
+                tb.Text = "";       // 清空文本
+                tb.Tag = null;     // 退出占位符状态 → 自动用主题前景色
             }
         }
 
@@ -99,8 +100,8 @@ namespace Shortpad.Windows.MainWindows
             var tb = (TextBox)sender;
             if (tb != null && string.IsNullOrWhiteSpace(tb.Text))
             {
-                tb.Text = "开始搜索..."; //恢复初始提示文本
-                tb.Foreground = Brushes.LightGray; //设置提示文本样式
+                tb.Text = PlaceholderText;   // 恢复占位文本
+                tb.Tag = PlaceholderTag;    // 进入占位符状态 → 自动用占位符色
             }
         }
 
