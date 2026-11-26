@@ -46,7 +46,7 @@
                 </EventTrigger>
             </Grid.Triggers>
 
-            <ListView x:Name="ImageListView" Margin="0,0,4,0" SelectionMode="Single" BorderBrush="Gray" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionChanged="SelectImage" ScrollViewer.ScrollChanged="ListViewScrollViewer_ScrollChanged" MouseDoubleClick="ConfirmImage">
+            <ListView x:Name="ImageListView" Margin="0,0,4,0" SelectionMode="Single" BorderBrush="{DynamicResource BorderBrush}" Background="{DynamicResource MenuGridBrush}" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" SelectionChanged="SelectImage" ScrollViewer.ScrollChanged="ListViewScrollViewer_ScrollChanged" MouseDoubleClick="ConfirmImage">
                 <ListView.ItemsPanel>
                     <ItemsPanelTemplate>
                         <WrapPanel x:Name="ImagePanel" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ListView}}" Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=ListView}}"/>
@@ -57,6 +57,28 @@
                         <ContentControl Content="{Binding ImageControl}" Width="40" Height="40" IsHitTestVisible="False" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                        <Setter Property="Padding" Value="5"/>
+                        <Setter Property="Margin" Value="5"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <Border Name="Bd" Background="{TemplateBinding Background}" BorderThickness="0">
+                                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource MainStackPanelBrush}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.ItemContainerStyle>
             </ListView>
             <!-- 垂直滚动条 -->
             <ScrollBar Name="VerticalScrollBar" Orientation="Vertical" Visibility="Collapsed" HorizontalAlignment="Right" Margin="0,1,1,1" ValueChanged="ExternalScrollBar_ValueChanged"/>
