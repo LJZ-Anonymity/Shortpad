@@ -95,12 +95,12 @@
         <ScrollBar x:Name="ScrollBar" Margin="240,250,10,0" VerticalAlignment="Top" Orientation="Horizontal" ValueChanged="ScrollBar_ValueChanged"/>
         <Popup x:Name="EditActionPagePopup" PopupAnimation="Fade" Height="137" Width="180" AllowsTransparency="True" StaysOpen="False">
             <Grid>
-                <Rectangle Fill="White" Margin="3,5">
+                <Rectangle Fill="{DynamicResource SliderBrush}" Margin="3,5">
                     <Rectangle.Effect>
                         <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="8" RenderingBias="Quality" ShadowDepth="1"/>
                     </Rectangle.Effect>
                 </Rectangle>
-                <Border Background="White" BorderThickness="0" CornerRadius="3" Margin="3">
+                <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0" CornerRadius="3" Margin="3">
                     <StackPanel Background="{x:Null}">
                         <Button x:Name="CheckActionPageInfoButton" Style="{StaticResource MenuButton}" ToolTip="查看动作页信息" Margin="0,3,0,0" Click="CheckActionPageInfoButton_Click">
                             <Grid Width="176">
