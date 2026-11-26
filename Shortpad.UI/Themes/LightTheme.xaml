@@ -19,7 +19,13 @@
     <SolidColorBrush x:Key="Button2HoverBrush" Color="#FFFAFAFA"/>
     
     <!-- 按钮 -->
+    <!-- 圆角Button -->
     <SolidColorBrush x:Key="ButtonBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource BorderColor}"/>
     <SolidColorBrush x:Key="ButtonHoverBrush" Color="#FFF3F3F3"/>
+
+    <!-- 场景Button -->
+    <SolidColorBrush x:Key="CheckedHoverSceneButtonBrush" Color="#FFDFDFDF"/>
+    <SolidColorBrush x:Key="CheckedSceneButtonBrush" Color="#FFE9E9E9"/>
+    <SolidColorBrush x:Key="HoverSceneButtonBrush" Color="#FFF5F5F5"/>
 </ResourceDictionary>

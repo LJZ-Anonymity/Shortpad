@@ -23,4 +23,9 @@
     <SolidColorBrush x:Key="ButtonBrush" Color="#FF1C1C1C"/>
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource BorderColor}"/>
     <SolidColorBrush x:Key="ButtonHoverBrush" Color="#FF2B2B2F"/>
+
+    <!-- 场景Button -->
+    <SolidColorBrush x:Key="CheckedHoverSceneButtonBrush" Color="#FF434343"/>
+    <SolidColorBrush x:Key="CheckedSceneButtonBrush" Color="#FF383838"/>
+    <SolidColorBrush x:Key="HoverSceneButtonBrush" Color="#FF2D2D2D"/>
 </ResourceDictionary>

@@ -254,29 +254,12 @@ namespace Shortpad.Windows.MainWindows
         {
             foreach (UIElement element in ActionPagesButtonPanel.Children)
             {
-                Button button = element as Button; // 转换为按钮
-                button.Background = button.Name == type
-                    ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E9E9E9"))
-                    : Brushes.Transparent; // 设置背景色
+                if (element is RadioButton radioButton)
+                {
+                    string sceneKey = radioButton.Tag as string ?? radioButton.Name;
+                    radioButton.IsChecked = sceneKey == type;
+                }
             }
-        }
-
-        // 鼠标移入Button高亮按钮
-        private void HightLightBlacklistItem(object sender, MouseEventArgs e)
-        {
-            Button button = sender as Button; // 转换发送者为Button对象
-            button.Background = button.Name == type
-                ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DFDFDF"))
-                : new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F5F5F5")); // 设置背景色
-        }
-
-        // 鼠标移出Button恢复原状
-        private void FadeBlacklistItem(object sender, MouseEventArgs e)
-        {
-            Button button = sender as Button; // 转换发送者为Button对象
-            button.Background = button.Name == type
-                ? new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E9E9E9"))
-                : Brushes.Transparent; // 设置背景色
         }
 
         /// <summary>
@@ -344,16 +327,15 @@ namespace Shortpad.Windows.MainWindows
         /// <param name="filter"> 过滤关键字 </param>
         private void CreateSceneButton(SceneData sceneData, string filter = null)
         {
-            var button = new Button()
+            var radioButton = new RadioButton()
             {
                 Style = (Style)FindResource("SceneButton"), // 应用样式
-                Name = sceneData.SceneTag,
-                AllowDrop = true
+                Tag = sceneData.SceneTag,
             };
             Grid buttonContent = CreateButtonContent(sceneData, filter); // 使用模块化方法创建按钮内容
-            button.Content = buttonContent; // 设置按钮内容
-            SetupButtonEvents(button); // 使用模块化方法设置按钮事件
-            ActionPagesButtonPanel.Children.Add(button); // 将按钮添加到StackPanel
+            radioButton.Content = buttonContent; // 设置按钮内容
+            SetupButtonEvents(radioButton); // 使用模块化方法设置按钮事件
+            ActionPagesButtonPanel.Children.Add(radioButton); // 将按钮添加到StackPanel
         }
 
         /// <summary>
@@ -470,35 +452,34 @@ namespace Shortpad.Windows.MainWindows
         /// <summary>
         /// 设置场景按钮事件
         /// </summary>
-        private void SetupButtonEvents(Button button)
+        private void SetupButtonEvents(RadioButton button)
         {
             button.MouseDoubleClick += EditSceneButton_Click; // 双击编辑场景信息
             button.DragEnter += SceneButton_DragEnterTrigger; // 拖拽进入触发高亮
             button.DragLeave += SceneButton_DragLeaveTrigger; // 拖拽离开恢复背景
             button.MouseRightButtonDown += OpenContextMenu; // 右键菜单
-            button.MouseEnter += HightLightBlacklistItem; // 鼠标移入高亮显示
             button.DragOver += SceneButton_DragOver; // 控制拖拽是否允许放置
             button.Click += ChanceSceneButton_Click; // 设置按钮点击事件
-            button.MouseLeave += FadeBlacklistItem; // 鼠标移出恢复原状
             button.Drop += ChangeActionPageScene; // 设置拖拽事件
         }
 
         // 拖拽进入触发器
         private void SceneButton_DragEnterTrigger(object sender, DragEventArgs e)
-            => TriggerSceneButtonDragState(sender as Button, isDragEnter: true);
+            => TriggerSceneButtonDragState(sender as RadioButton, isDragEnter: true);
 
         // 拖拽离开触发器
         private void SceneButton_DragLeaveTrigger(object sender, DragEventArgs e)
-            => TriggerSceneButtonDragState(sender as Button, isDragEnter: false);
+            => TriggerSceneButtonDragState(sender as RadioButton, isDragEnter: false);
 
         // 统一触发场景按钮拖拽视觉状态
-        private void TriggerSceneButtonDragState(Button button, bool isDragEnter)
+        private void TriggerSceneButtonDragState(RadioButton button, bool isDragEnter)
         {
-            if (button == null || button.Name == type) return;
+            string sceneTag = button?.Tag as string ?? button?.Name;
+            if (button == null || string.IsNullOrEmpty(sceneTag) || sceneTag == type) return;
 
             if (isDragEnter)
             {
-                var targetSceneData = db3.GetSceneData(button.Name);
+                var targetSceneData = db3.GetSceneData(sceneTag);
                 if (targetSceneData != null && targetSceneData.SceneCount >= 10) return;
 
                 button.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#E9E9E9"));
@@ -513,14 +494,15 @@ namespace Shortpad.Windows.MainWindows
         {
             e.Handled = true;
 
-            if (sender is not Button button)
+            if (sender is not RadioButton button)
             {
                 e.Effects = DragDropEffects.None;
                 return;
             }
 
-            var targetSceneData = db3.GetSceneData(button.Name);
-            if (button.Name == type || (targetSceneData != null && targetSceneData.SceneCount >= 10))
+            string sceneTag = button.Tag as string ?? button.Name;
+            var targetSceneData = db3.GetSceneData(sceneTag);
+            if (sceneTag == type || (targetSceneData != null && targetSceneData.SceneCount >= 10))
             {
                 e.Effects = DragDropEffects.None;
                 return;
@@ -547,9 +529,10 @@ namespace Shortpad.Windows.MainWindows
         // 右键打开菜单
         private void OpenContextMenu(object sender, MouseButtonEventArgs e)
         {
-            Button button = sender as Button; // 转换为按钮
-            if(new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(button.Name)) return; // 禁止编辑默认场景
-            EditSceneMenu editSceneMenu = new(button.Name); // 创建菜单
+            if (sender is not RadioButton button) return; // 转换为单选按钮
+            string sceneKey = button.Tag as string ?? button.Name;
+            if (new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(sceneKey)) return; // 禁止编辑默认场景
+            EditSceneMenu editSceneMenu = new(sceneKey); // 创建菜单
             editSceneMenu.Show(); // 显示菜单
         }
 
@@ -923,9 +906,13 @@ namespace Shortpad.Windows.MainWindows
         // 点击按钮切换场景类型
         private void ChanceSceneButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button; // 获取按钮
-            var sceneInfo = db3.GetSceneData(button.Name); // 获取场景信息
-            TypeChanged(sceneInfo.SceneTag); // 切换类型为全局场景
+            RadioButton radioButton = (RadioButton)sender;
+            string sceneKey = radioButton.Tag as string ?? radioButton.Name;
+            var sceneInfo = db3.GetSceneData(sceneKey); // 获取场景信息
+            if (sceneInfo != null)
+            {
+                TypeChanged(sceneInfo.SceneTag); // 切换场景类型
+            }
         }
 
         // 打开创建动作菜单
@@ -1187,8 +1174,11 @@ namespace Shortpad.Windows.MainWindows
         {
             if (e.Data.GetDataPresent("ButtonData"))
             {
-                Button targetButton = sender as Button; // 获取目标按钮
-                var targetSceneData = db3.GetSceneData(targetButton.Name); // 获取目标场景数据
+                if (sender is not RadioButton targetButton) return; // 获取目标单选按钮
+                string targetKey = targetButton.Tag as string ?? targetButton.Name;
+                var targetSceneData = db3.GetSceneData(targetKey); // 获取目标场景数据
+                if (targetSceneData == null) return;
+
                 string sourceButtonName = e.Data.GetData("ButtonData")?.ToString(); // 获取传递的 Button Name
                 if (!string.IsNullOrEmpty(sourceButtonName))
                 {
@@ -1386,17 +1376,15 @@ namespace Shortpad.Windows.MainWindows
             while (ActionPagesButtonPanel.Children.Count > 0)
             {
                 UIElement child = ActionPagesButtonPanel.Children[0];
-                if (child is Button button)
+                if (child is RadioButton button)
                 {
                     // 解绑所有事件
                     button.MouseDoubleClick -= EditSceneButton_Click;
                     button.DragEnter -= SceneButton_DragEnterTrigger;
                     button.DragLeave -= SceneButton_DragLeaveTrigger;
                     button.MouseRightButtonDown -= OpenContextMenu;
-                    button.MouseEnter -= HightLightBlacklistItem;
                     button.DragOver -= SceneButton_DragOver;
                     button.Click -= ChanceSceneButton_Click;
-                    button.MouseLeave -= FadeBlacklistItem;
                     button.Drop -= ChangeActionPageScene;
 
                     // 清理按钮资源

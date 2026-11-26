@@ -144,15 +144,6 @@
     </Style>
 
     <!-- 动作场景的 Button -->
-    <Style x:Key="SceneButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
-        <Setter Property="styles:ButtonStyles.CornerRadius" Value="4"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="AllowDrop" Value="True"/>
-        <Setter Property="Width" Value="Auto"/>
-        <Setter Property="Height" Value="36"/>
-        <Setter Property="Margin" Value="1"/>
-    </Style>
-
     <!-- 动作页标题的更改动作页的 Button -->
     <Style x:Key="ActionChangePageButton" TargetType="Button">
         <Setter Property="HorizontalAlignment" Value="Left"/>
