@@ -20,7 +20,7 @@
         <Button Content="常规" Style="{StaticResource Button3}" Margin="1,14,0,0" Width="68" Grid.Column="1" BorderThickness="0,0,0,2"/>
         <Grid Margin="10,43,0,0" Grid.ColumnSpan="2">
             <Grid Margin="0,23,0,0" HorizontalAlignment="Right" VerticalAlignment="Top" Height="320" RenderTransformOrigin="0.5,0.5" Width="307">
-                <GroupBox Header="使用情况" HorizontalAlignment="Left" Height="190" VerticalAlignment="Top" Width="277" Margin="10,107,0,0" BorderBrush="{DynamicResource BorderBrush}">
+                <GroupBox Header="使用情况" Style="{DynamicResource ThemedGroupBox}" HorizontalAlignment="Left" Height="190" VerticalAlignment="Top" Width="277" Margin="10,107,0,0">
                     <Grid>
                         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="总使用时长" VerticalAlignment="Top" FontSize="16" FontWeight="Bold" Margin="10,16,0,0"/>
                         <TextBlock x:Name="TotalUsageTimeTextBlock" HorizontalAlignment="Left" Margin="22,61,0,0" TextWrapping="Wrap" Text="加载中……" VerticalAlignment="Top" FontSize="14"/>
