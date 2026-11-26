@@ -52,7 +52,7 @@
                 </Button>
                 <Button Click="OpenWebsite" Style="{StaticResource MenuButton}" Margin="0,0,0,3">
                     <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
-                        <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                        <Image Source="/Resources/Images/globe.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="打开网址"/>
                     </Grid>
                 </Button>
@@ -65,13 +65,13 @@
                 </Button>
                 <Button x:Name="CreateOpenFileActionButton" Click="CreatOpenFileAction" Style="{StaticResource MenuButton}">
                     <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
-                        <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                        <Image Source="/Resources/Images/button_add_scene.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock x:Name="CreateOpenFileActionTextBlock" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Click="ImportActionData" ToolTip="从本地文件中导入动作" Style="{StaticResource MenuButton}" Margin="0,0,0,3">
                     <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
-                        <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                        <Image Source="/Resources/Images/file-input.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="导入动作"/>
                     </Grid>
                 </Button>
