@@ -22,6 +22,7 @@
 | `button_add.png` | `circle-plus` |
 | `button_add_scene.png` | `plus` |
 | `button_close.png` | `x` |
+| `button_copy_scene_id.png` | `files` |
 | `button_edit_scene.png` | `trash-2` |
 | `button_drag.png` | `move` |
 | `button_edit_scene` | `square-pen` |
@@ -38,7 +39,7 @@
 | `scene_actions.png` | `layout-grid` |
 | `scene_common.png` | `layers` |
 | `scene_desktop.png` | `monitor` |
-| `scene_global.png` | `globe` |
+| `scene_global.png` | `grid-3x3` |
 | `scene_locked.png` | `lock` |
 | `scene_taskbar.png` | `panel-bottom` |
 | `scene_unlocked.png` | `lock-open` |
