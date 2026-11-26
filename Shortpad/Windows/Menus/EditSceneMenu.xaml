@@ -15,8 +15,8 @@
     Height="40"
     Width="130"
 >
-    <Grid Background="Transparent" Height="30" Width="120">
-        <Border Background="White" CornerRadius="3">
+    <Grid Background="{DynamicResource WindowBackgroundBrush}" Height="30" Width="120">
+        <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3">
             <Border.Effect>
                 <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="10" RenderingBias="Quality" ShadowDepth="1"/>
             </Border.Effect>

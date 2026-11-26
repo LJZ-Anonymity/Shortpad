@@ -3,16 +3,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 >
     <!-- 场景名称文本块样式 -->
-    <Style x:Key="SceneNameTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="SceneNameTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Margin" Value="35,3,0,0"/>
     </Style>
 
     <!-- 场景标签文本块样式 -->
-    <Style x:Key="SceneTagTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="SceneTagTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Bottom"/>
         <Setter Property="Foreground" Value="#FFB4B4B4"/>
@@ -21,15 +19,13 @@
     </Style>
 
     <!-- 场景标题文本块样式 -->
-    <Style x:Key="SceneTitleTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="SceneTitleTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="11"/>
     </Style>
     
     <!-- 场景描述文本块样式 -->
-    <Style x:Key="SceneDescriptionTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="SceneDescriptionTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Foreground" Value="#FFB4B4B4"/>
@@ -38,8 +34,7 @@
     </Style>
 
     <!-- 动作页名称文本块样式 -->
-    <Style x:Key="ActionPageNameTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="ActionPageNameTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="11"/>
@@ -47,8 +42,7 @@
     </Style>
 
     <!-- 菜单按钮文本块样式 -->
-    <Style x:Key="MenuButtonTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="MenuButtonTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="30,0,0,0"/>
@@ -56,15 +50,13 @@
     </Style>
 
     <!-- 黑名单项文本 -->
-    <Style x:Key="BlacklistItemTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="BlacklistItemTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
     <!-- 黑名单项文件夹文本 -->
-    <Style x:Key="BlacklistItemFolderTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="BlacklistItemFolderTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Foreground" Value="LightGray"/>
         <Setter Property="Margin" Value="2,0,0,0"/>
@@ -73,8 +65,7 @@
     </Style>
 
     <!-- 连接文本块样式 -->
-    <Style x:Key="HoverTextBlock" TargetType="TextBlock">
-        <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+    <Style x:Key="HoverTextBlock" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Foreground" Value="#468FFC"/>

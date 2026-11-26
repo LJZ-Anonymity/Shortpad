@@ -860,7 +860,6 @@ namespace Shortpad.Windows.Menus
         // 鼠标移入显示子菜单
         private void SuspendAction_MouseEnter(object sender, MouseEventArgs e)
         {
-            SuspendAction.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEAEAEA")); // 改变背景颜色
             ChildGrid.Visibility = Visibility.Visible; // 显示子菜单
         }
 
@@ -868,7 +867,6 @@ namespace Shortpad.Windows.Menus
         private void SuspendAction_MouseLeave(object sender, MouseEventArgs e)
         {
             if (ChildGrid.IsMouseOver) return;
-            SuspendAction.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("White"));
             ChildGrid.Visibility = Visibility.Collapsed; // 隐藏子菜单
         }
 
@@ -877,7 +875,6 @@ namespace Shortpad.Windows.Menus
         {
             if (!MainGrid.IsMouseOver && !ChildGrid.IsMouseOver && !OtherFunction.IsMouseOver)
             {
-                SuspendAction.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("White")); // 还原背景颜色
                 ChildGrid.Visibility = Visibility.Collapsed; // 隐藏子菜单
             }
         }
@@ -885,7 +882,6 @@ namespace Shortpad.Windows.Menus
         // 鼠标移入显示子菜单
         private void OtherFunction_MouseEnter(object sender, MouseEventArgs e)
         {
-            OtherFunction.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEAEAEA")); // 改变背景颜色
             FirstChildGrid.Visibility = Visibility.Visible; // 显示子菜单
         }
 
@@ -893,14 +889,12 @@ namespace Shortpad.Windows.Menus
         private void OtherFunction_MouseLeave(object sender, MouseEventArgs e)
         {
             if (FirstChildGrid.IsMouseOver) return;
-            OtherFunction.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("White"));
             FirstChildGrid.Visibility = Visibility.Collapsed; // 隐藏子菜单
         }
 
         // 鼠标移入显示子菜单
         private void CopyActionInfo_MouseEnter(object sender, MouseEventArgs e)
         {
-            CopyActionInfo.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEAEAEA")); // 改变背景颜色
             SecondChildGrid.Visibility = Visibility.Visible; // 显示子菜单
         }
 
@@ -909,7 +903,6 @@ namespace Shortpad.Windows.Menus
         {
             if (!SecondChildGrid.IsMouseOver)
             {
-                CopyActionInfo.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("White")); // 还原背景颜色
                 SecondChildGrid.Visibility = Visibility.Collapsed; // 隐藏子菜单
             }
         }
@@ -917,7 +910,6 @@ namespace Shortpad.Windows.Menus
         // 鼠标移出关闭子菜单
         private void SecondChildGrid_MouseLeave(object sender, MouseEventArgs e)
         {
-            CopyActionInfo.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("White")); // 还原背景颜色
             SecondChildGrid.Visibility = Visibility.Collapsed; // 隐藏子菜单
         }
 
@@ -926,7 +918,6 @@ namespace Shortpad.Windows.Menus
         {
             if (!MainGrid.IsMouseOver && !SecondChildGrid.IsMouseOver && !OtherFunction.IsMouseOver)
             {
-                OtherFunction.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("White")); // 还原背景颜色
                 FirstChildGrid.Visibility = Visibility.Collapsed; // 隐藏子菜单
             }
         }

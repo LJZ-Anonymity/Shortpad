@@ -2,6 +2,7 @@
 using System.Windows.Interop;
 using Shortpad.Managers;
 using System.Windows;
+using Shortpad.Windows.Menus;
 
 namespace Shortpad.Helpers
 {

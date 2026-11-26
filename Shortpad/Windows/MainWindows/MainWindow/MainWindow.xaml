@@ -215,12 +215,12 @@
                     </Button>
                     <Popup x:Name="TitlePop" PopupAnimation="Fade" Width="180" Height="70" PlacementTarget="{Binding ElementName=ActionPageManager}" AllowsTransparency="True" StaysOpen="False">
                         <Grid>
-                            <Border Background="White" CornerRadius="3" Margin="3">
+                            <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3">
                                 <Border.Effect>
                                     <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                                 </Border.Effect>
                             </Border>
-                            <Border Background="White" CornerRadius="3" Margin="3" Padding="0,3">
+                            <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3" Padding="0,3">
                                 <StackPanel>
                                     <Button Style="{StaticResource MenuButton}" ToolTip="为应用程序创建场景设置，管理动作页" Click="OpenActionPageManageWindow">
                                         <Grid Width="176">
@@ -228,7 +228,7 @@
                                             <TextBlock Text="场景与动作" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                         </Grid>
                                     </Button>
-                                    <Rectangle Height="1" Width="176" Fill="#FFF0F0F0" Margin="0,3"/>
+                                    <Rectangle Height="1" Width="176" Fill="{DynamicResource BorderBrush}" Margin="0,3"/>
                                     <Button Style="{StaticResource MenuButton}" ToolTip="关闭Shortpad软件" Click="QuitShortpad">
                                         <Grid Width="176">
                                             <Image Source="/Resources/Images/menu_quit_app.png" Style="{StaticResource SelectButtonImage}"/>

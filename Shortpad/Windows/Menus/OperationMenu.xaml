@@ -18,12 +18,12 @@
 >
     <Grid>
         <Grid x:Name="MainGrid" Height="255" Width="204" Margin="15,13,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <Border Background="White" Margin="5">
+            <Border Background="{DynamicResource WindowBackgroundBrush}" Margin="5">
                 <Border.Effect>
                     <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                 </Border.Effect>
             </Border>
-            <Border CornerRadius="5" Background="White">
+            <Border CornerRadius="5" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel x:Name="MainStackPanel">
                     <Button x:Name="CloseFloatButton" Style="{StaticResource MenuButton}" ToolTip="关闭悬浮窗" Margin="0,5,0,0" Click="CloseFloatButton_Click">
                         <Grid Width="194">
@@ -31,7 +31,7 @@
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="关闭"/>
                         </Grid>
                     </Button>
-                    <Rectangle x:Name="Rectangle1" Height="1" Fill="#FFF0F0F0" Width="204" Margin="0,3"/>
+                    <Rectangle x:Name="Rectangle1" Height="1" Fill="{DynamicResource SliderBrush}" Width="204" Margin="0,3"/>
                     <Button x:Name="EditeInformation" Style="{StaticResource MenuButton}" Click="EditeInformation_Click">
                         <Button.ToolTip>
                             <StackPanel>
@@ -44,14 +44,14 @@
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="编辑"/>
                         </Grid>
                     </Button>
-                    <Rectangle x:Name="Rectangle2" Height="1" Fill="#FFF0F0F0" Width="204" Margin="0,3"/>
+                    <Rectangle x:Name="Rectangle2" Height="1" Fill="{DynamicResource SliderBrush}" Width="204" Margin="0,3"/>
                     <Button x:Name="SuspendAction" Style="{StaticResource MenuButton}" ToolTip="悬浮动作" MouseEnter="SuspendAction_MouseEnter" MouseLeave="SuspendAction_MouseLeave">
                         <Grid Width="194">
                             <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="悬浮"/>
                         </Grid>
                     </Button>
-                    <Rectangle Height="1" Fill="#FFF0F0F0" Width="204" Margin="0,3"/>
+                    <Rectangle Height="1" Fill="{DynamicResource SliderBrush}" Width="204" Margin="0,3"/>
                     <Button x:Name="CopyAction" Style="{StaticResource MenuButton}" Click="CopyAction_Click">
                         <Button.ToolTip>
                             <StackPanel>
@@ -105,12 +105,12 @@
         <Grid x:Name="ChiildGrid1" Margin="219,79,0,0">
             <Grid x:Name="ChildGrid" Margin="0" HorizontalAlignment="Left" VerticalAlignment="Top" MouseLeave="ChildGrid_MouseLeave">
                 <!-- 窗口阴影 -->
-                <Border CornerRadius="3" Background="White" Margin="5">
+                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}" Margin="5">
                     <Border.Effect>
                         <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border CornerRadius="3" Background="White">
+                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
                     <StackPanel>
                         <Button x:Name="FloatActionButton" Style="{StaticResource MenuButton}" Margin="0,3,0,0" Click="FloatActionButton_Click">
                             <Button.ToolTip>
@@ -144,12 +144,12 @@
         <Grid x:Name="ChiildGrid2" Margin="219,211,0,0">
             <Grid x:Name="FirstChildGrid" Margin="0" MouseLeave="FirstChildGrid_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <!-- 窗口阴影 -->
-                <Border CornerRadius="3" Background="White" Margin="5">
+                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}" Margin="5">
                     <Border.Effect>
                         <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border CornerRadius="3" Background="White">
+                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
                     <StackPanel>
                         <Button x:Name="ExportAction" Style="{StaticResource MenuButton}" ToolTip="导出动作定义到文件" Margin="0,3" Click="ExportAction_Click">
                             <Grid Width="130">
@@ -157,7 +157,7 @@
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="导出动作"/>
                             </Grid>
                         </Button>
-                        <Rectangle Height="1" Fill="#F0F0F0" Width="130"/>
+                        <Rectangle Height="1" Fill="{DynamicResource SliderBrush}" Width="130"/>
                         <Button x:Name="CheckImformation" Style="{StaticResource MenuButton}" ToolTip="查看动作信息" Margin="0,3,0,0" Click="CheckImformation_Click">
                             <Grid Width="130">
                                 <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
@@ -175,12 +175,12 @@
             </Grid>
             <Grid x:Name="SecondChildGrid" Margin="130,57,0,0" MouseLeave="SecondChildGrid_MouseLeave" VerticalAlignment="Top" HorizontalAlignment="Left">
                 <!-- 窗口阴影 -->
-                <Border CornerRadius="3" Background="White" Margin="5">
+                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}" Margin="5">
                     <Border.Effect>
                         <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border CornerRadius="3" Background="White">
+                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
                     <StackPanel>
                         <Button x:Name="CopyActionID" Style="{StaticResource MenuButton}" ToolTip="复制动作的ID文字" Margin="0,3,0,0" Click="CopyActionID_Click">
                             <Grid Width="130">

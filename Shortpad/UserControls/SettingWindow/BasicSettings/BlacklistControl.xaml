@@ -132,7 +132,7 @@
                             <ColumnDefinition Width="539*"/>
                             <ColumnDefinition Width="104"/>
                         </Grid.ColumnDefinitions>
-                        <Button x:Name="WhitelistSelectButton" Content="选择窗口" Style="{StaticResource WhiteButton}" Width="103" Height="24" HorizontalContentAlignment="Stretch" VerticalAlignment="Top" Grid.Column="1" Click="WhitelistSelectButton_Click" HorizontalAlignment="Right"/>
+                        <Button x:Name="WhitelistSelectButton" Content="选择窗口" Style="{StaticResource WhiteButton}" Width="103" Height="24" HorizontalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Click="WhitelistSelectButton_Click" HorizontalAlignment="Right"/>
                         <Popup x:Name="AddWhitelistAppsPop" PopupAnimation="Fade" Width="250" Height="4" PlacementTarget="{Binding ElementName=WhitelistSelectButton}" Placement="Bottom" AllowsTransparency="True" StaysOpen="False">
                             <Grid>
                                 <Rectangle Fill="White" Margin="5,7">

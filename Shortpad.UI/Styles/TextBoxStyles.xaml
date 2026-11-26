@@ -13,7 +13,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border x:Name="border" CornerRadius="3,0,0,3" ContextMenu="{DynamicResource TextBoxCustomContextMenu}" BorderBrush="{DynamicResource WhiteButtonBorderBrush}" Background="{DynamicResource WhiteButtonBrush}" BorderThickness="1">
+                    <Border x:Name="border" CornerRadius="3,0,0,3" ContextMenu="{DynamicResource TextBoxCustomContextMenu}" BorderBrush="{DynamicResource ButtonBorderBrush}" Background="{DynamicResource ButtonBrush}" BorderThickness="1">
                         <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" Margin="2,0" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Disabled"/>
                     </Border>
 
@@ -38,7 +38,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border x:Name="border" CornerRadius="3" BorderThickness="1.5" BorderBrush="{DynamicResource WhiteButtonBorderBrush}" Background="{DynamicResource WhiteButtonBrush}">
+                    <Border x:Name="border" CornerRadius="3" BorderThickness="1.5" BorderBrush="{DynamicResource ButtonBorderBrush}" Background="{DynamicResource ButtonBrush}">
                         <TextBox Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}, UpdateSourceTrigger=PropertyChanged}" BorderThickness="0" Background="{x:Null}" VerticalAlignment="Center" Margin="2,0" Foreground="{DynamicResource TextBrush}"/>
                     </Border>
 

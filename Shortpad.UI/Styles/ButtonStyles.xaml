@@ -34,8 +34,8 @@
 
     <!-- 基础圆角按钮：默认白底灰边，24×24，圆角由 styles:ButtonStyles.CornerRadius 控制 -->
     <Style x:Key="BaseRoundedButton" TargetType="Button">
-        <Setter Property="BorderBrush" Value="{DynamicResource WhiteButtonBorderBrush}"/>
-        <Setter Property="Background" Value="{DynamicResource WhiteButtonBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
+        <Setter Property="Background" Value="{DynamicResource ButtonBrush}"/>
         <Setter Property="styles:ButtonStyles.CornerRadius" Value="5"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
@@ -52,7 +52,7 @@
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="border" Property="Background" Value="{DynamicResource WhiteButtonHoverBrush}"/>
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource ButtonHoverBrush}"/>
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.55"/>
@@ -266,6 +266,7 @@
     <!-- “菜单按钮”的按钮样式 -->
     <Style x:Key="MenuButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
         <Setter Property="styles:ButtonStyles.CornerRadius" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="25"/>

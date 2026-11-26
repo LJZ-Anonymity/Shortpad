@@ -8,6 +8,9 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!-- 基础样式 -->
+                <ResourceDictionary Source="/Shortpad.UI;component/Styles/BaseStyles.xaml"/>
+
                 <!-- 右键菜单样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/CustomContextMenuStyle.xaml"/>
                 <!-- 堆栈面板样式 -->
@@ -49,35 +52,6 @@
 
             <!-- 字体资源 -->
             <FontFamily x:Key="GlobalFontFamily">微软雅黑</FontFamily>
-
-            <!-- 全局默认控件字体样式 -->
-            <Style TargetType="TextBlock">
-                <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            </Style>
-            <Style TargetType="TextBox">
-                <Setter Property="ContextMenu" Value="{DynamicResource TextBoxCustomContextMenu}"/>
-                <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            </Style>
-            <Style TargetType="Label">
-                <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            </Style>
-            <Style TargetType="{x:Type Button}">
-                <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            </Style>
-            <Style TargetType="{x:Type Window}">
-                <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
-                <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            </Style>
-            <Style TargetType="{x:Type UserControl}">
-                <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}"/>
-                <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
-            </Style>
-
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -18,12 +18,12 @@
 >
     <Grid x:Name="MainGrid" Width="178" Height="221" Margin="9,8,571,211">
         <!-- 窗口阴影 -->
-        <Rectangle Fill="White" Margin="5,7">
+        <Rectangle Fill="{DynamicResource WindowBackgroundBrush}" Margin="5,7">
             <Rectangle.Effect>
                 <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
             </Rectangle.Effect>
         </Rectangle>
-        <Border CornerRadius="3" Background="White">
+        <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
             <StackPanel>
                 <Button x:Name="PasteActionButton" Click="PasteActionButton_Click" Style="{StaticResource MenuButton}" Margin="0,3,0,3">
                     <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
@@ -31,7 +31,7 @@
                         <TextBlock x:Name="PasteActionTextBlock" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
-                <Rectangle x:Name="Line1" Height="1" Fill="#FFF0F0F0"/>
+                <Rectangle x:Name="Line1" Height="1" Fill="{DynamicResource BorderBrush}"/>
                 <Button x:Name="StartAppButton" Click="StartApp" Style="{StaticResource MenuButton}" Margin="0,3,0,0">
                     <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
                         <Image Source="/Resources/Images/action_start_app.png" Style="{StaticResource MenuButtonImage}"/>
@@ -56,7 +56,7 @@
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="打开网址"/>
                     </Grid>
                 </Button>
-                <Rectangle Height="1" Fill="#FFF0F0F0"/>
+                <Rectangle Height="1" Fill="{DynamicResource SliderBrush}"/>
                 <Button Click="LoadExtension" Style="{StaticResource MenuButton}" Margin="0,3,0,0">
                     <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
                         <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
