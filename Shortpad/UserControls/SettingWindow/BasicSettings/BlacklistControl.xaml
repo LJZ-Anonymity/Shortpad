@@ -108,12 +108,12 @@
                     <Button x:Name="BlacklistAddButton" Content="添加..." Style="{StaticResource WhiteButton}" ToolTip="增加特殊的应用" HorizontalAlignment="Left" Margin="216,199,0,0" VerticalAlignment="Top" Width="57" Height="27" Click="BlacklistAddButton_Click"/>
                     <Popup x:Name="AddBlacklistAppsPop" PopupAnimation="Fade" PlacementTarget="{Binding ElementName=BlacklistAddButton}" Placement="Bottom" AllowsTransparency="True" StaysOpen="False" Margin="198,412,197,411">
                         <Grid>
-                            <Rectangle Fill="White" Margin="5,7">
+                            <Rectangle Fill="{DynamicResource WindowBackgroundBrush}" Margin="5,7">
                                 <Rectangle.Effect>
-                                    <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="15" RenderingBias="Quality" ShadowDepth="1"/>
+                                    <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="15" RenderingBias="Quality" ShadowDepth="1"/>
                                 </Rectangle.Effect>
                             </Rectangle>
-                            <Border Width="240" Background="White" BorderThickness="0" CornerRadius="3" Margin="5">
+                            <Border Width="240" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0" CornerRadius="3" Margin="5">
                                 <StackPanel x:Name="AddBlacklistAppsStackPanel" Margin="-1.6,2"/>
                             </Border>
                         </Grid>
@@ -135,12 +135,12 @@
                         <Button x:Name="WhitelistSelectButton" Content="选择窗口" Style="{StaticResource WhiteButton}" Width="103" Height="24" HorizontalContentAlignment="Center" VerticalAlignment="Top" Grid.Column="1" Click="WhitelistSelectButton_Click" HorizontalAlignment="Right"/>
                         <Popup x:Name="AddWhitelistAppsPop" PopupAnimation="Fade" Width="250" Height="4" PlacementTarget="{Binding ElementName=WhitelistSelectButton}" Placement="Bottom" AllowsTransparency="True" StaysOpen="False">
                             <Grid>
-                                <Rectangle Fill="White" Margin="5,7">
+                                <Rectangle Fill="{DynamicResource WindowBackgroundBrush}" Margin="5,7">
                                     <Rectangle.Effect>
-                                        <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="15" RenderingBias="Quality" ShadowDepth="1"/>
+                                        <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="15" RenderingBias="Quality" ShadowDepth="1"/>
                                     </Rectangle.Effect>
                                 </Rectangle>
-                                <Border Width="240" Background="White" BorderThickness="0" CornerRadius="3" Margin="5">
+                                <Border Width="240" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0" CornerRadius="3" Margin="5">
                                     <StackPanel x:Name="AddWhitelistAppsStackPanel" Margin="-1.6,2"/>
                                 </Border>
                             </Grid>

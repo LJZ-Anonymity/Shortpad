@@ -20,7 +20,7 @@
         <!-- 窗口阴影 -->
         <Rectangle Fill="{DynamicResource WindowBackgroundBrush}" Margin="5,7">
             <Rectangle.Effect>
-                <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
             </Rectangle.Effect>
         </Rectangle>
         <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">

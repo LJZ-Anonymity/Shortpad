@@ -37,7 +37,7 @@
                         </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#EEEEEE"/>
+                                <Setter Property="Background" Value="{DynamicResource SearchButtonHoverBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -48,15 +48,15 @@
 
     <Grid MaxHeight="476" MinHeight="{Binding ElementName=SearchBoxGrid, Path=ActualHeight, Mode=OneWay}" Width="719" Margin="10">
         <!-- 窗口阴影 -->
-        <Border x:Name="ShadowBorder" Margin="0.6" Background="#FFF3F3F3" CornerRadius="5">
+        <Border x:Name="ShadowBorder" Margin="0.6" Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="5">
             <Border.Effect>
-                <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="20" RenderingBias="Quality" ShadowDepth="1"/>
+                <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="20" RenderingBias="Quality" ShadowDepth="1"/>
             </Border.Effect>
         </Border>
-        <Border x:Name="SearchBorder" Margin="0.6" Background="White" CornerRadius="5" helpers:ClipHelper.ClipToBounds="True">
+        <Border x:Name="SearchBorder" Margin="0.6" Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="5" helpers:ClipHelper.ClipToBounds="True">
             <Grid>
                 <Grid x:Name="SearchBoxGrid" Height="50" VerticalAlignment="Top">
-                    <TextBox x:Name="SearchBox" Text="开始搜索..." ToolTip="请输入关键词进行搜索" Width="700" Height="40" FontSize="28" GotFocus="SearchBox_GotFocus" LostFocus="SearchBox_LostFocus" KeyDown="SearchBox_KeyDown" TextChanged="SearchBox_TextChanged" VerticalContentAlignment="Center" BorderThickness="0" Foreground="LightGray" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBox x:Name="SearchBox" Background="Transparent" Text="开始搜索..." ToolTip="请输入关键词进行搜索" Width="700" Height="40" FontSize="28" GotFocus="SearchBox_GotFocus" LostFocus="SearchBox_LostFocus" KeyDown="SearchBox_KeyDown" TextChanged="SearchBox_TextChanged" VerticalContentAlignment="Center" BorderThickness="0" Foreground="LightGray" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <TextBox.Style>
                             <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}"/>
                         </TextBox.Style>

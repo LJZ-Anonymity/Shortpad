@@ -3,6 +3,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 >
     <Color x:Key="BorderColor">#FFD5D5D5</Color>
+    <Color x:Key="ShadowEffectBrush">#FFBBBBBB</Color>
+    
     <SolidColorBrush x:Key="TextBrush" Color="Black"/>
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="PopupSurfaceBrush" Color="#FFF"/>
@@ -28,4 +30,7 @@
     <SolidColorBrush x:Key="CheckedHoverSceneButtonBrush" Color="#FFDFDFDF"/>
     <SolidColorBrush x:Key="CheckedSceneButtonBrush" Color="#FFE9E9E9"/>
     <SolidColorBrush x:Key="HoverSceneButtonBrush" Color="#FFF5F5F5"/>
+    
+    <!-- 搜索Button -->
+    <SolidColorBrush x:Key="SearchButtonHoverBrush" Color="#FFEEEEEE"/>
 </ResourceDictionary>

@@ -329,7 +329,7 @@
                                         <Grid>
                                             <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0" CornerRadius="3" Margin="3">
                                                 <Border.Effect>
-                                                    <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="5" RenderingBias="Quality" ShadowDepth="1"/>
+                                                    <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="5" RenderingBias="Quality" ShadowDepth="1"/>
                                                 </Border.Effect>
                                             </Border>
                                             <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0" CornerRadius="3" Margin="3">
@@ -427,7 +427,7 @@
                     <!-- 阴影 -->
                     <Rectangle Fill="{DynamicResource WindowBackgroundBrush}" Margin="3,5">
                         <Rectangle.Effect>
-                            <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="8" RenderingBias="Quality" ShadowDepth="1"/>
+                            <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="8" RenderingBias="Quality" ShadowDepth="1"/>
                         </Rectangle.Effect>
                     </Rectangle>
                     <Border CornerRadius="5" Padding="0,5" BorderThickness="0" Background="{DynamicResource WindowBackgroundBrush}" Margin="3">
@@ -461,7 +461,7 @@
                                 <DataTrigger Binding="{Binding ElementName=BlurComboBox, Path=SelectedIndex}" Value="0">
                                     <Setter Property="Effect">
                                         <Setter.Value>
-                                            <DropShadowEffect Color="#66000000" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                                            <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                                         </Setter.Value>
                                     </Setter>
                                     <Setter Property="Opacity" Value="1"/>
@@ -470,7 +470,7 @@
                                 <DataTrigger Binding="{Binding ElementName=BlurComboBox, Path=SelectedIndex}" Value="1">
                                     <Setter Property="Effect">
                                         <Setter.Value>
-                                            <DropShadowEffect Color="#66000000" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                                            <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                                         </Setter.Value>
                                     </Setter>
                                     <Setter Property="Opacity" Value="0.5"/>

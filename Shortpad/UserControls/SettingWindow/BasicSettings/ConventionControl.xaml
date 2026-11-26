@@ -85,12 +85,12 @@
                             </Grid>
                             <Popup x:Name="TrayIconPopup" PopupAnimation="Fade" AllowsTransparency="True" IsOpen="False" Placement="Bottom" PlacementTarget="{Binding ElementName=TrayIconButton}" StaysOpen="False">
                                 <Grid>
-                                    <Border Background="White" CornerRadius="3" Margin="3">
+                                    <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3">
                                         <Border.Effect>
-                                            <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
+                                            <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                                         </Border.Effect>
                                     </Border>
-                                    <Border Background="White" CornerRadius="3" Margin="3" Padding="0,3">
+                                    <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3" Padding="0,3">
                                         <StackPanel Width="120">
                                             <Button x:Name="EditRunningTrayIconButton" Style="{StaticResource MenuButton}" HorizontalAlignment="Stretch" ToolTip="左键编辑，右键恢复默认" Click="EditRunningTrayIconButton_Click" MouseRightButtonDown="RestoreDefaultTrayIconButton_MouseRightButtonDown">
                                                 <Grid Width="120">

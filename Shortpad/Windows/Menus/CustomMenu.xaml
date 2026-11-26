@@ -21,7 +21,7 @@
         <!-- 窗口阴影 -->
         <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="5">
             <Border.Effect>
-                <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="5" RenderingBias="Quality" ShadowDepth="1"/>
+                <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="5" RenderingBias="Quality" ShadowDepth="1"/>
             </Border.Effect>
         </Border>
         <Border BorderThickness="0" CornerRadius="5" Padding="1" Background="{DynamicResource WindowBackgroundBrush}">

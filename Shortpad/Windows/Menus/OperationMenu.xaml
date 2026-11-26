@@ -20,7 +20,7 @@
         <Grid x:Name="MainGrid" Height="255" Width="204" Margin="15,13,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Border Background="{DynamicResource WindowBackgroundBrush}" Margin="5">
                 <Border.Effect>
-                    <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                    <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                 </Border.Effect>
             </Border>
             <Border CornerRadius="5" Background="{DynamicResource WindowBackgroundBrush}">
@@ -107,7 +107,7 @@
                 <!-- 窗口阴影 -->
                 <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}" Margin="5">
                     <Border.Effect>
-                        <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                        <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
                 <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
@@ -146,7 +146,7 @@
                 <!-- 窗口阴影 -->
                 <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}" Margin="5">
                     <Border.Effect>
-                        <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                        <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
                 <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
@@ -177,7 +177,7 @@
                 <!-- 窗口阴影 -->
                 <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}" Margin="5">
                     <Border.Effect>
-                        <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                        <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
                 <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
