@@ -140,6 +140,19 @@ namespace Shortpad.Database.SettingRepositories
             return conventions; // 返回所有 Convention 数据
         }
 
+        /// <summary>
+        /// 更新开机自启动状态
+        /// </summary>
+        public static void UpdateAutoStart(bool autoStart)
+        {
+            using var connection = OpenConnection(); // 打开数据库连接
+            using var transaction = connection.BeginTransaction(); // 开启事务
+            using var command = new SQLiteCommand(SQLStatements.UpdateAutoStart, connection); // 创建 SQLiteCommand 对象
+            command.Parameters.AddWithValue("@AutoStart", autoStart); // 绑定参数
+            command.ExecuteNonQuery(); // 执行更新命令
+            transaction.Commit(); // 提交事务
+        }
+
         // SQL 语句
         private static class SQLStatements
         {
@@ -210,6 +223,10 @@ namespace Shortpad.Database.SettingRepositories
             public const string UpdateLastPage = @"
             UPDATE Convention SET
                 LastPage = @LastPage
+            WHERE ID = 1;";
+            public const string UpdateAutoStart = @"
+            UPDATE Convention SET
+                AutoStart = @AutoStart
             WHERE ID = 1;";
         }
     }

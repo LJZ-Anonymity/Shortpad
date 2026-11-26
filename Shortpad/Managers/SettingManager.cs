@@ -1,9 +1,11 @@
-﻿using Shortpad.Models.Settings;
+﻿using Shortpad.Database.SettingRepositories;
+using Shortpad.Models.Settings;
 using System.Windows.Controls;
 using System.Threading.Tasks;
 using Shortpad.Database.Core;
 using System.Windows.Media;
 using System.Diagnostics;
+using Shortpad.Helpers;
 using System.Windows;
 
 namespace Shortpad.Managers
@@ -82,22 +84,34 @@ namespace Shortpad.Managers
         public async Task LoadConventionsAsync()
         {
             if (conventions != null) return; // 如果已经初始化了数据，直接返回
-            var Conventions = SettingDatabase.GetAllConventions().FirstOrDefault(); // 获取设置信息
+
+            var dbConventions = SettingDatabase.GetAllConventions().FirstOrDefault(); // 获取设置信息
+            if (dbConventions == null) return;
+
+            bool autoStart = dbConventions.AutoStart;
+
+            // 如果数据库配置为开启自启动，但注册表中不存在对应项，则修正为 false 并写回数据库
+            if (autoStart && !AutoStartHelper.IsAutoStartEnabled())
+            {
+                autoStart = false;
+                ConventionRepository.UpdateAutoStart(false);
+            }
+
             conventions = new Convention // 常规设置
             {
-                AutoStart = Conventions.AutoStart, // 开机自启
-                ShowNotification = Conventions.ShowNotification, // 显示通知
-                ShowAddImage = Conventions.ShowAddImage, // 显示添加图片按钮
-                HideTooltip = Conventions.HideTooltip, // 隐藏工具提示
-                LongPressThreshold = Conventions.LongPressThreshold, // 长按阈值
-                MouseMovePixels = Conventions.MouseMovePixels, // 鼠标移动像素
-                LoopPageFlipping = Conventions.LoopPageFlipping, // 循环翻页
-                RememberLastPage = Conventions.RememberLastPage, // 是否记住设置窗口中最后打开的页面
-                LastPage = Conventions.LastPage, // 最后打开的页面
-                EnableMemoryOptimization = Conventions.EnableMemoryOptimization, // 是否启用内存优化
-                TrayIconPathRunning = Conventions.TrayIconPathRunning, // 运行时托盘图标路径
-                TrayIconPathPaused = Conventions.TrayIconPathPaused, // 暂停时托盘图标路径
-                UseMenuAnimation = Conventions.UseMenuAnimation // 是否启用菜单动画
+                AutoStart = autoStart, // 开机自启
+                ShowNotification = dbConventions.ShowNotification, // 显示通知
+                ShowAddImage = dbConventions.ShowAddImage, // 显示添加图片按钮
+                HideTooltip = dbConventions.HideTooltip, // 隐藏工具提示
+                LongPressThreshold = dbConventions.LongPressThreshold, // 长按阈值
+                MouseMovePixels = dbConventions.MouseMovePixels, // 鼠标移动像素
+                LoopPageFlipping = dbConventions.LoopPageFlipping, // 循环翻页
+                RememberLastPage = dbConventions.RememberLastPage, // 是否记住设置窗口中最后打开的页面
+                LastPage = dbConventions.LastPage, // 最后打开的页面
+                EnableMemoryOptimization = dbConventions.EnableMemoryOptimization, // 是否启用内存优化
+                TrayIconPathRunning = dbConventions.TrayIconPathRunning, // 运行时托盘图标路径
+                TrayIconPathPaused = dbConventions.TrayIconPathPaused, // 暂停时托盘图标路径
+                UseMenuAnimation = dbConventions.UseMenuAnimation // 是否启用菜单动画
             }; // 加载设置数据到缓存
         }
 
