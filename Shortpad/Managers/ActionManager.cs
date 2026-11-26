@@ -36,24 +36,13 @@ namespace Shortpad.Managers
 
         private readonly ModuleLoader _moduleLoader;
 
-        /// <summary>
-        /// 弹出消息（UI线程安全）
-        /// </summary>
-        private void ShowToastSafe(string message, ToastType type)
-        {
-            Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
-            {
-                new ToastManager().Show(message, type);
-            }));
-        }
-
         public void ShowToast(string message, ToastType type)
         {
-            ShowToastSafe(message, type);
+            new ToastManager().Show(message, type);
         }
 
         /// <summary>
-        /// 执行动作（编排层）
+        /// 执行动作
         /// </summary>
         public async Task DoActionAsync(ButtonData data, string tableName)
         {
@@ -83,7 +72,7 @@ namespace Shortpad.Managers
                         OpenActionPage(data);
                         break;
                     default:
-                        ShowToastSafe($"未知的动作类型：{data.ActionType}", ToastType.Error);
+                        ShowToast($"未知的动作类型：{data.ActionType}", ToastType.Error);
                         break;
                 }
             }
@@ -107,7 +96,7 @@ namespace Shortpad.Managers
             var result = await _launcher.LaunchAsync(req);
             if (!result.Success)
             {
-                ShowToastSafe($"打开失败：{result.ErrorMessage}", ToastType.Error);
+                ShowToast($"打开失败：{result.ErrorMessage}", ToastType.Error);
             }
         }
 
@@ -145,7 +134,7 @@ namespace Shortpad.Managers
             string dllPath = data.Location;
             if (string.IsNullOrEmpty(dllPath) || !File.Exists(dllPath))
             {
-                ShowToastSafe($"扩展文件不存在: {dllPath}", ToastType.Error);
+                ShowToast($"扩展文件不存在: {dllPath}", ToastType.Error);
                 return;
             }
 
