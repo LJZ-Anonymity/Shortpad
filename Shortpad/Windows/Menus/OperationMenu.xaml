@@ -67,7 +67,7 @@
                     </Button>
                     <Button x:Name="CutAction" ToolTip="复制并删除动作" Style="{StaticResource MenuButton}" Click="CutAction_Click">
                         <Grid Width="199">
-                            <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                            <Image Source="/Resources/Images/action_cut.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="剪切"/>
                         </Grid>
                     </Button>
@@ -120,7 +120,7 @@
                                 </StackPanel>
                             </Button.ToolTip>
                             <Grid Width="194">
-                                <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                                <Image Source="/Resources/Images/square-chevron-up.png" Style="{StaticResource MenuButtonImage}"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="悬浮此动作"/>
                             </Grid>
                         </Button>
@@ -132,7 +132,7 @@
                                 </StackPanel>
                             </Button.ToolTip>
                             <Grid Width="194">
-                                <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                                <Image Source="/Resources/Images/circle-chevron-up.png" Style="{StaticResource MenuButtonImage}"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="悬浮动作页"/>
                             </Grid>
                         </Button>

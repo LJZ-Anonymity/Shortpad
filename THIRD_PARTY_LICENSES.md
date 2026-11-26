@@ -12,7 +12,8 @@
 
 | 项目中的文件 | Lucide 图标名 |
 | :--- | :--- |
-| `action_copy.png` | `copy` |
+| `action_copy.png` | `files` |
+| `action_cut.png` | `scissors` |
 | `action_open_file.png` | `file` |
 | `action_open_folder.png` | `folder-open` |
 | `action_open_web.png` | `external-link` |
@@ -22,7 +23,6 @@
 | `button_add.png` | `circle-plus` |
 | `button_add_scene.png` | `plus` |
 | `button_close.png` | `x` |
-| `button_copy_scene_id.png` | `files` |
 | `button_edit_scene.png` | `trash-2` |
 | `button_drag.png` | `move` |
 | `button_edit_scene` | `square-pen` |

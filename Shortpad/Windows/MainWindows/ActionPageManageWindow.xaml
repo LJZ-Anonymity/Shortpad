@@ -141,7 +141,7 @@
                         </Button>
                         <Button x:Name="CopyActionPageIDButton" Style="{StaticResource MenuButton}" ToolTip="复制动作页ID" Click="CopyActionPageIDButton_Click">
                             <Grid Width="176">
-                                <Image Source="/Resources/Images/button_copy_scene_id.png" Style="{StaticResource SelectButtonImage}"/>
+                                <Image Source="/Resources/Images/action_copy.png" Style="{StaticResource SelectButtonImage}"/>
                                 <TextBlock Text="复制ID" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
