@@ -629,7 +629,7 @@ namespace Shortpad.Windows.MainWindows
         private Canvas GenerateCanvas(int canvasIndex, string style)
         {
             Canvas dynamicCanvas = GenerateCanva(canvasIndex, style); // 生成画布
-            Grid grid = GenerateTitle(canvasIndex, style); // 生成标题
+            Grid grid = new Grid { Style = (Style)FindResource("ActionPageTitleGrid") };
             dynamicCanvas.Children.Add(grid); // 将网格添加到画布
             Button pageButton = GenerateChangePageButton(canvasIndex, style); // 生成标题按钮
             grid.Children.Add(pageButton);
@@ -639,13 +639,12 @@ namespace Shortpad.Windows.MainWindows
 
             TextBlock actionPageName = GenerateActionPageName(canvasIndex); // 生成动作页名称
             grid.Children.Add(actionPageName);
-    
+
             int rows = style == "_global" ? 3 : 4; // 行数
             int cols = 4; // 列数
             UniformGrid uniformGrid = new()
             {
-                Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F3F3F3")),
-                Margin = new Thickness(0, 20, 0, 0),
+                Style = (Style)FindResource("UniformGrid"),
                 Columns = cols,
                 Rows = rows,
             };
@@ -689,17 +688,6 @@ namespace Shortpad.Windows.MainWindows
                 Name = canvasName, // 画布名称
             }; // 创建画布
             return dynamicCanvas; // 返回画布
-        }
-
-        /// <summary>
-        /// 生成标题
-        /// </summary>
-        /// <param name="canvasIndex"> 画布索引 </param>
-        /// <param name="style"> 画布类型 </param>
-        private Grid GenerateTitle(int canvasIndex, string style)
-        {
-            Grid grid = new Grid { Style = (Style)FindResource("ActionPageTitleGrid") }; // 创建网格
-            return grid; // 返回网格
         }
 
         /// <summary>

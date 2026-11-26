@@ -16,6 +16,10 @@
 >
     <Window.Resources>
         <conv:SearchHintVisibilityConverter x:Key="SearchHintVisibilityConverter"/>
+        <Style x:Key="UniformGrid" TargetType="UniformGrid">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="0,20,0,0"/>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -36,7 +40,7 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Border Margin="9,44,0,39" CornerRadius="4" HorizontalAlignment="Left" Width="221" BorderBrush="#FFB4B4B4" BorderThickness="1">
+        <Border Margin="9,44,0,39" CornerRadius="4" HorizontalAlignment="Left" Width="221" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1">
             <StackPanel x:Name="ActionPagesButtonPanel"/>
         </Border>
         <Button x:Name="AddSceneButton" Style="{StaticResource BaseRoundedButton}" styles:ButtonStyles.CornerRadius="5,0,0,5" ToolTip="添加场景" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="50" Click="AddSceneButton_Click">
@@ -60,14 +64,31 @@
             </Label.ToolTip>
         </Label>
 
-        <Border x:Name="MainBorder" Margin="239,31,11,0" BorderBrush="#BCBCBC" BorderThickness="0.75" VerticalAlignment="Top" Height="224">
+        <Border x:Name="MainBorder" Margin="239,31,11,0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0.75" VerticalAlignment="Top" Height="224">
             <ScrollViewer x:Name="ScrollViewer" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" ScrollChanged="ScrollViewer_ScrollChanged">
-                <ListView x:Name="MainListView" Background="#EEEEEE" AllowDrop="True" PreviewDragOver="ListView_PreviewDragOver" Drop="ListView_Drop">
+                <ListView x:Name="MainListView" Background="{DynamicResource MenuGridBrush}" AllowDrop="True" PreviewDragOver="ListView_PreviewDragOver" Drop="ListView_Drop">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel x:Name="MainStackPanel" Orientation="Horizontal" MouseWheel="MainStackPanel_MouseWheel"/>
                         </ItemsPanelTemplate>
                     </ListView.ItemsPanel>
+
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                            <Setter Property="BorderThickness" Value="1"/>
+                            <Setter Property="Margin" Value="1,0"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <Border Background="{TemplateBinding Background}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
                 </ListView>
             </ScrollViewer>
         </Border>

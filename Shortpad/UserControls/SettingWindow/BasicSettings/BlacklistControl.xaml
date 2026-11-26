@@ -33,27 +33,27 @@
 
         <!-- 黑名单项边框 -->
         <Style x:Key="BlacklistItemBorder" TargetType="Border">
-            <Setter Property="Height" Value="25"/>
-            <Setter Property="CornerRadius" Value="3"/>
-            <Setter Property="Margin" Value="2,2,2,0"/>
             <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="2,2,2,0"/>
+            <Setter Property="CornerRadius" Value="3"/>
+            <Setter Property="Height" Value="25"/>
         </Style>
 
         <!-- 黑名单项内容面板 -->
         <Style x:Key="BlacklistItemStackPanel" TargetType="StackPanel">
-            <Setter Property="Width" Value="250"/>
-            <Setter Property="Orientation" Value="Horizontal"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Margin" Value="2,0,0,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="Margin" Value="2,0,0,0"/>
+            <Setter Property="Width" Value="250"/>
         </Style>
 
         <!-- 黑名单项图标面板 -->
         <Style x:Key="BlacklistItemIconStackPanel" TargetType="StackPanel">
-            <Setter Property="Orientation" Value="Horizontal"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Margin" Value="2,0,0,0"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="Margin" Value="2,0,0,0"/>
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -70,7 +70,7 @@
             <!-- 禁用Shortpad的应用程序 -->
             <GroupBox Header="禁用Shortpad的应用程序" Style="{StaticResource SettingGroupBox}" Margin="5,21,10,0" HorizontalAlignment="Stretch">
                 <Grid>
-                    <Border BorderBrush="#FFD5D5D5" BorderThickness="1" CornerRadius="3" VerticalAlignment="Top" Margin="4,0,0,0" Height="194">
+                    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="3" VerticalAlignment="Top" Margin="4,0,0,0" Height="194">
                         <Grid>
                             <Grid.Triggers>
                                 <EventTrigger RoutedEvent="MouseEnter">

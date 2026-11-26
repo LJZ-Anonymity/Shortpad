@@ -17,7 +17,7 @@
 
     <!-- 自定义 Thumb 样式，用于滚动条的滑块 -->
     <Style x:Key="ScrollThumb" TargetType="{x:Type Thumb}">
-        <Setter Property="Background" Value="Gray"/>
+        <Setter Property="Background" Value="{DynamicResource ScrollThumbBrush}"/>
         <Setter Property="Tag" Value="Vertical"/>
         <Setter Property="Template">
             <Setter.Value>

@@ -4,6 +4,7 @@
 >
     <!-- 动作页标题网格 -->
     <Style x:Key="ActionPageCanvas" TargetType="Canvas">
+        <Setter Property="Background" Value="{DynamicResource MainStackPanelBrush}"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="AllowDrop" Value="true"/>

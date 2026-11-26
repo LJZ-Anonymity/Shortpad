@@ -14,7 +14,7 @@
     <Style x:Key="ActionPageTitleGrid" TargetType="Grid">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Background" Value="#F3F3F3"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Height" Value="20"/>
         <Setter Property="Width" Value="260"/>
     </Style>
