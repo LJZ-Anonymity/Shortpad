@@ -128,7 +128,7 @@
                         <DataTrigger Binding="{Binding Blur}" Value="0">
                             <Setter Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                                    <DropShadowEffect Color="#66000000" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                                 </Setter.Value>
                             </Setter>
                             <Setter Property="Opacity" Value="1"/>
@@ -137,7 +137,7 @@
                         <DataTrigger Binding="{Binding Blur}" Value="1">
                             <Setter Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
+                                    <DropShadowEffect Color="#66000000" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                                 </Setter.Value>
                             </Setter>
                             <Setter Property="Opacity" Value="0.5"/>
