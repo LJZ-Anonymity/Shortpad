@@ -893,62 +893,76 @@ namespace Shortpad
         private string GetProcessSceneType()
         {
             string result = string.Empty;
-            IntPtr foregroundWindow = WindowHelper.GetCurrentForegroundWindow(); // 获取当前前台窗口
-            if (foregroundWindow == IntPtr.Zero) return result; // 无前台窗口
+            IntPtr hwnd = WindowHelper.GetCurrentForegroundWindow(); // 先取前台窗口
+            if (WindowHelper.IsIrrelevantWindow(hwnd)) // 前台是任务栏/桌面/Shortpad 自己 → 退化到鼠标位置窗口
+            {
+                IntPtr mouseHwnd = WindowHelper.GetMousePointWindow();
+                if (!WindowHelper.IsIrrelevantWindow(mouseHwnd))
+                    hwnd = mouseHwnd;
+            }
+
+            if (hwnd == IntPtr.Zero) return result;
             try
             {
-                uint processId = WindowHelper.GetWindowProcessId(foregroundWindow); // 获取窗口进程ID
-                using var process = Process.GetProcessById((int)processId); // 获取进程
+                uint processId = WindowHelper.GetWindowProcessId(hwnd);
+                using var process = Process.GetProcessById((int)processId);
 
-                // 访问 MainModule 可能因权限不足抛出 Win32Exception（拒绝访问）或进程退出等异常
-                string processFilePath = string.Empty;
-                try
-                {
-                    processFilePath = process.MainModule.FileName; // 获取进程文件路径
-                }
-                catch // 无法访问主模块则保持默认结果
-                {
-                    return result;
-                }
+                string processFilePath;
+                try { processFilePath = process.MainModule.FileName; }
+                catch { return result; }
 
-                if (!string.IsNullOrEmpty(processFilePath))
+                if (string.IsNullOrEmpty(processFilePath)) return result;
+
+                string processFileName = Path.GetFileNameWithoutExtension(processFilePath).ToLowerInvariant();
+                string normalizedCurrent = NormalizePath(processFilePath);
+
+                var dbTask = Task.Run(() =>
                 {
-                    string processFileName = Path.GetFileNameWithoutExtension(processFilePath).ToLower(); // 获取进程文件名（不含后缀）
                     try
                     {
-                        // 使用超时任务避免数据库操作阻塞过久
-                        var dbTask = Task.Run(() =>
-                        {
-                            try
-                            {
-                                var db = new ActionPageDatabase();
-                                if (db.SceneExists(processFileName))
-                                {
-                                    var scene = db.GetSceneData(processFileName);
-                                    if (scene != null)
-                                    {
-                                        if (string.Equals(scene.SceneProcess, processFilePath, StringComparison.OrdinalIgnoreCase) && scene.SceneCount > 0)
-                                        {
-                                            return processFileName;
-                                        }
-                                    }
-                                }
-                            }
-                            catch { }
-                            return string.Empty;
-                        });
+                        var db = new ActionPageDatabase();
+                        if (!db.SceneExists(processFileName)) return string.Empty;
 
-                        // 等待最多 500ms，超时则返回默认结果
-                        if (dbTask.Wait(TimeSpan.FromMilliseconds(500)))
-                        {
-                            result = dbTask.Result;
-                        }
+                        var scene = db.GetSceneData(processFileName);
+                        if (scene == null || scene.SceneCount <= 0) return string.Empty;
+
+                        return string.Equals(NormalizePath(scene.SceneProcess), normalizedCurrent,
+                                             StringComparison.OrdinalIgnoreCase)
+                            ? processFileName
+                            : string.Empty;
                     }
-                    catch { } // 忽略超时或其他异常
-                }
+                    catch { return string.Empty; }
+                });
+
+                if (dbTask.Wait(TimeSpan.FromMilliseconds(500)))
+                    result = dbTask.Result;
             }
-            catch { } // 忽略所有异常
+            catch { }
             return result;
+        }
+
+        /// <summary>
+        /// 规范化路径：去引号/空白、展开到绝对路径、去掉 \\?\ 前缀、统一分隔符。
+        /// </summary>
+        private static string NormalizePath(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path)) return string.Empty;
+            string p = path.Trim().Trim('"');
+
+            try
+            {
+                p = Path.GetFullPath(p); // 展开 ..、统一为绝对路径
+            }
+            catch
+            {
+                return p.Replace('/', '\\'); // 非法路径，退回基础清洗
+            }
+
+            // 去掉 \\?\ 长路径前缀（GetFullPath 有时会保留）
+            if (p.StartsWith(@"\\?\", StringComparison.Ordinal))
+                p = p.Substring(4);
+
+            return p.Replace('/', '\\');
         }
 
         /// <summary>

@@ -106,6 +106,15 @@ namespace Shortpad.Helpers
         // 获取窗口类名
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern int GetClassName(nint hWnd, StringBuilder lpClassName, int nMaxCount);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr WindowFromPoint(POINT point);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetAncestor(IntPtr hwnd, uint gaFlags);
+
+        private const uint GA_ROOT = 2;
+
         #endregion
 
         /// <summary>
@@ -578,6 +587,44 @@ namespace Shortpad.Helpers
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 鼠标位置下的顶层窗口
+        /// </summary>
+        public static IntPtr GetMousePointWindow()
+        {
+            if (!GetCursorPos(out var pt)) return IntPtr.Zero;
+            IntPtr hwnd = WindowFromPoint(pt);
+            return hwnd == IntPtr.Zero ? IntPtr.Zero : GetAncestor(hwnd, GA_ROOT);
+        }
+
+        /// <summary>
+        /// 是否为任务栏/桌面/Shortpad 自己这类"无意义"的窗口
+        /// </summary>
+        public static bool IsIrrelevantWindow(IntPtr hwnd)
+        {
+            if (hwnd == IntPtr.Zero) return true;
+
+            var sb = new StringBuilder(256);
+            if (GetClassName(hwnd, sb, sb.Capacity) > 0)
+            {
+                string cls = sb.ToString();
+                if (cls is "Shell_TrayWnd" or "Shell_SecondaryTrayWnd"
+                         or "Progman" or "WorkerW" or "NotifyIconOverflowWindow")
+                    return true;
+            }
+
+            try
+            {
+                uint pid = WindowHelper.GetWindowProcessId(hwnd);
+                using var p = Process.GetProcessById((int)pid);
+                if (string.Equals(p.ProcessName, "Shortpad", StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            catch { }
+
+            return false;
         }
     }
 }
