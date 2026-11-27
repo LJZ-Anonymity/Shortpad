@@ -225,14 +225,14 @@
                                 <StackPanel>
                                     <Button Style="{StaticResource MenuButton}" ToolTip="为应用程序创建场景设置，管理动作页" Click="OpenActionPageManageWindow">
                                         <Grid>
-                                            <ui:IconImage Source="/Resources/Images/scene_actions.png" Color="{DynamicResource ImageBrush}"/>
+                                            <ui:IconImage Source="/Resources/Images/scene_actions.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                             <TextBlock Text="场景与动作" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                         </Grid>
                                     </Button>
                                     <Rectangle Height="1" Width="176" Fill="{DynamicResource BorderBrush}" Margin="0,3"/>
                                     <Button Style="{StaticResource MenuButton}" ToolTip="关闭Shortpad软件" Click="QuitShortpad">
                                         <Grid>
-                                            <ui:IconImage Source="/Resources/Images/menu_quit_app.png" Color="{DynamicResource ImageBrush}"/>
+                                            <ui:IconImage Source="/Resources/Images/menu_quit_app.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                             <TextBlock Text="退出" TextAlignment="Left" Margin="26,0,0,0" FontSize="13" VerticalAlignment="Center"/>
                                         </Grid>
                                     </Button>

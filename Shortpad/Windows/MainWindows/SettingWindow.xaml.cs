@@ -694,5 +694,11 @@ namespace Shortpad.Windows.MainWindows
             DependencyProperty.RegisterAttached("SelectedBrush", typeof(Brush), typeof(SideBarButton), new PropertyMetadata(null));
         public static Brush GetSelectedBrush(DependencyObject obj) => (Brush)obj.GetValue(SelectedBrushProperty);
         public static void SetSelectedBrush(DependencyObject obj, Brush value) => obj.SetValue(SelectedBrushProperty, value);
+        public static readonly DependencyProperty IconTintBrushProperty =
+            DependencyProperty.RegisterAttached("IconTintBrush", typeof(Brush), typeof(SideBarButton),
+                new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+
+        public static void SetIconTintBrush(DependencyObject d, Brush value) => d.SetValue(IconTintBrushProperty, value);
+        public static Brush GetIconTintBrush(DependencyObject d) => (Brush)d.GetValue(IconTintBrushProperty);
     }
 }

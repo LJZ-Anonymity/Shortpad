@@ -74,4 +74,9 @@
     <SolidColorBrush x:Key="CheckBoxBorderHoverBrush" Color="#FF8A8A90"/>
     <SolidColorBrush x:Key="CheckBoxCheckedBrush" Color="{StaticResource AccentColor}"/>
     <SolidColorBrush x:Key="CheckBoxCheckMarkBrush" Color="{StaticResource WhiteColor}"/>
+
+    <!-- ToolTip -->
+    <SolidColorBrush x:Key="TooltipBackground" Color="#2B2D31"/>
+    <SolidColorBrush x:Key="TooltipBorderBrush" Color="#444950"/>
+    <Color x:Key="TooltipShadowColor">Black</Color>
 </ResourceDictionary>

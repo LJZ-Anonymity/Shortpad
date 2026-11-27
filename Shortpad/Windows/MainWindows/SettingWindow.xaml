@@ -1,6 +1,7 @@
 ﻿<Window
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:conv="clr-namespace:Shortpad.UI.Converters;assembly=Shortpad.UI"
+    xmlns:ui="clr-namespace:Shortpad.UI.UserControls;assembly=Shortpad.UI"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -30,7 +31,14 @@
                     <ControlTemplate TargetType="RadioButton">
                         <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="0">
                             <Grid>
-                                <Image Source="{Binding Path=(ctl:SideBarButton.Icon), RelativeSource={RelativeSource TemplatedParent}}" Width="24" Height="24" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                                <Grid Width="24" Height="24" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <Image Source="{Binding Path=(ctl:SideBarButton.Icon), RelativeSource={RelativeSource TemplatedParent}}" Stretch="Uniform"/>
+                                    <Rectangle Fill="{Binding Path=(ctl:SideBarButton.IconTintBrush), RelativeSource={RelativeSource TemplatedParent}}">
+                                        <Rectangle.OpacityMask>
+                                            <ImageBrush ImageSource="{Binding Path=(ctl:SideBarButton.Icon), RelativeSource={RelativeSource TemplatedParent}}" Stretch="Uniform"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Grid>
                                 <ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
@@ -66,6 +74,7 @@
             <Setter Property="Padding" Value="39,0,0,0"/>
             <Setter Property="ctl:SideBarButton.HoverBrush" Value="{DynamicResource Button2HoverBrush}"/>
             <Setter Property="ctl:SideBarButton.SelectedBrush" Value="{DynamicResource Button2HoverBrush}"/>
+            <Setter Property="ctl:SideBarButton.IconTintBrush" Value="{DynamicResource ImageBrush}"/>
         </Style>
     </Window.Resources>
 
@@ -78,13 +87,13 @@
         <!-- 侧边栏1 -->
         <StackPanel x:Name="MainStackPanel" Background="{DynamicResource MainStackPanelBrush}" Width="49" HorizontalAlignment="Center">
             <RadioButton x:Name="BasicSettings" Style="{StaticResource Button1}" ToolTip="基础设置" Click="BasicSettings_Click">
-                <Image Source="/Resources/Images/settings_tab_basic.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
+                <ui:IconImage Source="/Resources/Images/settings_tab_basic.png" HorizontalAlignment="Center" Color="{DynamicResource ImageBrush}" Width="30" Height="30"/>
             </RadioButton>
             <RadioButton Visibility="Collapsed" x:Name="Auxiliary_Functions" Style="{StaticResource Button1}" ToolTip="辅助功能" Click="Auxiliary_Functions_Click">
-                <!--<Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>-->
+                <!--<ui:IconImage Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Center" Color="{DynamicResource ImageBrush}" Width="30" Height="30"/>-->
             </RadioButton>
             <RadioButton x:Name="Tools" Style="{StaticResource Button1}" ToolTip="工具" Click="Tools_Click">
-                <Image Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Center" VerticalAlignment="Center" Width="30" Height="30"/>
+                <ui:IconImage Source="/Resources/Images/app_enabled.png" HorizontalAlignment="Center" Color="{DynamicResource ImageBrush}" Width="30" Height="30"/>
             </RadioButton>
         </StackPanel>
         <!-- 侧边栏2 -->

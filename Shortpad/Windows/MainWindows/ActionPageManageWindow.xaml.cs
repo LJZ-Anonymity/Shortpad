@@ -4,6 +4,7 @@ using Shortpad.Windows.EditWindows;
 using Shortpad.Windows.ToolWindows;
 using Shortpad.Windows.AddWindows;
 using Shortpad.Contracts.Models;
+using Shortpad.UI.UserControls;
 using System.Windows.Controls;
 using Shortpad.Database.Core;
 using Shortpad.Windows.Menus;
@@ -20,6 +21,7 @@ namespace Shortpad.Windows.MainWindows
 {
     public partial class ActionPageManageWindow : Window
     {
+        private List<string> sceneTypes = new List<string> { "_global", "common", "taskbar", "desktop" };
         private bool isDarkModle = false, showUsedTimes = false; // 是否为暗黑模式，是否显示使用次数
         private readonly ButtonManager buttonManager = new(); // 按钮管理器
         private readonly ActionPageDatabase db3 = new(); // 动作页数据库
@@ -252,12 +254,13 @@ namespace Shortpad.Windows.MainWindows
         // 设置场景按钮背景色
         private void SetButtonBackground()
         {
-            foreach (UIElement element in ActionPagesButtonPanel.Children)
+            foreach (RadioButton radioButton in ActionPagesButtonPanel.Children.OfType<RadioButton>())
             {
-                if (element is RadioButton radioButton)
+                string sceneKey = radioButton.Tag as string ?? radioButton.Name;
+                if (string.Equals(sceneKey, type, StringComparison.Ordinal))
                 {
-                    string sceneKey = radioButton.Tag as string ?? radioButton.Name;
-                    radioButton.IsChecked = sceneKey == type;
+                    radioButton.IsChecked = true;
+                    break;
                 }
             }
         }
@@ -301,12 +304,11 @@ namespace Shortpad.Windows.MainWindows
         /// <param name="scenes">待排序的场景数据</param>
         private List<SceneData> OrderScenes(List<SceneData> scenes)
         {
-            var defaultScenes = new List<string> { "_global", "common", "taskbar", "desktop" };
-            var ordered = new List<SceneData>(new SceneData[defaultScenes.Count]); // 默认场景
+            var ordered = new List<SceneData>(new SceneData[sceneTypes.Count]); // 默认场景
             var others = new List<SceneData>(); // 其他场景
             foreach (var data in scenes)
             {
-                int index = defaultScenes.IndexOf(data.SceneName);
+                int index = sceneTypes.IndexOf(data.SceneName);
                 if (index >= 0)
                 {
                     ordered[index] = data;
@@ -352,35 +354,61 @@ namespace Shortpad.Windows.MainWindows
             return buttonContent; // 返回按钮内容
         }
 
-        /// <summary>
-        /// 创建场景图片控件
-        /// </summary>
-        /// <param name="sceneData"> 场景数据 </param>
-        private Image CreateSceneImage(SceneData sceneData)
+        private bool UseIconImage(SceneData sceneData) => !string.IsNullOrEmpty(sceneData.SceneName) && sceneTypes.Contains(sceneData.SceneName);
+
+        private FrameworkElement CreateImageControl(SceneData sceneData, ImageSource source)
         {
-            const string defaultImagePath = "pack://application:,,,/Resources/Images/app_enabled.png";
-            const string resourcePrefix = "/Resources/Images/";
-            const string packPrefix = "pack://application:,,,";
-            try // 如果场景图标路径为空则使用默认图片，否则尝试加载指定图片
+            if (UseIconImage(sceneData))
             {
-                Image image = new Image
+                IconImage iconImage= new IconImage
                 {
-                    Source = string.IsNullOrEmpty(sceneData.SceneIconPath)
-                        ? new BitmapImage(new Uri(defaultImagePath, UriKind.Absolute))
-                        : CreateImageSource(sceneData.SceneIconPath, resourcePrefix, packPrefix, defaultImagePath),
-                    Style = (Style)FindResource("SceneButtonImage")
+                    Margin = new Thickness(5, 0, 0, 0),
+                    Source = source,
+                    Height = 24,
+                    Width = 24
                 };
-                return image;
+                iconImage.SetResourceReference(IconImage.ColorProperty, "ImageBrush");
+                return iconImage;
+            }
+
+            return new Image
+            {
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(5, 0, 0, 0),
+                Source = source,
+                Height = 24,
+                Width = 24
+            };
+        }
+
+        private FrameworkElement CreateSceneImage(SceneData sceneData)
+        {
+            try
+            {
+                ImageSource source = ResolveSceneImageSource(sceneData);
+                return CreateImageControl(sceneData, source);
             }
             catch (Exception ex)
             {
                 ShowToast("加载场景图片失败：" + ex.Message, ToastType.Error);
-                return new Image
-                {
-                    Source = new BitmapImage(new Uri(defaultImagePath, UriKind.Absolute)),
-                    Style = (Style)FindResource("SceneButtonImage")
-                };
+
+                const string defaultImagePath = "pack://application:,,,/Resources/Images/app_enabled.png";
+                ImageSource fallback = new BitmapImage(new Uri(defaultImagePath, UriKind.Absolute));
+                return CreateImageControl(sceneData, fallback);
             }
+        }
+
+        private ImageSource ResolveSceneImageSource(SceneData sceneData)
+        {
+            const string defaultImagePath = "pack://application:,,,/Resources/Images/app_enabled.png";
+            const string resourcePrefix = "/Resources/Images/";
+            const string packPrefix = "pack://application:,,,";
+
+            if (string.IsNullOrEmpty(sceneData.SceneIconPath))
+                return new BitmapImage(new Uri(defaultImagePath, UriKind.Absolute));
+
+            return CreateImageSource(sceneData.SceneIconPath, resourcePrefix, packPrefix, defaultImagePath);
         }
 
         /// <summary>
@@ -438,7 +466,7 @@ namespace Shortpad.Windows.MainWindows
                 Style = (Style)FindResource("SceneTagTextBlock"),
             };
             string tagText = sceneData.SceneTag; // 先拼接标签文本，如果不是默认场景，则加上.exe后缀（用于区分默认场景和应用场景）
-            if (!new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(sceneData.SceneTag))
+            if (!sceneTypes.Contains(sceneData.SceneTag))
                 tagText += ".exe"; // 普通应用场景标签加.exe后缀，便于用户识别
             // 必须在拼接好后再传递给高亮方法，否则高亮方法可能会覆盖Text属性，导致后缀丢失
             TextBlockHelper.SetHighlight(sceneTag, new HighlightTextData
@@ -531,7 +559,7 @@ namespace Shortpad.Windows.MainWindows
         {
             if (sender is not RadioButton button) return; // 转换为单选按钮
             string sceneKey = button.Tag as string ?? button.Name;
-            if (new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(sceneKey)) return; // 禁止编辑默认场景
+            if (sceneTypes.Contains(sceneKey)) return; // 禁止编辑默认场景
             EditSceneMenu editSceneMenu = new(sceneKey); // 创建菜单
             editSceneMenu.Show(); // 显示菜单
         }
@@ -541,7 +569,19 @@ namespace Shortpad.Windows.MainWindows
         {
             SceneTitleStackPanel.Children.Clear(); // 清空标题StackPanel
             var sceneInfo = db3.GetSceneData(type); // 获取场景信息
-            SceneImage.Source = new BitmapImage(new Uri(sceneInfo.SceneIconPath, UriKind.RelativeOrAbsolute)); // 设置场景图片
+            FrameworkElement source = CreateSceneImage(sceneInfo);
+            if(sceneTypes.Contains(sceneInfo.SceneName))
+            {
+                SceneIconImage.Source = ResolveSceneImageSource(sceneInfo); // 设置场景图片
+                SceneImage.Visibility = Visibility.Hidden;
+                SceneIconImage.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                SceneImage.Source = ResolveSceneImageSource(sceneInfo); // 设置场景图片
+                SceneImage.Visibility = Visibility.Visible;
+                SceneIconImage.Visibility = Visibility.Hidden;
+            }
             string sceneTitleText = db3.GetSceneTitle(sceneInfo); // 获取场景标题
             TextBlock sceneTitle = new()
             {
@@ -554,7 +594,7 @@ namespace Shortpad.Windows.MainWindows
                 Style = (Style)FindResource("SceneDescriptionTextBlock"), // 应用样式
                 Text = sceneInfo.SceneTag // 场景标签
             }; // 创建场景描述
-            if (!new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(sceneInfo.SceneTag))
+            if (!sceneTypes.Contains(sceneInfo.SceneTag))
                 sceneDescription.Text += ".exe"; // 标签可能为空
             SceneTitleStackPanel.Children.Add(sceneDescription); // 添加到标题StackPanel
         }
@@ -1128,7 +1168,7 @@ namespace Shortpad.Windows.MainWindows
         // 点击按钮编辑场景
         private void EditSceneButton_Click(object sender, RoutedEventArgs e)
         {
-            if (new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(type)) // 如果是默认场景
+            if (sceneTypes.Contains(type)) // 如果是默认场景
                 ShowToast("此项不可编辑。", ToastType.Common); // 弹出消息提醒
             else
             {
@@ -1142,7 +1182,7 @@ namespace Shortpad.Windows.MainWindows
         // 点击按钮删除场景
         private void DeleteSceneButton_Click(object sender, RoutedEventArgs e)
         {
-            if (new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(type)) // 如果是默认场景
+            if (sceneTypes.Contains(type)) // 如果是默认场景
                 ShowToast("此项不可删除。", ToastType.Common); // 弹出消息提醒
             else
             {
@@ -1219,7 +1259,7 @@ namespace Shortpad.Windows.MainWindows
                     {
                         db2.DeleteButtonTable(type); // 如果没有画布，则删除按钮数据表
                         db3.DeleteActionPageTable(type); // 删除动作页数据表
-                        if (!new List<string> { "_global", "common", "taskbar", "desktop" }.Contains(type)) // 如果不是默认场景
+                        if (!sceneTypes.Contains(type)) // 如果不是默认场景
                             db3.DeleteScene(type); // 删除场景数据表
                     }
 

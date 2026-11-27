@@ -1,27 +1,24 @@
-﻿<ResourceDictionary 
+﻿<ResourceDictionary
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 >
-    <!-- 圆角气泡 -->
     <Style x:Key="{x:Type ToolTip}" TargetType="{x:Type ToolTip}">
+        <Setter Property="Background" Value="{DynamicResource TooltipBackground}"/>
         <Setter Property="FontFamily" Value="{DynamicResource GlobalFontFamily}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
         <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Background" Value="White"/>
-        <Setter Property="Foreground" Value="Black"/>
         <Setter Property="MaxWidth" Value="400"/>
         <Setter Property="FontSize" Value="12"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToolTip}">
                     <Grid>
-                        <!-- 阴影效果 -->
-                        <Border CornerRadius="3" Background="White" Margin="3">
+                        <Border CornerRadius="3" Background="{DynamicResource TooltipBackground}" Margin="3">
                             <Border.Effect>
-                                <DropShadowEffect Color="LightGray" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
+                                <DropShadowEffect Color="{DynamicResource TooltipShadowColor}" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                             </Border.Effect>
                         </Border>
-                        <!-- 内容区域 -->
-                        <Border Background="White" BorderBrush="#C5CFD8" BorderThickness="1" CornerRadius="3" Margin="3">
+                        <Border Background="{DynamicResource TooltipBackground}" BorderBrush="{DynamicResource TooltipBorderBrush}" BorderThickness="1" CornerRadius="3" Margin="3">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6">
                                 <ContentPresenter.Resources>
                                     <Style TargetType="TextBlock">
