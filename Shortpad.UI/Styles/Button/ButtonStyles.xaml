@@ -84,32 +84,45 @@
 
     <!-- SettingWindow -->
     <!-- 设置菜单的Button -->
-    <Style x:Key="Button3" TargetType="Button">
-        <Setter Property="BorderThickness" Value="0,0,0,1.3"/>
+    <Style x:Key="Button3" TargetType="RadioButton">
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
         <Setter Property="HorizontalAlignment" Value="Left"/>
-        <Setter Property="BorderBrush" Value="#FF326CF3"/>
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="Background" Value="{x:Null}"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Height" Value="30"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="Button">
-                    <Grid>
-                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
-                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </Grid>
+                <ControlTemplate TargetType="RadioButton">
+                    <Border x:Name="Bd" SnapsToDevicePixels="True">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0" Padding="12,0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}" RecognizesAccessKey="True"/>
+                            </Border>
+                            <Border x:Name="Indicator" Grid.Row="1" Height="3" Background="{DynamicResource AccentBrush}" Opacity="0" HorizontalAlignment="Stretch"/>
+                        </Grid>
+                    </Border>
+
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#FAFAFA"/>
+                            <Setter TargetName="Bd" Property="Background" Value="{DynamicResource CheckedSceneButtonBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Indicator" Property="Opacity" Value="1"/>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-
+    
     <!-- 移除黑名单进程的Button -->
     <Style x:Key="DeleteBlacklistItem" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
         <Setter Property="HorizontalAlignment" Value="Right"/>

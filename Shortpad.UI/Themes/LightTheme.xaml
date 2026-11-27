@@ -39,7 +39,8 @@
     <SolidColorBrush x:Key="MenuGridBrush" Color="#FFF0F0F0"/>
     <SolidColorBrush x:Key="Button1HoverBrush" Color="{StaticResource F4F4Color}"/>
     <SolidColorBrush x:Key="Button2HoverBrush" Color="{StaticResource FAFAColor}"/>
-
+    <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
+    
     <!-- 按钮 -->
     <SolidColorBrush x:Key="ButtonBrush" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource BorderColor}"/>

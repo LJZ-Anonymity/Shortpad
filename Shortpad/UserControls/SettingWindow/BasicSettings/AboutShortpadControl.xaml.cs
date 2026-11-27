@@ -41,7 +41,7 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
         private void AboutShortpadButton_Click(object sender, RoutedEventArgs e)
         {
             settingManager.SetGridVisible(AboutShortpadButtonGrid, MainGrid); // 设置Grid可见性
-            settingManager.ButtonStyle3_Click(AboutShortpadButton, MainGrid); // 保存Button类型3边框设置
+            AboutShortpadButton.IsChecked = true; // 设置目标Button为选中状态
         }
 
         // 打开更新历史文件（从资源型JSON反序列化）
@@ -118,7 +118,7 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
         public void Privacy_StatementButton_Click(object sender, RoutedEventArgs e)
         {
             settingManager.SetGridVisible(Privacy_StatementButtonGrid, MainGrid); // 设置Grid可见性
-            settingManager.ButtonStyle3_Click(Privacy_StatementButton, MainGrid); // 保存Button类型3边框设置
+            Privacy_StatementButton.IsChecked = true;
         }
 
         /// <summary>

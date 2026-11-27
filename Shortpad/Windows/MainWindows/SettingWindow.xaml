@@ -56,7 +56,7 @@
             <Setter Property="Height" Value="45"/>
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="ctl:SideBarButton.HoverBrush" Value="{DynamicResource Button1HoverBrush}"/>
-            <Setter Property="ctl:SideBarButton.SelectedBrush" Value="{DynamicResource Button2HoverBrush}"/>
+            <Setter Property="ctl:SideBarButton.SelectedBrush" Value="{DynamicResource Button1HoverBrush}"/>
         </Style>
 
         <!-- 侧边栏2:图标 + 文字 -->

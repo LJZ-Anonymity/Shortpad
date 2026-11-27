@@ -82,7 +82,7 @@
             <ColumnDefinition Width="952*"/>
         </Grid.ColumnDefinitions>
         <!-- 基础设置-外观-面板窗口 -->
-        <Button x:Name="AppearanceButton"  Content="面板窗口" ToolTip="外观设置" Style="{StaticResource Button3}" Margin="1,14,0,0" Width="82" Grid.Column="1" BorderThickness="0,0,0,2"/>
+        <RadioButton x:Name="AppearanceButton" IsChecked="True" Content="面板窗口" ToolTip="外观设置" Style="{StaticResource Button3}" Margin="1,14,0,0" Grid.Column="1"/>
         <Grid x:Name="AppearanceButtonGrid" Margin="10,43,0,0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="186*"/>
@@ -92,8 +92,8 @@
             <Grid x:Name="SettingGrid" Grid.Column="0" Margin="0,0,0,10">
                 <ScrollViewer x:Name="ScrollViewer" VerticalScrollBarVisibility="Hidden" ScrollChanged="ScrollViewer_ScrollChanged">
                     <Grid>
-                        <Button x:Name="DefaultAppearanceSettingButton" Content="默认设置" Style="{StaticResource Button3}" Margin="7,10,0,0" Foreground="#FF0087FC" Width="70" BorderThickness="0,0,0,2" Click="DefaultAppearanceSettingButton_Click"/>
-                        <Button x:Name="DarkThemeSettingButton" Content="深色主题设置" Style="{StaticResource Button3}" Margin="77,10,0,0" Foreground="#FF0087FC" Width="110" BorderThickness="0" Click="DarkThemeSettingButton_Click"/>
+                        <RadioButton x:Name="DefaultAppearanceSettingButton" IsChecked="True" Content="默认设置" Style="{StaticResource Button3}" Margin="7,10,0,0" Foreground="#FF0087FC" Click="DefaultAppearanceSettingButton_Click"/>
+                        <RadioButton x:Name="DarkThemeSettingButton" Content="深色主题设置" Style="{StaticResource Button3}" Margin="77,10,0,0" Foreground="#FF0087FC" BorderThickness="0" Click="DarkThemeSettingButton_Click"/>
                         <Rectangle Fill="{DynamicResource BorderBrush}" VerticalAlignment="Top" Height="1" Margin="7,40,10,0"/>
 
                         <!-- 尺寸 -->

@@ -237,15 +237,6 @@ namespace Shortpad.Managers
         }
 
         /// <summary>
-        /// 设置Button类型3边框
-        /// </summary>
-        public void ButtonStyle3_Click(Button clickedButton, Grid buttonPanelGrid)
-        {
-            foreach (var button in buttonPanelGrid.Children.OfType<Button>()) // 遍历Button容器中所有Button，设置边框
-                button.BorderThickness = button == clickedButton ? new Thickness(0, 0, 0, 2) : new Thickness(0);
-        }
-
-        /// <summary>
         /// 判断当前设置是否与原始设置相同
         /// </summary>
         public bool IsSettingsChanged()

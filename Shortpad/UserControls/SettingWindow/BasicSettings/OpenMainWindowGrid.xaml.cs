@@ -107,7 +107,7 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
         private void OpenMainWindowButton_Click(object sender, RoutedEventArgs e)
         {
             settingManager.SetGridVisible(OpenMainWindowButtonGrid, MainGrid); // 设置Grid可见性
-            settingManager.ButtonStyle3_Click(OpenMainWindowButton, MainGrid); // 设置Button样式
+            OpenMainWindowButton.IsChecked = true; // 设置按钮为选中状态
         }
 
         // 测试鼠标按键名称
