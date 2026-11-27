@@ -31,14 +31,6 @@
             <Setter Property="Height" Value="25"/>
         </Style>
 
-        <!-- 黑名单项边框 -->
-        <Style x:Key="BlacklistItemBorder" TargetType="Border">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Margin" Value="2,2,2,0"/>
-            <Setter Property="CornerRadius" Value="3"/>
-            <Setter Property="Height" Value="25"/>
-        </Style>
-
         <!-- 黑名单项内容面板 -->
         <Style x:Key="BlacklistItemStackPanel" TargetType="StackPanel">
             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -55,7 +47,46 @@
             <Setter Property="Orientation" Value="Horizontal"/>
             <Setter Property="Margin" Value="2,0,0,0"/>
         </Style>
+        
+        <!-- 黑名单项 RadioButton -->
+        <Style x:Key="BlacklistItemRadioButton" TargetType="RadioButton">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Margin" Value="2,2,2,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Height" Value="25"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="PART_Border" Background="{TemplateBinding Background}" CornerRadius="3" SnapsToDevicePixels="True">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="PART_Border" Property="Background" Value="{DynamicResource ListItemHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="PART_Border" Property="Background" Value="{DynamicResource ListItemSelectedBrush}"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsChecked" Value="True"/>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="PART_Border" Property="Background" Value="{DynamicResource ListItemSelectedHoverBrush}"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15*"/>

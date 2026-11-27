@@ -20,6 +20,7 @@
     <SolidColorBrush x:Key="ScrollThumbBrush" Color="Gray"/>
     <SolidColorBrush x:Key="SliderBrush" Color="{StaticResource BorderColor}"/>
     <SolidColorBrush x:Key="ImageBrush" Color="Black"/>
+    <SolidColorBrush x:Key="DeleteIconBrush" Color="#FFD32F2F"/>
 
     <!-- 查找应用窗口 -->
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FF1F1F1F"/>
@@ -53,6 +54,10 @@
 
     <!-- 搜索Button -->
     <SolidColorBrush x:Key="SearchButtonHoverBrush" Color="#FFEEEEEE"/>
+
+    <!-- 删除按钮（DeleteBlacklistItem） -->
+    <SolidColorBrush x:Key="DeleteButtonHoverBrush" Color="#FFEBE6E1"/>
+    <SolidColorBrush x:Key="DeleteButtonPressedBrush" Color="#FFDDD5CE"/>
 
     <!-- ComboBox 专属键 -->
     <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="{StaticResource FAFAColor}"/>

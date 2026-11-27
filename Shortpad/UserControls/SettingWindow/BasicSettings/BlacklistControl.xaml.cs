@@ -1,4 +1,5 @@
 ﻿using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using RadioButton = System.Windows.Controls.RadioButton;
 using UserControl = System.Windows.Controls.UserControl;
 using CheckBox = System.Windows.Controls.CheckBox;
 using Application = System.Windows.Application;
@@ -31,8 +32,9 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
         private readonly HashSet<string> existingProcessNames = new(StringComparer.OrdinalIgnoreCase); // 已在任一名单中的进程名（规范化后），用于过滤"正在运行的程序"列表
         private WindowSelectWindow windowSelectWindow; // 拖选窗口
         private BlacklistSetting _setting = new(); // 当前黑名单设置
-        private bool _whitelistDirty; // 白名单文本框有未提交的修改
+        private BlacklistRule _selectedRule; // 当前选中的黑名单规则
         private bool _syncingWhitelistText; // 正在以代码方式回写白名单文本框（此时的 TextChanged 不算用户修改）
+        private bool _whitelistDirty; // 白名单文本框有未提交的修改
 
         /// <summary>
         /// 构造函数
@@ -295,95 +297,79 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
         /// </summary>
         private void AddBlacklistItem(BlacklistRule rule)
         {
-            Border border = new()
+            // 用 RadioButton 替代原来的 Border，Tag 仍携带规则本身
+            RadioButton item = new()
             {
-                Style = (Style)FindResource("BlacklistItemBorder"),
-                Tag = false
-            }; // 创建Border（Tag 表示是否被选中）
-            border.MouseEnter += HightLightBlacklistItem; // 绑定鼠标移入事件
-            border.MouseLeave += FadeBlacklistItem; // 绑定鼠标移出事件
-            border.MouseDown += SelectBlacklistItem; // 绑定鼠标按下事件
+                Style = (Style)FindResource("BlacklistItemRadioButton"),
+                GroupName = "BlacklistItemGroup",   // 同组互斥，保证单选
+                Tag = rule
+            };
+            item.Checked += SelectBlacklistItem;     // 选中事件替代原 MouseDown
 
-            Grid grid = new() { Style = (Style)FindResource("BlacklistItemGrid") }; // 创建Grid
-            border.Child = grid; // 设置Border内容
+            Grid grid = new() { Style = (Style)FindResource("BlacklistItemGrid") };
+            item.Content = grid;                     // RadioButton 是 ContentControl，直接放 Grid
 
-            StackPanel stackPanel = new() { Style = (Style)FindResource("BlacklistItemIconStackPanel") }; // 创建StackPanel
-            grid.Children.Add(stackPanel); // 添加StackPanel
+            StackPanel stackPanel = new() { Style = (Style)FindResource("BlacklistItemIconStackPanel") };
+            grid.Children.Add(stackPanel);
 
             TextBlock textBlock = new()
             {
                 Style = (Style)FindResource("BlacklistItemTextBlock"),
                 Text = GetDisplayText(rule)
-            }; // 创建TextBlock
-            stackPanel.Children.Add(textBlock); // 添加进程名称/路径
+            };
+            stackPanel.Children.Add(textBlock);
 
-            if (rule.MatchType == BlacklistMatchType.Folder) // 如果是文件夹
+            if (rule.MatchType == BlacklistMatchType.Folder)
             {
-                TextBlock folderLabel = new() { Style = (Style)FindResource("BlacklistItemFolderTextBlock") }; // 创建TextBlock
-                stackPanel.Children.Add(folderLabel); // 添加文件夹标记
+                TextBlock folderLabel = new() { Style = (Style)FindResource("BlacklistItemFolderTextBlock") };
+                stackPanel.Children.Add(folderLabel);
             }
 
             Button button = new()
             {
                 Style = (Style)FindResource("DeleteBlacklistItem"),
-                Tag = rule // 删除按钮携带规则本身，按 ID 删除
-            }; // 创建按钮
-            button.Click += DeleteFromBlacklist; // 绑定删除事件
-            grid.Children.Add(button); // 添加按钮
+                Tag = rule
+            };
+            button.Click += DeleteFromBlacklist;
+            grid.Children.Add(button);
 
-            Image image = new() { Style = (Style)FindResource("BlacklistItemDeleteIcon") }; // 创建图标
-            button.Content = image; // 添加图标
-            BlacklistStackPanel.Children.Add(border); // 添加到父容器StackPanel
+            BlacklistStackPanel.Children.Add(item);
         }
 
         // 从黑名单中删除一项
         private void DeleteFromBlacklist(object sender, RoutedEventArgs e)
         {
             if (sender is not Button button || button.Tag is not BlacklistRule rule) return;
-            if (button.Parent is not Grid grid || grid.Parent is not Border border) return;
+            if (button.Parent is not Grid grid || grid.Parent is not RadioButton item) return;
 
-            BlacklistRepository.RemoveRule(rule.ID); // 按 ID 删除
-            AppStateManager.LoadSettings(); // 重新加载设置
-            BlacklistStackPanel.Children.Remove(border); // 从界面移除
+            // 先解绑事件，避免 RadioButton 通过事件继续持有 BlacklistControl
+            item.Checked -= SelectBlacklistItem;
+            button.Click -= DeleteFromBlacklist;
+
+            BlacklistRepository.RemoveRule(rule.ID);
+            AppStateManager.LoadSettings();
+            BlacklistStackPanel.Children.Remove(item);
 
             if (rule.MatchType == BlacklistMatchType.ProcessName)
                 existingProcessNames.Remove(rule.Target);
             else if (rule.MatchType == BlacklistMatchType.Unknown)
-                SetUnknownButtonAdded(false); // 恢复"无法识别的应用"按钮
+                SetUnknownButtonAdded(false);
+
+            if (ReferenceEquals(_selectedRule, rule))
+                _selectedRule = null;
         }
 
-        // 鼠标移入Border高亮显示黑名单项
-        private void HightLightBlacklistItem(object sender, MouseEventArgs e)
+        /// <summary>
+        /// 黑名单项选中事件（RadioButton.Checked）。
+        /// 互斥与高亮由 GroupName + IsChecked + ControlTemplate.Trigger 自动完成，
+        /// 这里只负责记录当前选中的规则，供删除/编辑等操作使用。
+        /// </summary>
+        private void SelectBlacklistItem(object sender, RoutedEventArgs e)
         {
-            var border = (Border)sender; // 转换发送者为Border对象
-            if (!(bool)border.Tag) // 如果Border没有被选中
-                border.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F3F3F3"));
-        }
+            if (sender is not RadioButton item) return;
+            if (item.Tag is not BlacklistRule rule) return;
 
-        // 鼠标移出Border恢复原状
-        private void FadeBlacklistItem(object sender, MouseEventArgs e)
-        {
-            var border = (Border)sender; // 转换发送者为Border对象
-            if (!(bool)border.Tag) // 如果Border没有被选中
-                border.Background = Brushes.Transparent;
-        }
-
-        // 鼠标按下Border选中黑名单项
-        private void SelectBlacklistItem(object sender, MouseButtonEventArgs e)
-        {
-            Border targetBorder = (Border)sender; // 转换发送者为Border对象
-            foreach (var border in BlacklistStackPanel.Children.OfType<Border>()) // 取消上一个选中项
-            {
-                if ((bool)border.Tag) // 仅处理已选中项
-                {
-                    border.Tag = false;
-                    border.Background = Brushes.Transparent;
-                }
-            }
-
-            // 设置当前选中项
-            targetBorder.Tag = true;
-            targetBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFEAEAEA"));
+            _selectedRule = rule; // 记录当前选中的规则，供删除、编辑等操作使用
         }
 
         #endregion
@@ -689,7 +675,6 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
         // 控件关闭释放资源
         private void BlacklistGrid_Unloaded(object sender, RoutedEventArgs e)
         {
-            // 离开页面前，把还没提交的白名单修改保存下来
             try
             {
                 CommitWhitelistText();
@@ -699,15 +684,25 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
                 Debug.WriteLine($"Commit whitelist on unload failed: {ex.Message}");
             }
 
-            // 清理UI元素
+            // 解绑所有列表项的事件，断开 RadioButton -> BlacklistControl 的引用
+            foreach (var child in BlacklistStackPanel.Children.OfType<RadioButton>())
+            {
+                child.Checked -= SelectBlacklistItem;
+                if (child.Content is Grid grid)
+                {
+                    foreach (var btn in grid.Children.OfType<Button>())
+                        btn.Click -= DeleteFromBlacklist;
+                }
+            }
+
             BlacklistStackPanel.Children.Clear();
             AddBlacklistAppsStackPanel.Children.Clear();
             AddWhitelistAppsStackPanel.Children.Clear();
             BlacklistStackScrollViewer.Content = null;
 
-            // 清理缓存和变量
             existingProcessNames.Clear();
             windowSelectWindow = null;
+            _selectedRule = null;
         }
     }
 }

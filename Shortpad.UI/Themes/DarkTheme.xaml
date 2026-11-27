@@ -20,6 +20,7 @@
     <SolidColorBrush x:Key="ScrollThumbBrush" Color="#BABBBB"/>
     <SolidColorBrush x:Key="SliderBrush" Color="{StaticResource BorderColor}"/>
     <SolidColorBrush x:Key="ImageBrush" Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="DeleteIconBrush" Color="#FFFF6B6B"/>
 
     <!-- 查找应用窗口 -->
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFECECEC"/>
@@ -53,7 +54,11 @@
 
     <!-- 搜索Button -->
     <SolidColorBrush x:Key="SearchButtonHoverBrush" Color="#FF2F3136"/>
-
+    
+    <!-- 删除按钮（DeleteBlacklistItem） -->
+    <SolidColorBrush x:Key="DeleteButtonHoverBrush" Color="#FF45403B"/>
+    <SolidColorBrush x:Key="DeleteButtonPressedBrush" Color="#FF55504A"/>
+    
     <!-- ComboBox 专属键 -->
     <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="#FF2D2D30"/>
     <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#FF46464C"/>
@@ -66,7 +71,7 @@
     <SolidColorBrush x:Key="ComboBoxItemSelectedBrush" Color="#FF3A3A3E"/>
     <SolidColorBrush x:Key="ComboBoxDisabledForegroundBrush" Color="#FF6B6B70"/>
     <SolidColorBrush x:Key="ComboBoxDisabledBackgroundBrush" Color="#FF242427"/>
-    <Color x:Key="ComboBoxShadowColor">#000000</Color>
+    <Color x:Key="ComboBoxShadowColor">#66000000</Color>
 
     <!-- CheckBox 专属键 -->
     <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="#FF2D2D30"/>
@@ -78,5 +83,5 @@
     <!-- ToolTip -->
     <SolidColorBrush x:Key="TooltipBackground" Color="#2B2D31"/>
     <SolidColorBrush x:Key="TooltipBorderBrush" Color="#444950"/>
-    <Color x:Key="TooltipShadowColor">Black</Color>
+    <Color x:Key="TooltipShadowColor">#66000000</Color>
 </ResourceDictionary>

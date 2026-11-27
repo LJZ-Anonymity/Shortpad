@@ -28,7 +28,7 @@
                 <StackPanel x:Name="MainStackPanel">
                     <Button x:Name="CloseFloatButton" Style="{StaticResource MenuButton}" ToolTip="关闭悬浮窗" Margin="0,5,0,0" Click="CloseFloatButton_Click">
                         <Grid>
-                            <ui:IconImage Source="/Resources/Images/button_close.png" Color="Red" Margin="7,0"/>
+                            <ui:IconImage Source="/Resources/Images/button_close.png" Color="{DynamicResource DeleteIconBrush}" Margin="7,0"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="关闭"/>
                         </Grid>
                     </Button>
@@ -74,7 +74,7 @@
                     </Button>
                     <Button x:Name="DeleteAction" ToolTip="【面板窗口快速触发方式】拖动动作到右上角的关闭按钮" Style="{StaticResource MenuButton}" Click="DeleteAction_Click">
                         <Grid>
-                            <ui:IconImage Source="/Resources/Images/button_close.png" Color="Red" Margin="7,0"/>
+                            <ui:IconImage Source="/Resources/Images/button_close.png" Color="{DynamicResource DeleteIconBrush}" Margin="7,0"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="删除"/>
                         </Grid>
                     </Button>

@@ -95,13 +95,13 @@
                 </Button>
                 <Button Click="Restart" ToolTip="退出并重新启动" Style="{StaticResource MenuButton}">
                     <Grid>
-                        <ui:IconImage Source="/Resources/Images/menu_restart_app.png" Color="Red" Margin="7,0"  />
+                        <ui:IconImage Source="/Resources/Images/menu_restart_app.png" Color="{DynamicResource DeleteIconBrush}" Margin="7,0"  />
                         <TextBlock Text="重启Shortpad" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Click="Exit" ToolTip="关闭Shortpad软件" Style="{StaticResource MenuButton}">
                     <Grid>
-                        <ui:IconImage Source="/Resources/Images/menu_quit_app.png" Color="Red" Margin="7,0"/>
+                        <ui:IconImage Source="/Resources/Images/menu_quit_app.png" Color="{DynamicResource DeleteIconBrush}" Margin="7,0"/>
                         <TextBlock Text="退出" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
