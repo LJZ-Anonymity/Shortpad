@@ -30,7 +30,7 @@
                 <ControlTemplate TargetType="{x:Type Slider}">
                     <Grid>
                         <!-- 灰色底轨 -->
-                        <Rectangle Height="2" VerticalAlignment="Center" Fill="#F0F0F0"/>
+                        <Rectangle Height="2" VerticalAlignment="Center" Fill="{DynamicResource SliderBrush}"/>
                         <!-- 蓝色进度条，宽度动态绑定 -->
                         <Rectangle Height="2" VerticalAlignment="Center" HorizontalAlignment="Left" Fill="#FF326CF3">
                             <Rectangle.Width>
@@ -53,9 +53,9 @@
                                 <Thumb x:Name="PART_Thumb" Focusable="True">
                                     <Thumb.Template>
                                         <ControlTemplate TargetType="Thumb">
-                                            <Border x:Name="border" Width="16" Height="16" Background="White" BorderThickness="0" CornerRadius="8" BorderBrush="Gray">
+                                            <Border x:Name="border" Width="16" Height="16" Background="White" BorderThickness="0" CornerRadius="8">
                                                 <Border.Effect>
-                                                    <DropShadowEffect Color="#FFBBBBBB" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
+                                                    <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                                                 </Border.Effect>
                                             </Border>
                                             <ControlTemplate.Triggers>
