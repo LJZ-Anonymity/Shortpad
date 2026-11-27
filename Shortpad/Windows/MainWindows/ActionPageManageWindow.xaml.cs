@@ -1159,7 +1159,7 @@ namespace Shortpad.Windows.MainWindows
         private void AddActionPageButton_MouseRightButtonDown(object sender, MouseButtonEventArgs e) => showUsedTimes = !showUsedTimes; // 切换显示/隐藏使用次数
 
         // 滚动滚轮移动视图
-        private void MainStackPanel_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void MainListView_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             e.Handled = true; // 标记事件为已处理，防止默认行为
             int delta = e.Delta < 0 ? 30 : -30; // 获取滚轮滚动方向
