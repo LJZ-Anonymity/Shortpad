@@ -37,8 +37,6 @@
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/SliderStyle.xaml"/>
                 <!-- 图片样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/ImageStyles.xaml"/>
-                <!-- 网格样式 -->
-                <ResourceDictionary Source="/Shortpad.UI;component/Styles/GridStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- 定义TextBox右键菜单 -->

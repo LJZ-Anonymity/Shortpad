@@ -334,13 +334,13 @@
                                             </Border>
                                             <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0" CornerRadius="3" Margin="3">
                                                 <StackPanel Background="{x:Null}">
-                                                    <Button x:Name="SelectBackgroundImageButton" Style="{StaticResource MenuButton}" Margin="0,3,0,0" Click="SelectBackgroundImageButton_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                                                    <Button x:Name="SelectBackgroundImageButton" Style="{StaticResource MenuButton}" Margin="0,3,0,0" Click="SelectBackgroundImageButton_Click" HorizontalContentAlignment="Center">
                                                         <TextBlock Text="选择图片" HorizontalAlignment="Left" Margin="7,0"/>
                                                     </Button>
-                                                    <Button x:Name="ClearBackgroundImageButton" Style="{StaticResource MenuButton}" Click="ClearBackgroundImageButton_Click" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                                                    <Button x:Name="ClearBackgroundImageButton" Style="{StaticResource MenuButton}" Click="ClearBackgroundImageButton_Click" HorizontalContentAlignment="Center">
                                                         <TextBlock Text="清空图片" HorizontalAlignment="Left" Margin="7,0"/>
                                                     </Button>
-                                                    <Button x:Name="InsertClipboardTextButton" Content="插入剪切贴板文本" Style="{StaticResource MenuButton}" Margin="0,0,0,3" Click="InsertClipboardTextButton_Click"/>
+                                                    <Button x:Name="InsertClipboardTextButton" Content="插入剪切贴板文本" Style="{StaticResource MenuButton}" Margin="0,0,0,3" Click="InsertClipboardTextButton_Click" HorizontalContentAlignment="Center"/>
                                                 </StackPanel>
                                             </Border>
                                         </Grid>
@@ -432,11 +432,11 @@
                     </Rectangle>
                     <Border CornerRadius="5" Padding="0,5" BorderThickness="0" Background="{DynamicResource WindowBackgroundBrush}" Margin="3">
                         <StackPanel Background="{x:Null}">
-                            <Button Content="原始" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Original" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-                            <Button Content="小白" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Simple" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-                            <Button Content="半透" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Translucent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-                            <Button Content="深色" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Dark" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
-                            <Button Content="深色半透" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="DarkTranslucent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            <Button Content="原始" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Original" HorizontalContentAlignment="Center"/>
+                            <Button Content="小白" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Simple" HorizontalContentAlignment="Center"/>
+                            <Button Content="半透" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Translucent" HorizontalContentAlignment="Center"/>
+                            <Button Content="深色" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Dark" HorizontalContentAlignment="Center"/>
+                            <Button Content="深色半透" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="DarkTranslucent" HorizontalContentAlignment="Center"/>
                         </StackPanel>
                     </Border>
                 </Grid>

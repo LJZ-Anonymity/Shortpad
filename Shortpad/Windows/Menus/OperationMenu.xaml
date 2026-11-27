@@ -26,7 +26,7 @@
             <Border CornerRadius="5" Background="{DynamicResource WindowBackgroundBrush}">
                 <StackPanel x:Name="MainStackPanel">
                     <Button x:Name="CloseFloatButton" Style="{StaticResource MenuButton}" ToolTip="关闭悬浮窗" Margin="0,5,0,0" Click="CloseFloatButton_Click">
-                        <Grid Width="194">
+                        <Grid>
                             <Image Source="/Resources/Images/button_close.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="关闭"/>
                         </Grid>
@@ -39,14 +39,14 @@
                                 <TextBlock Text="【面板窗口快速触发方式】左Shift+点击。"/>
                             </StackPanel>
                         </Button.ToolTip>
-                        <Grid Width="194">
+                        <Grid>
                             <Image Source="/Resources/Images/action_edit.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="编辑"/>
                         </Grid>
                     </Button>
                     <Rectangle x:Name="Rectangle2" Height="1" Fill="{DynamicResource SliderBrush}" Width="204" Margin="0,3"/>
                     <Button x:Name="SuspendAction" Style="{StaticResource MenuButton}" ToolTip="悬浮动作" MouseEnter="SuspendAction_MouseEnter" MouseLeave="SuspendAction_MouseLeave">
-                        <Grid Width="194">
+                        <Grid>
                             <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="悬浮"/>
                         </Grid>
@@ -60,19 +60,19 @@
                                 <TextBlock Text="【面板窗口快速复制】Ctrl+拖动动作"/>
                             </StackPanel>
                         </Button.ToolTip>
-                        <Grid Width="199">
+                        <Grid>
                             <Image Source="/Resources/Images/action_copy.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="复制"/>
                         </Grid>
                     </Button>
                     <Button x:Name="CutAction" ToolTip="复制并删除动作" Style="{StaticResource MenuButton}" Click="CutAction_Click">
-                        <Grid Width="199">
+                        <Grid>
                             <Image Source="/Resources/Images/action_cut.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="剪切"/>
                         </Grid>
                     </Button>
                     <Button x:Name="DeleteAction" ToolTip="【面板窗口快速触发方式】拖动动作到右上角的关闭按钮" Style="{StaticResource MenuButton}" Click="DeleteAction_Click">
-                        <Grid Width="199">
+                        <Grid>
                             <Rectangle Width="16" Height="16" Fill="red" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="7,0,0,0">
                                 <Rectangle.OpacityMask>
                                     <ImageBrush ImageSource="/Resources/Images/button_close.png"/>
@@ -82,19 +82,19 @@
                         </Grid>
                     </Button>
                     <Button x:Name="PasteIcon" ToolTip="设置动作图标为剪贴板图片" Style="{StaticResource MenuButton}" Click="PasteIcon_Click">
-                        <Grid Width="199">
+                        <Grid>
                             <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="粘贴图标"/>
                         </Grid>
                     </Button>
                     <Button x:Name="OtherFunction" ToolTip="其它功能" Style="{StaticResource MenuButton}" MouseEnter="OtherFunction_MouseEnter" MouseLeave="OtherFunction_MouseLeave">
-                        <Grid Width="198">
+                        <Grid>
                             <Image Source="/Resources/Images/icon_info.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="信息"/>
                         </Grid>
                     </Button>
                     <Button x:Name="OpenLocation" ToolTip="在资源管理器中找到对应文件或文件夹" Style="{StaticResource MenuButton}" Margin="0,0,0,5" Click="OpenLocation_Click">
-                        <Grid Width="194">
+                        <Grid>
                             <Image Source="/Resources/Images/action_open_folder.png" Style="{StaticResource MenuButtonImage}"/>
                             <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="打开所在位置"/>
                         </Grid>
@@ -110,7 +110,7 @@
                         <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
+                <Border CornerRadius="3" Width="150" Background="{DynamicResource WindowBackgroundBrush}">
                     <StackPanel>
                         <Button x:Name="FloatActionButton" Style="{StaticResource MenuButton}" Margin="0,3,0,0" Click="FloatActionButton_Click">
                             <Button.ToolTip>
@@ -119,7 +119,7 @@
                                     <!--<TextBlock Text="【面板窗口快速触发方式】右键拖拽 或Alt+左键拖拽悬浮。"/>-->
                                 </StackPanel>
                             </Button.ToolTip>
-                            <Grid Width="194">
+                            <Grid>
                                 <Image Source="/Resources/Images/square-chevron-up.png" Style="{StaticResource MenuButtonImage}"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="悬浮此动作"/>
                             </Grid>
@@ -131,7 +131,7 @@
                                     <!--<TextBlock Text="【面板窗口快速触发方式】Ctrl+右键点击动作页。"/>-->
                                 </StackPanel>
                             </Button.ToolTip>
-                            <Grid Width="194">
+                            <Grid>
                                 <Image Source="/Resources/Images/circle-chevron-up.png" Style="{StaticResource MenuButtonImage}"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="悬浮动作页"/>
                             </Grid>
@@ -152,20 +152,20 @@
                 <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
                     <StackPanel>
                         <Button x:Name="ExportAction" Style="{StaticResource MenuButton}" ToolTip="导出动作定义到文件" Margin="0,3" Click="ExportAction_Click">
-                            <Grid Width="130">
+                            <Grid>
                                 <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="导出动作"/>
                             </Grid>
                         </Button>
                         <Rectangle Height="1" Fill="{DynamicResource SliderBrush}" Width="130"/>
                         <Button x:Name="CheckImformation" Style="{StaticResource MenuButton}" ToolTip="查看动作信息" Margin="0,3,0,0" Click="CheckImformation_Click">
-                            <Grid Width="130">
+                            <Grid>
                                 <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="查看信息"/>
                             </Grid>
                         </Button>
                         <Button x:Name="CopyActionInfo" Style="{StaticResource MenuButton}" Margin="0,0,0,3" MouseEnter="CopyActionInfo_MouseEnter" MouseLeave="CopyActionInfo_MouseLeave">
-                            <Grid Width="130">
+                            <Grid>
                                 <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}" Margin="7,0,0,0"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="复制"/>
                             </Grid>
@@ -180,16 +180,16 @@
                         <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
+                <Border CornerRadius="3" Width="130" Background="{DynamicResource WindowBackgroundBrush}">
                     <StackPanel>
                         <Button x:Name="CopyActionID" Style="{StaticResource MenuButton}" ToolTip="复制动作的ID文字" Margin="0,3,0,0" Click="CopyActionID_Click">
-                            <Grid Width="130">
+                            <Grid>
                                 <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="动作ID"/>
                             </Grid>
                         </Button>
                         <Button x:Name="CopyActionName" Style="{StaticResource MenuButton}" ToolTip="复制动作的名称文字" Margin="0,0,0,3" Click="CopyActionName_Click">
-                            <Grid Width="130">
+                            <Grid>
                                 <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="动作名称"/>
                             </Grid>

@@ -26,7 +26,7 @@
                 </Border>
                 <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3">
                     <Button Style="{StaticResource MenuButton}" Click="CopyLocation">
-                        <Grid Width="174" Height="20">
+                        <Grid>
                             <Image Source="/Resources/Images/clipboard-list.png" Style="{StaticResource SelectButtonImage}"/>
                             <TextBlock Text="插入剪切贴板文本" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                         </Grid>

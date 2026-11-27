@@ -31,7 +31,7 @@ namespace Shortpad.Windows.Menus
                 if (data.SceneCount == 0 || data.SceneTag == "_global") continue; // 跳过没有动作页的场景和全局场景
                 IncreaseMenuSize(); // 增加菜单大小
                 Button button = GenerateButton(data); // 生成切换动作页按钮
-                Grid grid = new() { Width = MainGrid.Width }; // 创建按钮容器
+                Grid grid = new(); // 创建按钮容器
                 button.Content = grid; // 设置按钮内容
                 Image image = GenerateImage(data); // 生成按钮图片
                 grid.Children.Add(image);
@@ -53,38 +53,36 @@ namespace Shortpad.Windows.Menus
         /// 生成切换动作页按钮
         /// </summary>
         /// <param name="data"> 场景数据 </param>
-        /// <returns> 切换动作页按钮 </returns>
         private Button GenerateButton(SceneData data)
         {
             Button button = new()
             {
-                Style = (Style)base.FindResource("MenuButton"), // 加载按钮样式
-                ToolTip = data.SceneTag, // 设置按钮提示
-                Name = data.SceneTag, // 设置按钮名称
-                Tag = data.SceneName // 设置按钮标签
-            }; // 生成切换动作页按钮
-            return button; // 返回按钮
+                Style = (Style)base.FindResource("MenuButton"),
+                ToolTip = data.SceneTag,
+                Name = data.SceneTag,
+                Tag = data.SceneName
+            };
+            return button;
         }
 
         /// <summary>
         /// 生成按钮图标
         /// </summary>
         /// <param name="data"> 场景数据 </param>
-        /// <returns> 按钮图标 </returns>
         private Image GenerateImage(SceneData data)
         {
-            Image image = new() { Style = (Style)base.FindResource("SelectButtonImage") }; // 生成按钮图标
+            Image image = new() { Style = (Style)base.FindResource("SelectButtonImage") };
             try
             {
-                image.Source = new BitmapImage(new Uri(data.SceneIconPath, UriKind.RelativeOrAbsolute)); // 设置按钮图标
+                image.Source = new BitmapImage(new Uri(data.SceneIconPath, UriKind.RelativeOrAbsolute));
             }
             catch (System.IO.IOException)
             {
-                var toast = new ToastManager(); // 创建Toast管理器
-                toast.Show("加载场景" + data.SceneName + " 图标失败。", ToastType.Error); // 显示Toast提示
-                image.Source = new BitmapImage(new Uri("/Resources/Images/app_enabled.png", UriKind.Relative)); // 设置默认图标
+                var toast = new ToastManager();
+                toast.Show("加载场景" + data.SceneName + " 图标失败。", ToastType.Error);
+                image.Source = new BitmapImage(new Uri("/Resources/Images/app_enabled.png", UriKind.Relative));
             }
-            return image; // 返回图标
+            return image;
         }
 
         /// <summary>
@@ -95,33 +93,33 @@ namespace Shortpad.Windows.Menus
         {
             TextBlock textBlock = new()
             {
-                Style = (Style)base.FindResource("MenuButtonTextBlock"), // 加载按钮文字样式
-                Text = db3.GetSceneTitle(data), // 设置按钮文字
-            }; // 生成按钮文字
-            return textBlock; // 返回文字
+                Style = (Style)base.FindResource("MenuButtonTextBlock"),
+                Text = db3.GetSceneTitle(data),
+            };
+            return textBlock;
         }
 
         // 切换动作页
         private void ChangeActionPage(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button; // 获取按钮
-            MainWindow mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault(); // 获取主窗口
-            if (mainWindow != null) // 如果主窗口存在
+            Button button = sender as Button;
+            MainWindow mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
+            if (mainWindow != null)
                 mainWindow.OnCommonStyleChanged(button.Name); // 切换动作页时更新样式
-            base.Close(); // 关闭菜单
+            base.Close();
         }
 
         // 重写基类的失焦处理方法
         protected override void HandleDeactivated()
         {
-            WindowHelper.SetMainWindowFocused(); // 关闭窗口
-            base.HandleDeactivated(); // 调用基类方法以触发ClosingOrHiding事件
+            WindowHelper.SetMainWindowFocused();
+            base.HandleDeactivated();
         }
 
         // 关闭窗口前释放资源
         protected override void OnClosed(EventArgs e)
         {
-            base.OnClosed(e); // 调用基类的 OnClosed 方法
+            base.OnClosed(e);
         }
     }
 }

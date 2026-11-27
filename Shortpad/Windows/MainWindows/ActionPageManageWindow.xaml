@@ -20,6 +20,21 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Margin" Value="0,20,0,0"/>
         </Style>
+        <!-- 动作页标题网格 -->
+        <Style x:Key="ActionPageTitleGrid" TargetType="Grid">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="260"/>
+        </Style>
+        <!-- 场景按钮的内容网格 -->
+        <Style x:Key="SceneButtonContentGrid" TargetType="Grid">
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Width" Value="221"/>
+        </Style>
         <Style x:Key="SceneButton" TargetType="RadioButton">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -134,31 +149,31 @@
                 <Border Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0" CornerRadius="3" Margin="3">
                     <StackPanel Background="{x:Null}">
                         <Button x:Name="CheckActionPageInfoButton" Style="{StaticResource MenuButton}" ToolTip="查看动作页信息" Margin="0,3,0,0" Click="CheckActionPageInfoButton_Click">
-                            <Grid Width="176">
+                            <Grid>
                                 <Image Source="/Resources/Images/icon_info.png" Style="{StaticResource SelectButtonImage}"/>
                                 <TextBlock Text="信息" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
                         <Button x:Name="CopyActionPageIDButton" Style="{StaticResource MenuButton}" ToolTip="复制动作页ID" Click="CopyActionPageIDButton_Click">
-                            <Grid Width="176">
+                            <Grid>
                                 <Image Source="/Resources/Images/action_copy.png" Style="{StaticResource SelectButtonImage}"/>
                                 <TextBlock Text="复制ID" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
                         <Button x:Name="EditActionPageInfoButton" Style="{StaticResource MenuButton}" ToolTip="编辑动作页信息" Click="EditActionPageInfoButton_Click">
-                            <Grid Width="176">
+                            <Grid>
                                 <Image Source="/Resources/Images/button_edit_scene.png" Style="{StaticResource SelectButtonImage}"/>
                                 <TextBlock Text="编辑" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
                         <Button x:Name="CreatOpenActionPageActionButton" Style="{StaticResource MenuButton}" ToolTip="创建一个切换到此动作页的动作并复制到剪贴板" Click="CreatOpenActionPageActionButton_Click">
-                            <Grid Width="176">
+                            <Grid>
                                 <Image Source="/Resources/Images/action_paste.png" Style="{StaticResource SelectButtonImage}"/>
                                 <TextBlock Text="生成加载动作页的动作" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
                         <Button x:Name="DeleteActionPageButton" Style="{StaticResource MenuButton}" ToolTip="删除动作页" Click="DeleteActionPageButton_Click">
-                            <Grid Width="176">
+                            <Grid>
                                 <Image Source="/Resources/Images/button_close.png" Style="{StaticResource SelectButtonImage}"/>
                                 <TextBlock Text="删除动作页" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>

@@ -24,9 +24,9 @@
         <Border CornerRadius="3" Padding="0,3" Height="30" Width="120">
             <StackPanel>
                 <Button Style="{StaticResource MenuButton}" Click="Button_Click">
-                    <Grid Width="120">
-                        <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}" Margin="10,0,0,0"/>
-                        <TextBlock Text="编辑" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    <Grid>
+                        <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
+                        <TextBlock Text="编辑" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
             </StackPanel>

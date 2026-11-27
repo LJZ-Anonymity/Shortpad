@@ -26,51 +26,51 @@
         <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
             <StackPanel>
                 <Button x:Name="PasteActionButton" Click="PasteActionButton_Click" Style="{StaticResource MenuButton}" Margin="0,3,0,3">
-                    <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
+                    <Grid>
                         <Image Source="/Resources/Images/action_paste.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock x:Name="PasteActionTextBlock" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Rectangle x:Name="Line1" Height="1" Fill="{DynamicResource BorderBrush}"/>
                 <Button x:Name="StartAppButton" Click="StartApp" Style="{StaticResource MenuButton}" Margin="0,3,0,0">
-                    <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
+                    <Grid>
                         <Image Source="/Resources/Images/action_start_app.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="启动软件"/>
                     </Grid>
                 </Button>
                 <Button Click="OpenFile" Style="{StaticResource MenuButton}">
-                    <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
+                    <Grid>
                         <Image Source="/Resources/Images/action_open_file.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="打开文件"/>
                     </Grid>
                 </Button>
                 <Button Click="OpenFolder" Style="{StaticResource MenuButton}">
-                    <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
+                    <Grid>
                         <Image Source="/Resources/Images/action_open_folder.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="打开文件夹"/>
                     </Grid>
                 </Button>
                 <Button Click="OpenWebsite" Style="{StaticResource MenuButton}" Margin="0,0,0,3">
-                    <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
+                    <Grid>
                         <Image Source="/Resources/Images/globe.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="打开网址"/>
                     </Grid>
                 </Button>
                 <Rectangle Height="1" Fill="{DynamicResource SliderBrush}"/>
                 <Button Click="LoadExtension" Style="{StaticResource MenuButton}" Margin="0,3,0,0">
-                    <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
+                    <Grid>
                         <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="加载扩展"/>
                     </Grid>
                 </Button>
                 <Button x:Name="CreateOpenFileActionButton" Click="CreatOpenFileAction" Style="{StaticResource MenuButton}">
-                    <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
+                    <Grid>
                         <Image Source="/Resources/Images/button_add_scene.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock x:Name="CreateOpenFileActionTextBlock" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Click="ImportActionData" ToolTip="从本地文件中导入动作" Style="{StaticResource MenuButton}" Margin="0,0,0,3">
-                    <Grid Width="168" Style="{StaticResource MenuButtonContentGrid}">
+                    <Grid>
                         <Image Source="/Resources/Images/file-input.png" Style="{StaticResource MenuButtonImage}"/>
                         <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="导入动作"/>
                     </Grid>

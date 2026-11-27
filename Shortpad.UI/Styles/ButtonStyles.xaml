@@ -257,6 +257,8 @@
     <!-- “菜单按钮”的按钮样式 -->
     <Style x:Key="MenuButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
         <Setter Property="styles:ButtonStyles.CornerRadius" Value="0"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="Width" Value="Auto"/>
