@@ -93,7 +93,7 @@
                 <ScrollViewer x:Name="ScrollViewer" VerticalScrollBarVisibility="Hidden" ScrollChanged="ScrollViewer_ScrollChanged">
                     <Grid>
                         <RadioButton x:Name="DefaultAppearanceSettingButton" IsChecked="True" Content="默认设置" Style="{StaticResource Button3}" Margin="7,10,0,0" Foreground="#FF0087FC" Click="DefaultAppearanceSettingButton_Click"/>
-                        <RadioButton x:Name="DarkThemeSettingButton" Content="深色主题设置" Style="{StaticResource Button3}" Margin="77,10,0,0" Foreground="#FF0087FC" BorderThickness="0" Click="DarkThemeSettingButton_Click"/>
+                        <RadioButton x:Name="DarkThemeSettingButton" Content="深色主题设置" Style="{StaticResource Button3}" Margin="87,10,0,0" Foreground="#FF0087FC" BorderThickness="0" Click="DarkThemeSettingButton_Click"/>
                         <Rectangle Fill="{DynamicResource BorderBrush}" VerticalAlignment="Top" Height="1" Margin="7,40,10,0"/>
 
                         <!-- 尺寸 -->

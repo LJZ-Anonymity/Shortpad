@@ -91,16 +91,16 @@
             <StackPanel x:Name="ActionPagesButtonPanel"/>
         </Border>
         <Button x:Name="AddSceneButton" Style="{StaticResource BaseRoundedButton}" styles:ButtonHelper.CornerRadius="5,0,0,5" ToolTip="添加场景" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="50" Click="AddSceneButton_Click">
-            <Image Source="/Resources/Images/button_add_scene.png" Height="16" Width="16"/>
+            <ui:IconImage Source="/Resources/Images/button_add_scene.png" Color="{DynamicResource ImageBrush}"/>
         </Button>
         <Button x:Name="EditSceneButton" Style="{StaticResource BaseRoundedButton}" styles:ButtonHelper.CornerRadius="0" ToolTip="修改场景设置" HorizontalAlignment="Left" Margin="59,0,0,10" VerticalAlignment="Bottom" Width="50" Click="EditSceneButton_Click">
-            <Image Source="/Resources/Images/button_edit_scene.png" Height="16" Width="16"/>
+            <ui:IconImage Source="/Resources/Images/button_edit_scene.png" Color="{DynamicResource ImageBrush}"/>
         </Button>
         <Button x:Name="DeleteSceneButton" Style="{StaticResource BaseRoundedButton}" styles:ButtonHelper.CornerRadius="0,5,5,0" ToolTip="删除场景" HorizontalAlignment="Left" Margin="108,0,0,10" VerticalAlignment="Bottom" Width="50" Click="DeleteSceneButton_Click">
-            <Image Source="/Resources/Images/button_delete_scene.png" Height="16" Width="16"/>
+            <ui:IconImage Source="/Resources/Images/button_delete_scene.png" Color="{DynamicResource ImageBrush}"/>
         </Button>
         <Button x:Name="ToTopSceneButton" Style="{StaticResource WhiteButton}" ToolTip="到顶部" HorizontalAlignment="Left" Margin="200,0,0,10" VerticalAlignment="Bottom" Width="30" Click="ToTopSceneButton_Click">
-            <Image Source="/Resources/Images/button_jump_to_pinned.png" Height="16" Width="16"/>
+            <ui:IconImage Source="/Resources/Images/button_jump_to_pinned.png" Color="{DynamicResource ImageBrush}"/>
         </Button>
 
         <Image x:Name="SceneImage" HorizontalAlignment="Left" Height="16" Margin="240,10,0,0" VerticalAlignment="Top" Width="16"/>
@@ -184,7 +184,12 @@
                 </Border>
             </Grid>
         </Popup>
-        <Button x:Name="AddActionPageButton" Content="添加动作页" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="240,264,0,0" VerticalAlignment="Top" Click="AddActionPage" Width="163" ToolTip="右键显示/隐藏动作使用次数" MouseRightButtonDown="AddActionPageButton_MouseRightButtonDown"/>
+        <Button x:Name="AddActionPageButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="240,264,0,0" VerticalAlignment="Top" Click="AddActionPage" Width="163" ToolTip="右键显示/隐藏动作使用次数" MouseRightButtonDown="AddActionPageButton_MouseRightButtonDown">
+            <StackPanel Orientation="Horizontal">
+                <ui:IconImage Source="/Resources/Images/button_add_scene.png" Color="{DynamicResource ImageBrush}"/>
+                <TextBlock Text="添加动作页" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
         <CheckBox x:Name="AutoReturnToFirstPageCheckBox" Content="自动返回第一页" Margin="535,268,0,0" VerticalAlignment="Top" ToolTip="在后面的页执行完动作后是否自动返回到第一页" HorizontalAlignment="Left" Click="AutoReturnToFirstPageCheckBox_Click"/>
     </Grid>
 </Window>
