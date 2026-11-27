@@ -1,5 +1,6 @@
 ﻿<Window
     xmlns:styles="clr-namespace:Shortpad.UI.Styles.Button;assembly=Shortpad.UI"
+    xmlns:ui="clr-namespace:Shortpad.UI.UserControls;assembly=Shortpad.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:conv="clr-namespace:Shortpad.UI.Converters;assembly=Shortpad.UI"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -150,32 +151,32 @@
                     <StackPanel Background="{x:Null}">
                         <Button x:Name="CheckActionPageInfoButton" Style="{StaticResource MenuButton}" ToolTip="查看动作页信息" Margin="0,3,0,0" Click="CheckActionPageInfoButton_Click">
                             <Grid>
-                                <Image Source="/Resources/Images/icon_info.png" Style="{StaticResource SelectButtonImage}"/>
+                                <ui:IconImage Source="/Resources/Images/icon_info.png" Color="{DynamicResource ImageBrush}"/>
                                 <TextBlock Text="信息" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
                         <Button x:Name="CopyActionPageIDButton" Style="{StaticResource MenuButton}" ToolTip="复制动作页ID" Click="CopyActionPageIDButton_Click">
                             <Grid>
-                                <Image Source="/Resources/Images/action_copy.png" Style="{StaticResource SelectButtonImage}"/>
+                                <ui:IconImage Source="/Resources/Images/action_copy.png" Color="{DynamicResource ImageBrush}"/>
                                 <TextBlock Text="复制ID" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
                         <Button x:Name="EditActionPageInfoButton" Style="{StaticResource MenuButton}" ToolTip="编辑动作页信息" Click="EditActionPageInfoButton_Click">
                             <Grid>
-                                <Image Source="/Resources/Images/button_edit_scene.png" Style="{StaticResource SelectButtonImage}"/>
+                                <ui:IconImage Source="/Resources/Images/button_edit_scene.png" Color="{DynamicResource ImageBrush}"/>
                                 <TextBlock Text="编辑" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
                         <Button x:Name="CreatOpenActionPageActionButton" Style="{StaticResource MenuButton}" ToolTip="创建一个切换到此动作页的动作并复制到剪贴板" Click="CreatOpenActionPageActionButton_Click">
                             <Grid>
-                                <Image Source="/Resources/Images/action_paste.png" Style="{StaticResource SelectButtonImage}"/>
+                                <ui:IconImage Source="/Resources/Images/action_paste.png" Color="{DynamicResource ImageBrush}"/>
                                 <TextBlock Text="生成加载动作页的动作" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>
                         <Button x:Name="DeleteActionPageButton" Style="{StaticResource MenuButton}" ToolTip="删除动作页" Click="DeleteActionPageButton_Click">
                             <Grid>
-                                <Image Source="/Resources/Images/button_close.png" Style="{StaticResource SelectButtonImage}"/>
-                                <TextBlock Text="删除动作页" TextAlignment="Left" Margin="26,0,0,0" FontSize="13"/>
+                                <ui:IconImage Source="/Resources/Images/button_close.png" Color="Red"/>
+                                <TextBlock Text="删除动作页" TextAlignment="Left" Margin="26,0,0,0" FontSize="13" Foreground="Red"/>
                             </Grid>
                         </Button>
                     </StackPanel>

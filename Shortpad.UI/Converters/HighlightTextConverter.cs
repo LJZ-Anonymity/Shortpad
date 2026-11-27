@@ -1,5 +1,5 @@
-﻿using System.Windows.Documents;
-using System.Windows.Media;
+﻿using Brushes = System.Windows.Media.Brushes;
+using System.Windows.Documents;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows;

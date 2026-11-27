@@ -1,5 +1,6 @@
 ﻿<Window
     xmlns:mainwindow="clr-namespace:Shortpad.Windows.MainWindows.MainWindow"
+    xmlns:ui="clr-namespace:Shortpad.UI.UserControls;assembly=Shortpad.UI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DataContext="{d:DesignInstance Type=mainwindow:MainWindowViewModel}"
     xmlns:conv="clr-namespace:Shortpad.UI.Converters;assembly=Shortpad.UI"
@@ -224,14 +225,14 @@
                                 <StackPanel>
                                     <Button Style="{StaticResource MenuButton}" ToolTip="为应用程序创建场景设置，管理动作页" Click="OpenActionPageManageWindow">
                                         <Grid>
-                                            <Image Source="/Resources/Images/scene_actions.png" Style="{StaticResource SelectButtonImage}"/>
+                                            <ui:IconImage Source="/Resources/Images/scene_actions.png" Color="{DynamicResource ImageBrush}"/>
                                             <TextBlock Text="场景与动作" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                         </Grid>
                                     </Button>
                                     <Rectangle Height="1" Width="176" Fill="{DynamicResource BorderBrush}" Margin="0,3"/>
                                     <Button Style="{StaticResource MenuButton}" ToolTip="关闭Shortpad软件" Click="QuitShortpad">
                                         <Grid>
-                                            <Image Source="/Resources/Images/menu_quit_app.png" Style="{StaticResource SelectButtonImage}"/>
+                                            <ui:IconImage Source="/Resources/Images/menu_quit_app.png" Color="{DynamicResource ImageBrush}"/>
                                             <TextBlock Text="退出" TextAlignment="Left" Margin="26,0,0,0" FontSize="13" VerticalAlignment="Center"/>
                                         </Grid>
                                     </Button>
@@ -299,12 +300,7 @@
                     <StackPanel x:Name="GlobalButtonPanel" Margin="77.6,0,77.6,13" Orientation="Horizontal" HorizontalAlignment="Center"/>
                     <StackPanel x:Name="CommonButtonPanel" Margin="0,13,0,0" Orientation="Horizontal" HorizontalAlignment="Center"/>
                     <Button x:Name="SearchButton" HorizontalAlignment="Right" Margin="0,0,58,0" Style="{StaticResource Task}" Click="SearchButton_Click" ToolTip="搜索">
-                        <Rectangle Width="14" Height="14" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">
-                            <Rectangle.OpacityMask>
-                                <!--<ImageBrush ImageSource="/Resources/Images/button_search.png"/>-->
-                                <ImageBrush/>
-                            </Rectangle.OpacityMask>
-                        </Rectangle>
+                        <ui:IconImage Source="/Resources/Images/button_search.png" Color="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}"/>
                     </Button>
                     <Button x:Name="ActionPageSelecter" HorizontalAlignment="Right" Margin="0,0,34,0" Style="{StaticResource Task}" Click="LockCommonActionPage" MouseRightButtonDown="OpenSelectActionPageMenu">
                         <Rectangle Width="14" Height="14" Fill="{Binding DataContext.ToolbarIconColor, RelativeSource={RelativeSource AncestorType=Window}}">

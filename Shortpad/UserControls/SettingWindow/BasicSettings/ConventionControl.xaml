@@ -94,13 +94,13 @@
                                         <StackPanel Width="120">
                                             <Button x:Name="EditRunningTrayIconButton" Style="{StaticResource MenuButton}" ToolTip="左键编辑，右键恢复默认" Click="EditRunningTrayIconButton_Click" MouseRightButtonDown="RestoreDefaultTrayIconButton_MouseRightButtonDown">
                                                 <Grid>
-                                                    <Image Source="{Binding RunningTrayIconImage, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="10,0" HorizontalAlignment="Left" Style="{StaticResource MenuButtonImage}"/>
+                                                    <Image Source="{Binding RunningTrayIconImage, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="10,0" Height="16" Width="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                                     <TextBlock Text="运行时图标" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40,0,0,0"/>
                                                 </Grid>
                                             </Button>
                                             <Button x:Name="EditPausedTrayIconButton" Style="{StaticResource MenuButton}" ToolTip="左键编辑，右键恢复默认" Click="EditPausedTrayIconButton_Click" MouseRightButtonDown="RestoreDefaultTrayIconButton_MouseRightButtonDown">
                                                 <Grid>
-                                                    <Image Source="{Binding PausedTrayIconImage, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="10,0" HorizontalAlignment="Left" Style="{StaticResource MenuButtonImage}"/>
+                                                    <Image Source="{Binding PausedTrayIconImage, RelativeSource={RelativeSource AncestorType=UserControl}}" Margin="10,0" Height="16" Width="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                                                     <TextBlock Text="暂停时图标" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="40,0,0,0"/>
                                                 </Grid>
                                             </Button>

@@ -6,6 +6,7 @@ using Shortpad.Windows.ToolWindows;
 using System.Windows.Threading;
 using Shortpad.Contracts.Models;
 using Shortpad.Models.Settings;
+using Shortpad.UI.UserControls;
 using System.Windows.Controls;
 using Shortpad.Database.Core;
 using System.ComponentModel;

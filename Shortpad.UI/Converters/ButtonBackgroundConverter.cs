@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Brushes = System.Windows.Media.Brushes;
+using System.Globalization;
 using System.Windows.Media;
 using System.Windows.Data;
 

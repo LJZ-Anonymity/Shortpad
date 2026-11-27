@@ -19,6 +19,7 @@
     <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
     <SolidColorBrush x:Key="ScrollThumbBrush" Color="#BABBBB"/>
     <SolidColorBrush x:Key="SliderBrush" Color="{StaticResource BorderColor}"/>
+    <SolidColorBrush x:Key="ImageBrush" Color="#E0E0E0"/>
 
     <!-- 查找应用窗口 -->
     <SolidColorBrush x:Key="TextPrimaryBrush" Color="#FFECECEC"/>

@@ -1,6 +1,7 @@
 ﻿<UserControl
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:conv="clr-namespace:Shortpad.UI.Converters;assembly=Shortpad.UI"
+    xmlns:ui="clr-namespace:Shortpad.UI.UserControls;assembly=Shortpad.UI"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:Shortpad.UserControls.AddWindow"
@@ -36,31 +37,31 @@
                             <StackPanel Background="{x:Null}" Margin="0,3">
                                 <Button Style="{StaticResource MenuButton}" ToolTip="选择开始菜单中可以找到的程序" Click="ChooseApplications">
                                     <Grid>
-                                        <Image Source="/Resources/Images/action_start_app.png" Style="{StaticResource SelectButtonImage}"/>
+                                        <ui:IconImage Source="/Resources/Images/action_start_app.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                         <TextBlock Text="已安装的软件..." TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                     </Grid>
                                 </Button>
                                 <Button Style="{StaticResource MenuButton}" ToolTip="打开文件或运行程序" Click="ChooseProcess">
                                     <Grid>
-                                        <Image Source="/Resources/Images/action_open_file.png" Style="{StaticResource SelectButtonImage}"/>
+                                        <ui:IconImage Source="/Resources/Images/action_open_file.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                         <TextBlock Text="文件..." TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                     </Grid>
                                 </Button>
                                 <Button Style="{StaticResource MenuButton}" ToolTip="在资源管理器中打开Windows目录" Click="ChooseFolder">
                                     <Grid>
-                                        <Image Source="/Resources/Images/action_open_folder.png" Style="{StaticResource SelectButtonImage}"/>
+                                        <ui:IconImage Source="/Resources/Images/action_open_folder.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                         <TextBlock Text="文件夹..." TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                     </Grid>
                                 </Button>
                                 <Button Style="{StaticResource MenuButton}" ToolTip="将剪切板中的文本作为文件打开或作为命令执行" Click="CopyLocation">
                                     <Grid>
-                                        <Image Source="/Resources/Images/clipboard-list.png" Style="{StaticResource SelectButtonImage}"/>
+                                        <ui:IconImage Source="/Resources/Images/clipboard-list.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                         <TextBlock Text="变量:剪贴板文本" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                     </Grid>
                                 </Button>
                                 <Button Style="{StaticResource MenuButton}" ToolTip="重新提取文件图标" Click="ReGetFileIcon">
                                     <Grid>
-                                        <Image Source="/Resources/Images/app_enabled.png" Style="{StaticResource SelectButtonImage}"/>
+                                        <ui:IconImage Source="/Resources/Images/app_enabled.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                         <TextBlock Text="重新提取图标" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                     </Grid>
                                 </Button>

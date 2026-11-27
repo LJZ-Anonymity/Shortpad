@@ -1,5 +1,6 @@
 ﻿<local:BaseMenuWindow
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="clr-namespace:Shortpad.UI.UserControls;assembly=Shortpad.UI"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -28,25 +29,25 @@
             <StackPanel Margin="-1,-1,-1,-1">
                 <Button Click="ShowMainWindow" ToolTip="弹出面板窗口" Style="{StaticResource MenuButton}" Margin="0,5,0,0">
                     <Grid>
-                        <Image x:Name="showMainWindow" Source="/Resources/Images/menu_open_panel.png" Style="{StaticResource MenuButtonImage}"/>
+                        <ui:IconImage Source="/Resources/Images/menu_open_panel.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                         <TextBlock Text="显示面板窗口" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Click="OpenSettingWindow" ToolTip="打开设置窗口" Style="{StaticResource MenuButton}">
                     <Grid>
-                        <Image x:Name="openSettingWindow" Source="/Resources/Images/window_settings.png" Style="{StaticResource MenuButtonImage}"/>
+                        <ui:IconImage Source="/Resources/Images/window_settings.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                         <TextBlock Text="设置" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Click="OpenActionPageManageWindow" ToolTip="打开场景与动作管理窗口" Style="{StaticResource MenuButton}">
                     <Grid>
-                        <Image x:Name="openActionPageManageWindow" Source="/Resources/Images/scene_actions.png" Style="{StaticResource MenuButtonImage}"/>
+                        <ui:IconImage Source="/Resources/Images/scene_actions.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                         <TextBlock Text="场景与动作" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Click="PauseShortpad" ToolTip="暂停和恢复Shortpad触发" Style="{StaticResource MenuButton}">
                     <Grid>
-                        <Image x:Name="pauseShortpad" Source="/Resources/Images/state_pause.png" Style="{StaticResource MenuButtonImage}" Margin="7,0,7,0"/>
+                        <ui:IconImage x:Name="pauseShortpad" Source="/Resources/Images/state_pause.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                         <TextBlock x:Name="PauseShortpadTextBlock" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
@@ -88,19 +89,19 @@
                 </Button>-->
                 <Button Click="SwitchTheme" ToolTip="切换主题" Style="{StaticResource MenuButton}">
                     <Grid>
-                        <Image x:Name="switchTheme" Source="/Resources/Images/menu_toggle_theme.png" Style="{StaticResource MenuButtonImage}"/>
+                        <ui:IconImage Source="/Resources/Images/menu_toggle_theme.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                         <TextBlock Text="切换主题模式" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Click="Restart" ToolTip="退出并重新启动" Style="{StaticResource MenuButton}">
                     <Grid>
-                        <Image x:Name="restart" Source="/Resources/Images/menu_restart_app.png" Style="{StaticResource MenuButtonImage}"/>
+                        <ui:IconImage Source="/Resources/Images/menu_restart_app.png" Color="Red" Margin="7,0"  />
                         <TextBlock Text="重启Shortpad" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>
                 <Button Click="Exit" ToolTip="关闭Shortpad软件" Style="{StaticResource MenuButton}">
                     <Grid>
-                        <Image x:Name="exit" Source="/Resources/Images/menu_quit_app.png" Style="{StaticResource MenuButtonImage}" Margin="7,0,7,0"/>
+                        <ui:IconImage Source="/Resources/Images/menu_quit_app.png" Color="Red" Margin="7,0"/>
                         <TextBlock Text="退出" Style="{StaticResource MenuButtonTextBlock}"/>
                     </Grid>
                 </Button>

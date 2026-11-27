@@ -1,0 +1,17 @@
+﻿<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="Shortpad.UI.UserControls.IconImage"
+    
+    HorizontalAlignment="Left"
+    VerticalAlignment="Center"
+    x:Name="root"
+    Height="16"
+    Width="16"
+>
+    <Rectangle Fill="{Binding Color, ElementName=root}">
+        <Rectangle.OpacityMask>
+            <ImageBrush ImageSource="{Binding Source, ElementName=root}" Stretch="{Binding Stretch, ElementName=root}"/>
+        </Rectangle.OpacityMask>
+    </Rectangle>
+</UserControl>

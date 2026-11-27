@@ -1,8 +1,8 @@
 ﻿using Rectangle = System.Windows.Shapes.Rectangle;
-using Shortpad.UserControls.SettingWindow;
 using Point = System.Windows.Point;
 using System.Windows.Media.Imaging;
 using Shortpad.Contracts.Models;
+using Shortpad.UI.UserControls;
 using System.Windows.Controls;
 using Path = System.IO.Path;
 using System.Windows.Shapes;

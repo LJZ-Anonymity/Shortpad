@@ -29,7 +29,11 @@ namespace Shortpad.Windows.Menus
         private void SetRunModeText()
         {
             PauseShortpadTextBlock.Text = AppStateManager.Pause ? "恢复" : "暂停";
-            pauseShortpad.Source = new BitmapImage(new Uri(AppStateManager.Pause ? "/Resources/Images/state_play.png" : "/Resources/Images/state_pause.png", UriKind.Relative));
+            pauseShortpad.Source = new BitmapImage(new Uri(
+                AppStateManager.Pause
+                    ? "pack://application:,,,/Resources/Images/state_play.png"
+                    : "pack://application:,,,/Resources/Images/state_pause.png",
+                UriKind.Absolute));
         }
 
         // 弹出面板窗口

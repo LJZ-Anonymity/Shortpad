@@ -1,13 +1,19 @@
-﻿using System.Text.RegularExpressions;
+﻿using ColorConverter = System.Windows.Media.ColorConverter;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
+using UserControl = System.Windows.Controls.UserControl;
+using Rectangle = System.Windows.Shapes.Rectangle;
+using TextBox = System.Windows.Controls.TextBox;
+using Color = System.Windows.Media.Color;
+using System.Text.RegularExpressions;
+using Point = System.Windows.Point;
 using Shortpad.Windows.ToolWindows;
 using System.Windows.Threading;
 using System.Windows.Controls;
-using System.Windows.Shapes;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows;
 
-namespace Shortpad.UserControls.SettingWindow
+namespace Shortpad.UI.UserControls
 {
     public partial class ColorPicker : UserControl
     {
@@ -113,11 +119,13 @@ namespace Shortpad.UserControls.SettingWindow
             if (_colorRect != null)
             {
                 Color hueColor = GetColorFromHue(hue);
-                
+
                 // 创建新的渐变画刷
-                LinearGradientBrush gradientBrush = new LinearGradientBrush();
-                gradientBrush.StartPoint = new Point(0, 0);
-                gradientBrush.EndPoint = new Point(1, 0);
+                LinearGradientBrush gradientBrush = new()
+                {
+                    StartPoint = new Point(0, 0),
+                    EndPoint = new Point(1, 0)
+                };
                 gradientBrush.GradientStops.Add(new GradientStop(Colors.White, 0));
                 gradientBrush.GradientStops.Add(new GradientStop(hueColor, 1));
                 
@@ -136,7 +144,7 @@ namespace Shortpad.UserControls.SettingWindow
             
             // 先将控件更新标志设为false，确保后续更新能正常进行
             _updatingControls = false;
-            
+
             // 更新RGB和HSV值
             RgbToHsv(_currentColor.R, _currentColor.G, _currentColor.B, out _hue, out _saturation, out _value);
             
@@ -281,9 +289,7 @@ namespace Shortpad.UserControls.SettingWindow
         private void Slider_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
         {
             if (_updatingControls) return; // 确保控件已初始化
-            
-            var slider = sender as Slider; // 获取滑块
-            if (slider == null) return; // 确保滑块不为null
+            if (sender is not Slider slider) return; // 确保滑块不为null
 
             int value = (int)slider.Value;  // 获取滑块值
             string sliderName = slider.Name; // 获取滑块名称
@@ -321,9 +327,9 @@ namespace Shortpad.UserControls.SettingWindow
             
             TextBox textBox = (TextBox)sender; // 获取文本框
             if (string.IsNullOrEmpty(textBox.Text)) return; // 确保文本框不为空
-            
-            int value = 0;  // 获取文本框值
-            if (!int.TryParse(textBox.Text, out value))
+
+            // 获取文本框值
+            if (!int.TryParse(textBox.Text, out int value))
             {
                 value = 0; // 如果文本框值不是数字，则设置为0
             }
@@ -370,7 +376,7 @@ namespace Shortpad.UserControls.SettingWindow
         /// </summary>
         /// <param name="hue"> 色相值 </param>
         /// <returns> 颜色 </returns>
-        private Color GetColorFromHue(double hue)
+        private static Color GetColorFromHue(double hue)
         {
             HsvToRgb(hue, 1, 1, out byte r, out byte g, out byte b); // 将HSV转换为RGB
             return Color.FromRgb(r, g, b); // 返回颜色
@@ -454,7 +460,7 @@ namespace Shortpad.UserControls.SettingWindow
         /// <param name="h"> 色相 </param>
         /// <param name="s"> 饱和度 </param>
         /// <param name="v"> 亮度 </param>
-        private void RgbToHsv(byte r, byte g, byte b, out double h, out double s, out double v)
+        private static void RgbToHsv(byte r, byte g, byte b, out double h, out double s, out double v)
         {
             double red = r / 255.0; // 转换为0-1范围
             double green = g / 255.0; // 转换为0-1范围
@@ -466,7 +472,6 @@ namespace Shortpad.UserControls.SettingWindow
 
             v = max; // 亮度
             s = max == 0 ? 0 : delta / max; // 饱和度
-            h = 0;  // 色调
             if (delta == 0)
             {
                 h = 0; // 如果差为0，则无色
@@ -500,12 +505,12 @@ namespace Shortpad.UserControls.SettingWindow
         /// <param name="r"> 红色 </param>
         /// <param name="g"> 绿色 </param>
         /// <param name="b"> 蓝色 </param>
-        private void HsvToRgb(double h, double s, double v, out byte r, out byte g, out byte b)
+        private static void HsvToRgb(double h, double s, double v, out byte r, out byte g, out byte b)
         {
             double c = v * s; // 计算临界值
             double x = c * (1 - Math.Abs((h / 60) % 2 - 1)); // 计算 x 值
             double m = v - c; // 颜色值
-            double red = 0, green = 0, blue = 0;  // 颜色值
+            double red, green, blue;  // 颜色值
             
             if (h >= 0 && h < 60) // 如果 色相在 0 到 60 之间
             {
@@ -596,7 +601,7 @@ namespace Shortpad.UserControls.SettingWindow
         ///  检查给定的字符串是否为有效的十六进制颜色格式
         /// </summary>
         /// <param name="hexColor"> 十六进制颜色字符串 </param>
-        private bool IsValidHexColor(string hexColor)
+        private static bool IsValidHexColor(string hexColor)
             => Regex.IsMatch(hexColor, @"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$"); // 匹配 #RGB、#RRGGBB和#AARRGGBB格式
 
         /// <summary>
@@ -726,20 +731,14 @@ namespace Shortpad.UserControls.SettingWindow
     }
 
     // 颜色变化事件参数类
-    public class ColorChangedEventArgs : EventArgs
+    /// <summary>
+    /// 创建颜色变化事件参数
+    /// </summary>
+    /// <param name="oldColor"> 旧颜色 </param>
+    /// <param name="newColor"> 新颜色 </param>
+    public class ColorChangedEventArgs(Color oldColor, Color newColor) : EventArgs
     {
-        public Color OldColor { get; } // 旧颜色
-        public Color NewColor { get; } // 新颜色
-
-        /// <summary>
-        /// 创建颜色变化事件参数
-        /// </summary>
-        /// <param name="oldColor"> 旧颜色 </param>
-        /// <param name="newColor"> 新颜色 </param>
-        public ColorChangedEventArgs(Color oldColor, Color newColor)
-        {
-            OldColor = oldColor; // 旧颜色
-            NewColor = newColor; // 新颜色
-        }
+        public Color OldColor { get; } = oldColor; // 旧颜色
+        public Color NewColor { get; } = newColor; // 新颜色
     }
 }

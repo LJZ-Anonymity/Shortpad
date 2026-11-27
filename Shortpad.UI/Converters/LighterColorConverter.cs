@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using ColorConverter = System.Windows.Media.ColorConverter;
+using Color = System.Windows.Media.Color;
+using System.Globalization;
 using System.Windows.Media;
 using System.Windows.Data;
 
