@@ -55,6 +55,12 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         private bool _isSelfTriggered; // 自身触发标志
         private string CommonStyle;
 
+        // 页面跳转缓存
+        private readonly Dictionary<(string Table, int Index), string> _pageTitleCache = new(); // 动作页名称缓存
+        private bool _loopPageFlipping = true; // 循环翻页缓存
+        private int _globalSceneCount = 1; // 全局页总数缓存
+        private int _commonSceneCount = 1; // 通用页总数缓存
+
         public MainWindow() => InitializeComponent();
 
         #endregion
@@ -96,21 +102,21 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             // UI 线程：只剩创建控件，图标和外观都命中缓存
             iconManager.ApplyBackground(BackgroundImage, bgTask.Result, vm.BackgroundImagePath);
             InitializePageGrids();
-            SubscribeStateEvents();   // 放在页面生成之后，避免 ScheduleRefresh 在页面没建好时触发
+            SubscribeStateEvents(); // 放在页面生成之后，避免 ScheduleRefresh 在页面没建好时触发
         }
 
         public void PrewarmFirstShow()
         {
             if (_isShutdown || IsVisible) return;
 
-            _isSilentlyHidden = true;        // IsHiddenOrInvisible 保持为 true
+            _isSilentlyHidden = true;
             bool oldShowActivated = ShowActivated;
-            ShowActivated = false;           // 不抢焦点
+            ShowActivated = false; // 不抢焦点
             Opacity = 0;
             IsHitTestVisible = false;
 
             Show();
-            UpdateLayout();                  // 把首次布局也做掉
+            UpdateLayout();// 把首次布局也做掉
 
             ShowActivated = oldShowActivated;
         }
@@ -120,25 +126,61 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// </summary>
         public void OnCommonStyleChanged(string style)
         {
-            CommonStyle = db2.TableExists(style) ? style : DEFAULT_STYLE; // 设置样式
+            CommonStyle = db2.TableExists(style) ? style : DEFAULT_STYLE;
+
             CommonGrid.Children.Clear();
+            CommonPageIndex = 0; // 新场景从第 0 页开始
+            ClearPageTitleCache(CommonStyle); // 场景变了，旧标题缓存失效
+
             SetCommonTextBlock(0);
             GeneratePageGrid(CommonGrid, CommonStyle, 0, 4, 4);
+
+            ReloadSceneCountCache(); // 场景变了，页总数可能变
             GenerateButtons();
 
-            // 不再强制锁定，改为同步现有状态
             if (DataContext is MainWindowViewModel vm)
                 vm.IsLocked = AppStateManager.Locked;
+        }
+
+        /// <summary>
+        /// 清掉某个表的页面名称缓存
+        /// </summary>
+        private void ClearPageTitleCache(string table)
+        {
+            var keys = _pageTitleCache.Keys.Where(k => k.Table == table).ToList();
+            foreach (var k in keys) _pageTitleCache.Remove(k);
         }
 
         // 初始化动作页面
         private void InitializePageGrids()
         {
-            CommonStyle = db2.TableExists(CommonStyle) ? CommonStyle : DEFAULT_STYLE; // 设置样式
+            CommonStyle = db2.TableExists(CommonStyle) ? CommonStyle : DEFAULT_STYLE;
+
+            // 初始化页面缓存
+            ReloadSceneCountCache();
+            ReloadLoopFlippingCache();
+
             GeneratePageGrid(GlobalGrid, GLOBAL_STYLE, 0, 3, 4);
             GeneratePageGrid(CommonGrid, CommonStyle, 0, 4, 4);
-            GenerateButtons(); // 生成按钮
+            GenerateButtons();
             SetCommonTextBlock(0);
+        }
+
+        /// <summary>
+        /// 刷新两个类型的页总数缓存
+        /// </summary>
+        private void ReloadSceneCountCache()
+        {
+            _globalSceneCount = db3.GetSceneData(GLOBAL_STYLE)?.SceneCount ?? 1;
+            _commonSceneCount = db3.GetSceneData(CommonStyle)?.SceneCount ?? 1;
+        }
+
+        /// <summary>
+        /// 刷新循环翻页缓存
+        /// </summary>
+        private void ReloadLoopFlippingCache()
+        {
+            _loopPageFlipping = SettingDatabase.GetAllConventions().FirstOrDefault()?.LoopPageFlipping ?? true;
         }
 
         /// <summary>
@@ -147,9 +189,14 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <param name="GridIndex"> 通用网格索引 </param>
         private void SetCommonTextBlock(int GridIndex)
         {
-            var actionPageData = db3.GetActionPageData(CommonStyle, GridIndex); // 从数据库中获取通用动作页面数据
-            CommonTextBlock.Text = actionPageData.ActionPageName; // 设置通用标签内容
-            CommonTextBlock.ToolTip = actionPageData.ActionPageName; // 设置通用标签提示
+            var key = (CommonStyle, GridIndex);
+            if (!_pageTitleCache.TryGetValue(key, out var name))
+            {
+                name = db3.GetActionPageData(CommonStyle, GridIndex).ActionPageName;
+                _pageTitleCache[key] = name;
+            }
+            CommonTextBlock.Text = name;
+            CommonTextBlock.ToolTip = name;
         }
 
         // 设置窗口状态
@@ -272,10 +319,16 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             MarkDirty("appearance");
             ScheduleRefresh();
         }
-        private void OnConventionsChanged() { MarkDirty("conventions"); ScheduleRefresh(); }
+        private void OnConventionsChanged()
+        {
+            ReloadLoopFlippingCache();
+            MarkDirty("conventions");
+            ScheduleRefresh();
+        }
         private void OnActionPageChanged(string table)
         {
             if (_isSelfTriggered) return;
+            ClearPageTitleCache(table);
             MarkDirty($"page:{table}");
             ScheduleRefresh();
         }
@@ -290,6 +343,7 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         private void OnSceneListChanged(string table)
         {
             if (_isSelfTriggered) return;
+            ReloadSceneCountCache();
             MarkDirty($"scenes:{table}");
             ScheduleRefresh();
         }
@@ -422,12 +476,14 @@ namespace Shortpad.Windows.MainWindows.MainWindow
                 if (string.Equals(table, GLOBAL_STYLE, StringComparison.Ordinal))
                 {
                     GenerateButtons();
-                    ShowTargetPage(GlobalGrid, GLOBAL_STYLE, GloblePageIndex, 3, 4, GlobalButtonPanel);
+                    GloblePageIndex = Math.Min(GloblePageIndex, Math.Max(0, _globalSceneCount - 1));
+                    ShowTargetPage(GlobalGrid, GLOBAL_STYLE, GloblePageIndex, GlobalButtonPanel);
                 }
                 else if (string.Equals(table, CommonStyle, StringComparison.Ordinal))
                 {
                     GenerateButtons();
-                    ShowTargetPage(CommonGrid, CommonStyle, CommonPageIndex, 4, 4, CommonButtonPanel);
+                    CommonPageIndex = Math.Min(CommonPageIndex, Math.Max(0, _commonSceneCount - 1));
+                    ShowTargetPage(CommonGrid, CommonStyle, CommonPageIndex, CommonButtonPanel);
                 }
             }
         }
@@ -455,7 +511,7 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// </summary>
         private void RebuildPages(Panel parent, string gridType, int rows)
         {
-            int visibleIndex = GetVisiblePageGridIndex(parent, gridType);
+            int visibleIndex = gridType == GLOBAL_STYLE ? GloblePageIndex : CommonPageIndex;
             parent.Children.Clear();
             GeneratePageGrid(parent, gridType, visibleIndex, rows, 4);
             if (gridType != GLOBAL_STYLE) SetCommonTextBlock(visibleIndex);
@@ -468,17 +524,12 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         // 生成页面切换 Button
         private void GenerateButtons()
         {
-            // 切换通用动作页时清空
-            GlobalButtonPanel.Children.Clear(); // 清空全局动作页切换按钮
-            CommonButtonPanel.Children.Clear(); // 清空通用动作页切换按钮
+            GlobalButtonPanel.Children.Clear();
+            CommonButtonPanel.Children.Clear();
 
-            // 使用缓存获取场景数据，减少数据库查询
-            var globalSceneData = db3.GetSceneData(GLOBAL_STYLE);
-            var commonSceneData = db3.GetSceneData(CommonStyle);
-
-            // 生成页面切换按钮，保留当前选中的按钮状态
-            GeneratePageButtons(GLOBAL_STYLE, globalSceneData?.SceneCount ?? 1, GlobalPageChangeButton_Click, GlobalButtonPanel, GloblePageIndex);
-            GeneratePageButtons(CommonStyle, commonSceneData?.SceneCount ?? 1, CommonPageChangeButton_Click, CommonButtonPanel, CommonPageIndex);
+            // 直接用缓存字段，避免重复查库
+            GeneratePageButtons(GLOBAL_STYLE, _globalSceneCount, GlobalPageChangeButton_Click, GlobalButtonPanel, GloblePageIndex);
+            GeneratePageButtons(CommonStyle, _commonSceneCount, CommonPageChangeButton_Click, CommonButtonPanel, CommonPageIndex);
         }
 
         /// <summary>
@@ -508,12 +559,12 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         // 全局页面切换按钮点击
         private void GlobalPageChangeButton_Click(object sender, RoutedEventArgs e)
         {
-            SwitchToPageGrid(sender, GlobalGrid, GLOBAL_STYLE, 3, 4, GlobalButtonPanel);
+            SwitchToPageGrid(sender, GlobalGrid, GLOBAL_STYLE, GlobalButtonPanel);
         }
         // 通用页面切换按钮点击
         private void CommonPageChangeButton_Click(object sender, RoutedEventArgs e)
         {
-            SwitchToPageGrid(sender, CommonGrid, CommonStyle, 4, 4, CommonButtonPanel);
+            SwitchToPageGrid(sender, CommonGrid, CommonStyle, CommonButtonPanel);
         }
 
         /// <summary>
@@ -522,18 +573,41 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <param name="parent">父容器</param>
         /// <param name="gridType">Grid类型</param>
         /// <param name="targetIndex">目标页面索引</param>
-        /// <param name="rows">行数</param>
-        /// <param name="cols">列数</param>
         /// <param name="buttonPanel">按钮面板</param>
-        private void ShowTargetPage(Panel parent, string gridType, int targetIndex, int rows, int cols, Panel buttonPanel)
+        /// <summary>
+        /// 显示目标页面并同步相关状态（单次遍历完成显隐切换）
+        /// </summary>
+        private void ShowTargetPage(Panel parent, string gridType, int targetIndex, Panel buttonPanel)
         {
-            if (!parent.Children.OfType<Grid>().Any(g => g.Name == $"{gridType}{targetIndex}")) // 如果目标页面不存在
-                GeneratePageGrid(parent, gridType, targetIndex, rows, cols); // 生成目标页面
-            ShowPageGrid(parent, gridType, targetIndex, rows, cols); // 显示目标页面
-            foreach (Button btn in buttonPanel.Children.OfType<Button>()) // 同步按钮背景色
-                btn.Background = btn.Name == $"{gridType}{targetIndex}" ? SelectedBrush : UnSelectedBrush;
-            if (gridType != GLOBAL_STYLE) SetCommonTextBlock(targetIndex); // 设置通用标签内容
-            if (gridType == GLOBAL_STYLE) GloblePageIndex = targetIndex; else CommonPageIndex = targetIndex; // 同步页面索引
+            bool isGlobal = gridType == GLOBAL_STYLE;
+            int rows = isGlobal ? 3 : 4;
+            string targetName = $"{gridType}{targetIndex}";   // 只拼一次
+
+            // 单次遍历：切可见性 + 判断目标页是否存在
+            bool exists = false;
+            foreach (UIElement child in parent.Children)
+            {
+                if (child is Grid g && g.Name.StartsWith(gridType, StringComparison.Ordinal))
+                {
+                    bool isTarget = g.Name == targetName;
+                    g.Visibility = isTarget ? Visibility.Visible : Visibility.Collapsed;
+                    if (isTarget) exists = true;
+                }
+            }
+
+            // 目标页不存在则生成（GeneratePageGrid 默认 Visible）
+            if (!exists) GeneratePageGrid(parent, gridType, targetIndex, rows, 4);
+
+            // 同步按钮背景色
+            foreach (UIElement child in buttonPanel.Children)
+            {
+                if (child is Button btn)
+                    btn.Background = btn.Name == targetName ? SelectedBrush : UnSelectedBrush;
+            }
+
+            if (!isGlobal) SetCommonTextBlock(targetIndex);
+            if (isGlobal) GloblePageIndex = targetIndex;
+            else CommonPageIndex = targetIndex;
         }
 
         /// <summary>
@@ -542,15 +616,13 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <param name="sender">发送者</param>
         /// <param name="parent">父容器</param>
         /// <param name="gridType">Grid类型</param>
-        /// <param name="rows">行数</param>
-        /// <param name="cols">列数</param>
         /// <param name="buttonPanel">按钮面板</param>
-        private void SwitchToPageGrid(object sender, Panel parent, string gridType, int rows, int cols, Panel buttonPanel)
+        private void SwitchToPageGrid(object sender, Panel parent, string gridType, Panel buttonPanel)
         {
             if (sender is Button clickedButton)
             {
                 int pageIndex = int.Parse(clickedButton.Name.Replace($"{gridType}", ""));
-                ShowTargetPage(parent, gridType, pageIndex, rows, cols, buttonPanel); // 使用公共方法
+                ShowTargetPage(parent, gridType, pageIndex, buttonPanel); // 使用公共方法
             }
         }
 
@@ -601,32 +673,31 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// </summary>
         /// <param name="parent">父容器</param>
         /// <param name="gridType">Grid类型</param>
-        /// <param name="rows">行数</param>
-        /// <param name="cols">列数</param>
         /// <param name="buttonPanel">按钮面板</param>
         /// <param name="delta">滚动变化量（正数向上滚动，负数向下滚动）</param>
-        private void NavigatePage(Panel parent, string gridType, int rows, int cols, Panel buttonPanel, int delta)
+        private void NavigatePage(Panel parent, string gridType, Panel buttonPanel, int delta)
         {
-            int currentIndex = GetVisiblePageGridIndex(parent, gridType); // 获取当前可见页面索引
-            int totalPages = db3.GetSceneData(gridType)?.SceneCount ?? 1; // 获取总动作页数
-            bool loop = SettingDatabase.GetAllConventions().FirstOrDefault()?.LoopPageFlipping ?? true; // 获取是否循环翻页
+            bool isGlobal = gridType == GLOBAL_STYLE;
+            int currentIndex = isGlobal ? GloblePageIndex : CommonPageIndex;
+            int totalPages = isGlobal ? _globalSceneCount : _commonSceneCount;
+
             int targetIndex = delta > 0 ? currentIndex - 1 : currentIndex + 1;
 
-            int? validatedIndex = ValidateAndAdjustPageIndex(targetIndex, totalPages, loop); // 验证并调整页面索引
-            if (validatedIndex == null) return; // 如果应该退出，直接返回
+            int? validated = ValidateAndAdjustPageIndex(targetIndex, totalPages, _loopPageFlipping);
+            if (validated == null) return;
 
-            ShowTargetPage(parent, gridType, validatedIndex.Value, rows, cols, buttonPanel); // 使用公共方法显示目标页面
+            ShowTargetPage(parent, gridType, validated.Value, buttonPanel);
         }
 
         /// <summary>
         /// 鼠标滚轮切换页面
         /// </summary>
-        private void Grid_MouseWheel(MouseWheelEventArgs e, Panel parent, string gridType, int rows, int cols, Panel buttonPanel) => NavigatePage(parent, gridType, rows, cols, buttonPanel, e.Delta);
+        private void Grid_MouseWheel(MouseWheelEventArgs e, Panel parent, string gridType, Panel buttonPanel) => NavigatePage(parent, gridType, buttonPanel, e.Delta);
 
         // 全局Grid滚轮事件
-        private void GlobalGrid_MouseWheel(object sender, MouseWheelEventArgs e) => Grid_MouseWheel(e, GlobalGrid, GLOBAL_STYLE, 3, 4, GlobalButtonPanel);
+        private void GlobalGrid_MouseWheel(object sender, MouseWheelEventArgs e) => Grid_MouseWheel(e, GlobalGrid, GLOBAL_STYLE, GlobalButtonPanel);
         // 通用Grid滚轮事件
-        private void CommonGrid_MouseWheel(object sender, MouseWheelEventArgs e) => Grid_MouseWheel(e, CommonGrid, CommonStyle, 4, 4, CommonButtonPanel);
+        private void CommonGrid_MouseWheel(object sender, MouseWheelEventArgs e) => Grid_MouseWheel(e, CommonGrid, CommonStyle, CommonButtonPanel);
 
         /// <summary>
         /// 动态生成一页的Grid和按钮
@@ -772,23 +843,6 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             buttonManager.RefreshButtonDisplay(button, buttonData, vm.ButtonSize);
         }
 
-        /// <summary>
-        /// 显示指定页的Grid
-        /// </summary>
-        /// <param name="parent">父容器（如 CommonGrid/GlobalGrid）</param>
-        /// <param name="gridType">"common" 或 "_global"</param>
-        /// <param name="pageIndex">页码</param>
-        /// <param name="rows">行数</param>
-        /// <param name="cols">列数</param>
-        private void ShowPageGrid(Panel parent, string gridType, int pageIndex, int rows, int cols)
-        {
-            foreach (UIElement child in parent.Children)
-            {
-                if (child is Grid g && g.Name.StartsWith(gridType))
-                    g.Visibility = (g.Name == $"{gridType}{pageIndex}") ? Visibility.Visible : Visibility.Collapsed;
-            }
-        }
-
         #endregion
 
         #region UI 事件处理
@@ -806,12 +860,6 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             _isSilentlyHidden = true;
             Opacity = 0;
             IsHitTestVisible = false;
-
-            // 延迟重置页面，让 UI 线程优先渲染 Opacity = 0，避免视觉卡顿
-            Dispatcher.BeginInvoke(new Action(() =>
-            {
-                if (_isSilentlyHidden) ResetToFirstPage();
-            }), System.Windows.Threading.DispatcherPriority.Background);
 
             try
             {
@@ -852,12 +900,14 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <summary>
         /// 将全局与通用动作页都切回第一页
         /// </summary>
-        private void ResetToFirstPage()
+        private void ResetToFirstPage(string gridType)
         {
             if (_isShutdown) return;
             if (DataContext is not MainWindowViewModel) return;
-            ShowTargetPage(GlobalGrid, GLOBAL_STYLE, 0, 3, 4, GlobalButtonPanel);
-            ShowTargetPage(CommonGrid, CommonStyle, 0, 4, 4, CommonButtonPanel);
+
+            Panel parent = gridType == GLOBAL_STYLE ? GlobalGrid : CommonGrid;
+            Panel buttonPanel = gridType == GLOBAL_STYLE ? GlobalButtonPanel : CommonButtonPanel;
+            ShowTargetPage(parent, gridType, 0, buttonPanel);
         }
 
         // 添加关闭标志防止报错
@@ -909,14 +959,10 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <param name="buttonType">按钮类型</param>
         private void HandleAutoReturn(string buttonType)
         {
-            bool autoReturn = db3.GetAutoReturnToFirstPage(buttonType); // 获取是否自动返回第一页
-            if (autoReturn) // 如果自动返回第一页，清空按钮所在容器
+            bool autoReturn = db3.GetAutoReturnToFirstPage(buttonType);
+            if (autoReturn)
             {
-                if (buttonType == GLOBAL_STYLE)
-                    GlobalGrid.Children.Clear(); // 清空按钮所在容器
-                else
-                    CommonGrid.Children.Clear(); // 清空按钮所在容器
-                GeneratePageGrid(buttonType == GLOBAL_STYLE ? GlobalGrid : CommonGrid, buttonType, 0, 3, 4); // 重新生成第一页内容
+                ResetToFirstPage(buttonType); // 重置到第一页
             }
         }
 
@@ -1107,33 +1153,20 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <summary>
         /// 切换动作页（根据按钮数据，切换到指定类型和索引的动作页）
         /// </summary>
-        /// <param name="data"> 按钮数据 </param>
         public void OpenActionPage(ButtonData data)
         {
-            string type = data.Data1; // 获取动作页类型
-            int targetIndex = int.Parse(data.Data2); // 获取目标动作页索引
-            if (type != GLOBAL_STYLE) OnCommonStyleChanged(type); // 如果切换到非全局动作页，更新样式
+            string type = data.Data1;
+            int targetIndex = int.Parse(data.Data2);
+            if (type != GLOBAL_STYLE) OnCommonStyleChanged(type);
 
-            Panel parent = type == GLOBAL_STYLE ? GlobalGrid : CommonGrid; // 获取当前Grid容器
-            int currentGridIndex = GetVisiblePageGridIndex(parent, type); // 获取当前可见的Grid编号
-            /* 可有可无的逻辑
-                if (currentGridIndex == targetIndex) return; // 已在目标页，无需后续操作
-             */
+            int totalPages = type == GLOBAL_STYLE ? _globalSceneCount : _commonSceneCount;
+            int? validated = ValidateAndAdjustPageIndex(targetIndex, totalPages, _loopPageFlipping);
+            if (validated == null) return;
 
-            bool scrollUp = currentGridIndex > targetIndex; // 判断滚动方向
-            int steps = Math.Abs(currentGridIndex - targetIndex); // 需要滚动的次数
-            int delta = scrollUp ? Mouse.MouseWheelDeltaForOneLine : -Mouse.MouseWheelDeltaForOneLine; // 计算滚动变化量
-
-            // 根据类型确定参数
-            int rows = type == GLOBAL_STYLE ? 3 : 4;
-            int cols = 4;
+            Panel parent = type == GLOBAL_STYLE ? GlobalGrid : CommonGrid;
             Panel buttonPanel = type == GLOBAL_STYLE ? GlobalButtonPanel : CommonButtonPanel;
 
-            // 循环调用翻页方法
-            for (int i = 0; i < steps; i++)
-            {
-                NavigatePage(parent, type, rows, cols, buttonPanel, delta);
-            }
+            ShowTargetPage(parent, type, validated.Value, buttonPanel);
         }
 
         // 点击按钮打开搜索窗口

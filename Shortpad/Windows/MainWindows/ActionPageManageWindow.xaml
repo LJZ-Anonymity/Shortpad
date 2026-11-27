@@ -112,7 +112,7 @@
 
         <Border x:Name="MainBorder" Margin="239,31,11,0" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0.75" VerticalAlignment="Top" Height="224">
             <ScrollViewer x:Name="ScrollViewer" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" ScrollChanged="ScrollViewer_ScrollChanged">
-                <ListView x:Name="MainListView" Background="{DynamicResource MenuGridBrush}" AllowDrop="True" PreviewDragOver="ListView_PreviewDragOver" Drop="ListView_Drop">
+                <ListView x:Name="MainListView" Background="{DynamicResource MenuGridBrush}" AllowDrop="True" PreviewDragOver="ListView_PreviewDragOver" Drop="ListView_Drop" MouseWheel="MainStackPanel_MouseWheel">
                     <ListView.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel x:Name="MainStackPanel" Orientation="Horizontal" MouseWheel="MainStackPanel_MouseWheel"/>
