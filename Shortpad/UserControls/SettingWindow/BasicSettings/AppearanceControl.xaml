@@ -432,11 +432,11 @@
                     </Rectangle>
                     <Border CornerRadius="5" Padding="0,5" BorderThickness="0" Background="{DynamicResource WindowBackgroundBrush}" Margin="3">
                         <StackPanel Background="{x:Null}">
-                            <Button Content="原始" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Original"/>
-                            <Button Content="小白" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Simple"/>
-                            <Button Content="半透" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Translucent"/>
-                            <Button Content="深色" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Dark"/>
-                            <Button Content="深色半透" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="DarkTranslucent"/>
+                            <Button Content="原始" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Original" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            <Button Content="小白" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Simple" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            <Button Content="半透" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Translucent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            <Button Content="深色" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="Dark" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                            <Button Content="深色半透" Style="{StaticResource MenuButton}" Click="PresetStyleItem_Click" Tag="DarkTranslucent" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
                         </StackPanel>
                     </Border>
                 </Grid>
