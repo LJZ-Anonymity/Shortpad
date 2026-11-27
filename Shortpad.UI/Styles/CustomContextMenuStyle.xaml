@@ -33,7 +33,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Separator">
                     <Grid>
-                        <Border Height="1" Background="#FFF0F0F0" Margin="0" HorizontalAlignment="Stretch"/>
+                        <Border Height="1" Background="{DynamicResource BorderBrush}" Margin="0" HorizontalAlignment="Stretch"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
@@ -51,9 +51,9 @@
                     <!-- 外层Grid用于叠加阴影和内容，Margin为菜单整体留出空间 -->
                     <Grid Margin="5">
                         <!-- 阴影层 -->
-                        <Border Background="White" CornerRadius="3" SnapsToDevicePixels="True">
+                        <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" SnapsToDevicePixels="True">
                             <Border.Effect>
-                                <DropShadowEffect Color="#44000000" BlurRadius="6" ShadowDepth="1" Direction="0"/>
+                                <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" BlurRadius="6" ShadowDepth="1" Direction="0"/>
                             </Border.Effect>
                         </Border>
                         <!-- 主体层 -->

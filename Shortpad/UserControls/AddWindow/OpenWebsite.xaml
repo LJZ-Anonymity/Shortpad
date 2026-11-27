@@ -24,7 +24,7 @@
                         <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3">
+                <Border Background="{DynamicResource PopupSurfaceBrush}" CornerRadius="3" Margin="3">
                     <Button Style="{StaticResource MenuButton}" Click="CopyLocation">
                         <Grid>
                             <Image Source="/Resources/Images/clipboard-list.png" Style="{StaticResource SelectButtonImage}"/>

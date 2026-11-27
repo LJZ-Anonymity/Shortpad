@@ -32,7 +32,7 @@
                                 <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                             </Border.Effect>
                         </Border>
-                        <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3">
+                        <Border Background="{DynamicResource PopupSurfaceBrush}" CornerRadius="3" Margin="3">
                             <StackPanel Background="{x:Null}" Margin="0,3">
                                 <Button Style="{StaticResource MenuButton}" ToolTip="选择开始菜单中可以找到的程序" Click="ChooseApplications">
                                     <Grid>

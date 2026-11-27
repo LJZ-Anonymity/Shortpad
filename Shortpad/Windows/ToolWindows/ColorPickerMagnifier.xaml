@@ -15,7 +15,7 @@
         
     Loaded="ColorPickerMagnifier_Loaded"
 >
-    <Border BorderBrush="#FF333333" BorderThickness="2" CornerRadius="4" Background="#F0FFFFFF">
+    <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="2" CornerRadius="4" Background="{DynamicResource WindowBackgroundBrush}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -24,7 +24,7 @@
             </Grid.RowDefinitions>
 
             <!-- 放大区域 -->
-            <Border Grid.Row="1" Width="200" Height="200" BorderBrush="#FF000000" BorderThickness="1" Margin="10">
+            <Border Grid.Row="1" Width="200" Height="200" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="10">
                 <Grid>
                     <Image x:Name="MagnifierImage" Stretch="UniformToFill"/>
                     <!-- 标识当前选中像素的方框 -->
@@ -39,9 +39,9 @@
 
             <!-- 颜色信息 -->
             <StackPanel Grid.Row="2" Margin="10,5" HorizontalAlignment="Center">
-                <Border x:Name="ColorPreviewBorder" Width="100" Height="20" BorderBrush="#FF000000" BorderThickness="1" Margin="0,5"/>
+                <Border x:Name="ColorPreviewBorder" Width="100" Height="20" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,5"/>
                 <TextBlock x:Name="HexTextBlock" TextAlignment="Center" FontFamily="Consolas" FontSize="12" Margin="0,5"/>
-                <TextBlock x:Name="RgbTextBlock" TextAlignment="Center" FontSize="10" Foreground="#FF666666"/>
+                <TextBlock x:Name="RgbTextBlock" TextAlignment="Center" FontSize="10"/>
             </StackPanel>
         </Grid>
     </Border>

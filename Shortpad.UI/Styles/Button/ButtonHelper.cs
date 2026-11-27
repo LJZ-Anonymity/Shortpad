@@ -1,14 +1,14 @@
 ﻿using System.Windows;
 
-namespace Shortpad.UI.Styles
+namespace Shortpad.UI.Styles.Button
 {
-    public static class ButtonStyles
+    public static class ButtonHelper
     {
         public static readonly DependencyProperty CornerRadiusProperty =
             DependencyProperty.RegisterAttached(
                 "CornerRadius",
                 typeof(CornerRadius),
-                typeof(ButtonStyles),
+                typeof(ButtonHelper),
                 new FrameworkPropertyMetadata(new CornerRadius(5)));
 
         public static CornerRadius GetCornerRadius(DependencyObject obj)

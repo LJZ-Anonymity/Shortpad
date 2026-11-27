@@ -147,22 +147,22 @@ namespace Shortpad.UserControls.SettingWindow
                 
                 try
                 {
-                    // 1. 先更新色相滑块的值
+                    // 先更新色相滑块的值
                     HueSlider.Value = _hue;
                     
-                    // 2. 直接更新颜色选择区域的背景色
+                    // 直接更新颜色选择区域的背景色
                     UpdateHueColorRect(_hue);
                     
-                    // 3. 更新RGB滑块
+                    // 更新RGB滑块
                     if (RedSlider != null) RedSlider.Value = _currentColor.R;
                     if (GreenSlider != null) GreenSlider.Value = _currentColor.G;
                     if (BlueSlider != null) BlueSlider.Value = _currentColor.B;
                     if (AlphaSlider != null) AlphaSlider.Value = _currentColor.A;
                     
-                    // 4. 更新色彩选择点的位置
+                    // 更新色彩选择点的位置
                     UpdateColorThumbPosition();
                     
-                    // 5. 更新十六进制值
+                    // 更新十六进制值
                     UpdateHexValue();
                 }
                 finally
@@ -361,12 +361,8 @@ namespace Shortpad.UserControls.SettingWindow
         {
             if (_updatingControls) return; // 确保控件已初始化
             _hue = ((Slider)sender).Value; // 获取色相值
-
-            // 更新颜色选择区域背景色
-            UpdateHueColorRect(_hue);
-            
-            // 更新颜色
-            UpdateColorFromHsv(); 
+            UpdateHueColorRect(_hue); // 更新颜色选择区域背景色
+            UpdateColorFromHsv();  // 更新颜色
         }
 
         /// <summary>
@@ -595,16 +591,13 @@ namespace Shortpad.UserControls.SettingWindow
             HexValue.Text = hexText; // 更新文本框
             _updatingControls = false; // 重置标志
         }
-        
+
         /// <summary>
         ///  检查给定的字符串是否为有效的十六进制颜色格式
         /// </summary>
         /// <param name="hexColor"> 十六进制颜色字符串 </param>
-        /// <returns> 是否为有效的十六进制颜色格式 </returns>
         private bool IsValidHexColor(string hexColor)
-        {
-            return Regex.IsMatch(hexColor, @"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$"); // 匹配 #RGB、#RRGGBB和#AARRGGBB格式
-        }
+            => Regex.IsMatch(hexColor, @"^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$"); // 匹配 #RGB、#RRGGBB和#AARRGGBB格式
 
         /// <summary>
         /// 启动屏幕取色模式

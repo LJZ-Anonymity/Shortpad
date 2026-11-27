@@ -23,7 +23,7 @@
                     <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                 </Border.Effect>
             </Border>
-            <Border CornerRadius="5" Background="{DynamicResource WindowBackgroundBrush}">
+            <Border CornerRadius="5" Background="{DynamicResource PopupSurfaceBrush}">
                 <StackPanel x:Name="MainStackPanel">
                     <Button x:Name="CloseFloatButton" Style="{StaticResource MenuButton}" ToolTip="关闭悬浮窗" Margin="0,5,0,0" Click="CloseFloatButton_Click">
                         <Grid>
@@ -110,7 +110,7 @@
                         <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border CornerRadius="3" Width="150" Background="{DynamicResource WindowBackgroundBrush}">
+                <Border CornerRadius="3" Width="150" Background="{DynamicResource PopupSurfaceBrush}">
                     <StackPanel>
                         <Button x:Name="FloatActionButton" Style="{StaticResource MenuButton}" Margin="0,3,0,0" Click="FloatActionButton_Click">
                             <Button.ToolTip>
@@ -149,7 +149,7 @@
                         <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
+                <Border CornerRadius="3" Background="{DynamicResource PopupSurfaceBrush}">
                     <StackPanel>
                         <Button x:Name="ExportAction" Style="{StaticResource MenuButton}" ToolTip="导出动作定义到文件" Margin="0,3" Click="ExportAction_Click">
                             <Grid>
@@ -180,7 +180,7 @@
                         <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border CornerRadius="3" Width="130" Background="{DynamicResource WindowBackgroundBrush}">
+                <Border CornerRadius="3" Width="130" Background="{DynamicResource PopupSurfaceBrush}">
                     <StackPanel>
                         <Button x:Name="CopyActionID" Style="{StaticResource MenuButton}" ToolTip="复制动作的ID文字" Margin="0,3,0,0" Click="CopyActionID_Click">
                             <Grid>

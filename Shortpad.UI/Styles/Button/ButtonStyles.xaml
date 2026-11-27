@@ -1,9 +1,9 @@
 ﻿<ResourceDictionary 
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"        
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:styles="clr-namespace:Shortpad.UI.Styles.Button"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:conv="clr-namespace:Shortpad.UI.Converters"
-    xmlns:styles="clr-namespace:Shortpad.UI.Styles"
 >
     <!-- 颜色转换器 -->
     <conv:SmartHoverColorConverter x:Key="SmartHoverColorConverter" DarkerFactor="0.8" LighterFactor="1.2"/>
@@ -32,11 +32,11 @@
         </Setter>
     </Style>
 
-    <!-- 基础圆角按钮：默认白底灰边，24×24，圆角由 styles:ButtonStyles.CornerRadius 控制 -->
+    <!-- 基础圆角按钮：默认白底灰边，24×24，圆角由 styles:ButtonHelper.CornerRadius 控制 -->
     <Style x:Key="BaseRoundedButton" TargetType="Button">
         <Setter Property="BorderBrush" Value="{DynamicResource ButtonBorderBrush}"/>
         <Setter Property="Background" Value="{DynamicResource ButtonBrush}"/>
-        <Setter Property="styles:ButtonStyles.CornerRadius" Value="5"/>
+        <Setter Property="styles:ButtonHelper.CornerRadius" Value="5"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
@@ -47,7 +47,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{Binding Path=(styles:ButtonStyles.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                    <Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{Binding Path=(styles:ButtonHelper.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" RecognizesAccessKey="True"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -65,20 +65,20 @@
 
     <!-- 白色背景，灰色边框圆角Button -->
     <Style x:Key="WhiteButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
-        <Setter Property="styles:ButtonStyles.CornerRadius" Value="5"/>
+        <Setter Property="styles:ButtonHelper.CornerRadius" Value="5"/>
     </Style>
 
     <!-- AddWindow -->
     <!--“选择”Button -->
     <Style x:Key="Select" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
-        <Setter Property="styles:ButtonStyles.CornerRadius" Value="0,3,3,0"/>
+        <Setter Property="styles:ButtonHelper.CornerRadius" Value="0,3,3,0"/>
         <Setter Property="Height" Value="28"/>
         <Setter Property="Width" Value="39"/>
     </Style>
 
     <!-- “选择图片”的按钮样式 -->
     <Style x:Key="ImageButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
-        <Setter Property="styles:ButtonStyles.CornerRadius" Value="3"/>
+        <Setter Property="styles:ButtonHelper.CornerRadius" Value="3"/>
         <Setter Property="BorderThickness" Value="0"/>
     </Style>
 
@@ -123,7 +123,7 @@
 
     <!-- ActionPageManageWindow -->
     <!-- 动作 Button -->
-    <Style x:Key="ActionButton" TargetType="Button">
+    <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="AllowDrop" Value="True"/>
@@ -256,7 +256,7 @@
 
     <!-- “菜单按钮”的按钮样式 -->
     <Style x:Key="MenuButton" TargetType="Button" BasedOn="{StaticResource BaseRoundedButton}">
-        <Setter Property="styles:ButtonStyles.CornerRadius" Value="0"/>
+        <Setter Property="styles:ButtonHelper.CornerRadius" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="Background" Value="Transparent"/>

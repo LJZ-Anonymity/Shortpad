@@ -11,31 +11,18 @@
                 <!-- 基础样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/BaseStyles.xaml"/>
 
-                <!-- 右键菜单样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/CustomContextMenuStyle.xaml"/>
-                <!-- 堆栈面板样式 -->
+                <ResourceDictionary Source="/Shortpad.UI;component/Styles/ComboBox/ComboBoxStyle.xaml"/>
                 <!--<ResourceDictionary Source="/Shortpad.UI;component/Styles/StackPanelStyles.xaml"/>-->
-                <!-- 文本块样式 -->
+                <ResourceDictionary Source="/Shortpad.UI;component/Styles/Button/ButtonStyles.xaml"/>
+                <ResourceDictionary Source="/Shortpad.UI;component/Styles/Slider/SliderStyle.xaml"/>
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/TextBlockStyles.xaml"/>
-                <!-- 滚动条样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/ScrollBarStyle.xaml"/>
-                <!-- 复选框样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/CheckBoxStyle.xaml"/>
-                <!-- 组框样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/GroupBoxStyle.xaml"/>
-                <!-- 输入框样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/TextBoxStyles.xaml"/>
-                <!-- 下拉框样式 -->
-                <ResourceDictionary Source="/Shortpad.UI;component/Styles/ComboBoxStyle.xaml"/>
-                <!-- 画布样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/CanvasStyles.xaml"/>
-                <!-- 提示框样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/TooltipStyle.xaml"/>
-                <!-- 按钮样式 -->
-                <ResourceDictionary Source="/Shortpad.UI;component/Styles/ButtonStyles.xaml"/>
-                <!-- 标签样式 -->
-                <ResourceDictionary Source="/Shortpad.UI;component/Styles/SliderStyle.xaml"/>
-                <!-- 图片样式 -->
                 <ResourceDictionary Source="/Shortpad.UI;component/Styles/ImageStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 

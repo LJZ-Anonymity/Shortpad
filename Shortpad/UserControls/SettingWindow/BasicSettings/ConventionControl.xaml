@@ -90,7 +90,7 @@
                                             <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                                         </Border.Effect>
                                     </Border>
-                                    <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3" Padding="0,3">
+                                    <Border Background="{DynamicResource PopupSurfaceBrush}" CornerRadius="3" Margin="3" Padding="0,3">
                                         <StackPanel Width="120">
                                             <Button x:Name="EditRunningTrayIconButton" Style="{StaticResource MenuButton}" ToolTip="左键编辑，右键恢复默认" Click="EditRunningTrayIconButton_Click" MouseRightButtonDown="RestoreDefaultTrayIconButton_MouseRightButtonDown">
                                                 <Grid>

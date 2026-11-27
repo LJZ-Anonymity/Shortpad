@@ -24,7 +24,7 @@
                         <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                     </Border.Effect>
                 </Border>
-                <Border Background="{DynamicResource WindowBackgroundBrush}" CornerRadius="3" Margin="3">
+                <Border Background="{DynamicResource PopupSurfaceBrush}" CornerRadius="3" Margin="3">
                     <StackPanel>
                         <Button Name="SelectExtensionButton" Style="{StaticResource MenuButton}" Click="SelectExtensionButton_Click" Margin="0,3,0,0">
                             <Grid>

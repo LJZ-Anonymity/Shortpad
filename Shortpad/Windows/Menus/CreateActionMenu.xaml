@@ -23,7 +23,7 @@
                 <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="30" RenderingBias="Quality" ShadowDepth="1"/>
             </Rectangle.Effect>
         </Rectangle>
-        <Border CornerRadius="3" Background="{DynamicResource WindowBackgroundBrush}">
+        <Border CornerRadius="3" Background="{DynamicResource PopupSurfaceBrush}">
             <StackPanel>
                 <Button x:Name="PasteActionButton" Click="PasteActionButton_Click" Style="{StaticResource MenuButton}" Margin="0,3,0,3">
                     <Grid>
