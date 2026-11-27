@@ -62,6 +62,8 @@ namespace Shortpad
         private Action<string, string> _trayIconChangedHandler; // 托盘图标改变事件
         private readonly static HashSet<KeyCode> _downKeys = new(); // 按下的键集合
         private bool _isOpenKeyClickedOutside = false; // 是否在外部按下了唤出键
+        private DispatcherTimer? _testButtonHoverTimer; // 定时刷新测试按钮的悬停状态
+        private volatile bool _isMouseOnTestButton; // 鼠标是否在测试按钮上（UI 线程写，钩子线程读）
         private KeyCode? _lastKeyCode = null; // 上一个按键码
         private string _previewRunningPath; // 预览运行图标路径
         private string _previewPausedPath; // 预览暂停图标路径
@@ -84,6 +86,7 @@ namespace Shortpad
             InitializeTimer(); // 初始化定时器
             InitializeTaskbar(); // 初始化托盘图标
             InitializeHookAsync(); // 初始化钩子
+            InitializeTestButtonHoverTracker(); // 初始化测试按钮悬停状态刷新
             this.MainWindow = null; // 设置主窗口为null，避免应用程序在没有窗口时退出
         }
 
@@ -253,6 +256,45 @@ namespace Shortpad
             AppStateManager.PressTimer.Tick += PressTimer_Tick; // 计时器回调
         }
 
+        /// <summary>
+        /// 初始化测试按钮悬停状态的刷新定时器（运行在 UI 线程）
+        /// </summary>
+        private void InitializeTestButtonHoverTracker()
+        {
+            _testButtonHoverTimer = new DispatcherTimer(DispatcherPriority.Normal)
+            {
+                Interval = TimeSpan.FromMilliseconds(30)
+            };
+            _testButtonHoverTimer.Tick += (s, e) => UpdateTestButtonHoverState();
+            _testButtonHoverTimer.Start();
+        }
+
+        /// <summary>
+        /// 在 UI 线程上计算鼠标是否位于 TestButton 上，并更新标记位
+        /// </summary>
+        private void UpdateTestButtonHoverState()
+        {
+            bool hover = false;
+            try
+            {
+                var windows = Application.Current.Windows.OfType<SettingWindow>();
+                foreach (var settingWindow in windows)
+                {
+                    if (!settingWindow.IsVisible) continue;
+
+                    var testButton = VisualHelper.FindButtonByName(settingWindow, "TestButton");
+                    if (testButton != null && testButton.IsMouseOver)
+                    {
+                        hover = true;
+                        break;
+                    }
+                }
+            }
+            catch { }
+
+            _isMouseOnTestButton = hover;
+        }
+
         #endregion
 
         #region 全局钩子与按键判定
@@ -271,6 +313,14 @@ namespace Shortpad
         // 鼠标按下事件
         private void Hook_MousePressed(object? sender, MouseHookEventArgs e)
         {
+            // 按下时若在测试按钮上：清空残留的按下时间并直接忽略本次按下
+            if (_isMouseOnTestButton)
+            {
+                AppStateManager.MousePressStartTime = null;
+                _isOpenKeyClickedOutside = false;
+                return;
+            }
+
             AppStateManager.MousePressStartTime = DateTime.Now;
             IsMouseClickOutsideMainWindow(e); // 点击落在已显示的 MainWindow 外部则隐藏
             if (!CanProcessHook()) return;
@@ -405,50 +455,7 @@ namespace Shortpad
         /// 判断是否可以处理钩子
         /// 如果禁用Shortpad或全屏禁用Shortpad或鼠标在测试按键区域上，返回
         /// </summary>
-        private bool CanProcessHook() => !IsBannedFromShortpad() && !FullScreenDisable() && !IsMouseOnTestButton();
-
-        /// <summary>
-        /// 检查鼠标是否在测试按键区域上
-        /// </summary>
-        private bool IsMouseOnTestButton()
-        {
-            bool isMouseOnTestButton = false;
-            try
-            {
-                // 使用 BeginInvoke 避免阻塞调用线程，如果 UI 线程繁忙则直接返回 false
-                var operation = this.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    var mousePosition = System.Windows.Forms.Cursor.Position; // 获取当前鼠标位置
-                    var settingWindows = Application.Current.Windows.OfType<SettingWindow>(); // 检查是否有设置窗口打开
-                    foreach (var settingWindow in settingWindows)
-                    {
-                        if (settingWindow.IsVisible)
-                        {
-                            var testButton = VisualHelper.FindButtonByName(settingWindow, "TestButton"); // 递归查找名为 "TestButton" 的按钮
-                            if (testButton != null)
-                            {
-                                var buttonPoint = testButton.PointFromScreen(new System.Windows.Point(mousePosition.X, mousePosition.Y)); // 将屏幕坐标转换为按钮坐标
-                                if (buttonPoint.X >= 0 && buttonPoint.X <= testButton.ActualWidth &&
-                                    buttonPoint.Y >= 0 && buttonPoint.Y <= testButton.ActualHeight) // 检查鼠标是否在按钮范围内
-                                {
-                                    isMouseOnTestButton = true; // 设置鼠标在测试按钮上
-                                    break; // 找到后退出循环
-                                }
-                            }
-                        }
-                    }
-                }), DispatcherPriority.Normal);
-
-                // 等待操作完成，但设置超时时间避免长时间阻塞
-                if (operation.Status == DispatcherOperationStatus.Pending)
-                {
-                    // 如果操作还在等待，等待最多 50ms
-                    operation.Wait(TimeSpan.FromMilliseconds(50));
-                }
-            }
-            catch { }
-            return isMouseOnTestButton; // 返回鼠标是否在测试按钮上
-        }
+        private bool CanProcessHook() => !IsBannedFromShortpad() && !FullScreenDisable() && !_isMouseOnTestButton;
 
         /// <summary>
         /// 判断是否是 Ctrl 键
@@ -1029,6 +1036,7 @@ namespace Shortpad
             // 先释放关键资源，避免阻塞退出流程
             DisposeTaskbarIcon();
             DisposeHook();
+            _testButtonHoverTimer?.Stop(); // 停止测试按钮悬停状态刷新
 
             try
             {
