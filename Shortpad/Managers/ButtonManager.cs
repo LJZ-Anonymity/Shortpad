@@ -106,7 +106,8 @@ namespace Shortpad.Managers
             if (string.IsNullOrEmpty(text)) return;
             if (Uri.TryCreate(text, UriKind.Absolute, out Uri url))
             {
-                _ = ProcessUrlDrop(url.ToString(), int.Parse(targetButton.Name.Replace(tableName, "")), tableName);
+                int buttonId = ControlNameHelper.ParseButtonId(targetButton);
+                _ = ProcessUrlDrop(url.ToString(), buttonId, tableName);
             }
         }
 
@@ -116,8 +117,8 @@ namespace Shortpad.Managers
         private void ProcessButtonDrop(Button targetButton, string tableName1, string tableName2, double buttonSize, double titleMaxWidth)
         {
             if (SourceButton == null) return;
-            int buttonID1 = int.Parse(SourceButton.Name.Replace(tableName1, ""));
-            int buttonID2 = int.Parse(targetButton.Name.Replace(tableName2, ""));
+            int buttonID1 = ControlNameHelper.ParseButtonId(SourceButton);
+            int buttonID2 = ControlNameHelper.ParseButtonId(targetButton);
             db2.ExchangeButtonID(buttonID1, buttonID2, tableName1, tableName2);
             var sourceData = SourceButton.Tag as ButtonData;
             var targetData = targetButton.Tag as ButtonData;
@@ -152,7 +153,8 @@ namespace Shortpad.Managers
         /// </summary>
         private void UpdateButtonDisplay(Button button, string tableName, double buttonSize, double titleMaxWidth)
         {
-            var buttonData = db2.GetButtonDataByID(int.Parse(button.Name.Replace(tableName, "")), tableName);
+            int buttonId = ControlNameHelper.ParseButtonId(button);
+            var buttonData = db2.GetButtonDataByID(buttonId, tableName);
             RefreshButtonDisplay(button, buttonData, buttonSize, titleMaxWidth);
         }
 
@@ -161,14 +163,16 @@ namespace Shortpad.Managers
         /// </summary>
         private void ProcessSingleFileDrop(Button button, string filePath, double buttonSize, double titleMaxWidth, string tableName)
         {
+            int buttonId = ControlNameHelper.ParseButtonId(button);
+
             if (IsImage(filePath))
             {
-                ProcessImageDrop(filePath, int.Parse(button.Name.Replace(tableName, "")), tableName);
+                ProcessImageDrop(filePath, buttonId, tableName);
                 return;
             }
             else if (Path.GetExtension(filePath).ToLower() == ".url")
             {
-                ProcessUrlShortcutDrop(filePath, int.Parse(button.Name.Replace(tableName, "")), tableName);
+                ProcessUrlShortcutDrop(filePath, buttonId, tableName);
                 return;
             }
 
@@ -184,7 +188,7 @@ namespace Shortpad.Managers
             string fileName = Path.GetFileNameWithoutExtension(filePath);
             ButtonData buttonData = new ButtonData
             {
-                ButtonID = int.Parse(button.Name.Replace(tableName, "")),
+                ButtonID = buttonId,
                 Title = fileName,
                 Location = filePath,
                 ImagePath = iconPath,
@@ -271,9 +275,10 @@ namespace Shortpad.Managers
             }
 
             string fileName = Path.GetFileNameWithoutExtension(filePaths[0]);
+            int buttonId = ControlNameHelper.ParseButtonId(button);
             ButtonData buttonData = new ButtonData
             {
-                ButtonID = int.Parse(button.Name.Replace(tableName, "")),
+                ButtonID = buttonId,
                 Title = $"{fileName}等{filePaths.Length}个文件(夹)",
                 Location = filePath,
                 ImagePath = iconPath,
@@ -752,8 +757,9 @@ namespace Shortpad.Managers
 
                 if (menuType == null) return;
 
+                int buttonId = ControlNameHelper.ParseButtonId(button);
                 var menuInstance = (Window)Activator.CreateInstance(menuType,
-                    int.Parse(button.Name.Replace(tableName, "")), tableName, sourceWindow);
+                    buttonId, tableName, sourceWindow);
 
                 if (menuInstance is not BaseMenuWindow menu) return;
 
@@ -766,9 +772,7 @@ namespace Shortpad.Managers
 
                 SetMenuPositionAndShow(menuInstance, sourceWindow);
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         /// <summary>
@@ -789,8 +793,8 @@ namespace Shortpad.Managers
         {
             return menuType switch
             {
-                "OperationMenu" => new OperationMenu(int.Parse(button.Name.Replace(tableName, "")), tableName, sourceWindow),
-                "CreatActionMenu" => new CreateActionMenu(int.Parse(button.Name.Replace(tableName, "")), tableName),
+                "OperationMenu" => new OperationMenu(ControlNameHelper.ParseButtonId(button), tableName, sourceWindow),
+                "CreatActionMenu" => new CreateActionMenu(ControlNameHelper.ParseButtonId(button), tableName),
                 "SelectActionPageMenu" => new SelectActionPageMenu(),
                 "CustomMenu" => new CustomMenu(),
                 "EditSceneMenu" => new EditSceneMenu(tableName),
@@ -816,7 +820,7 @@ namespace Shortpad.Managers
         {
             if (SourceButton == null) return;
             string tableName = SourceTableName.StartsWith("_global") ? "_global" : commonStyle;
-            int buttonID = int.Parse(SourceButton.Name.Replace($"{tableName}", ""));
+            int buttonID = ControlNameHelper.ParseButtonId(SourceButton);
             db2.DeleteAction(buttonID, tableName);
             mainWindow.UpdateButtonContent(buttonID, tableName);
         }

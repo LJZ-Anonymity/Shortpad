@@ -58,8 +58,7 @@ namespace Shortpad.Windows.Menus
             {
                 Style = (Style)base.FindResource("MenuButton"),
                 ToolTip = data.SceneTag,
-                Name = data.SceneTag,
-                Tag = data.SceneName
+                Tag = data.SceneTag
             };
             return button;
         }
@@ -81,8 +80,10 @@ namespace Shortpad.Windows.Menus
         // 切换动作页
         private void ChangeActionPage(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            AppStateManager.MainWindowInstance.OnCommonStyleChanged(button.Name); // 切换动作页时更新样式
+            if (sender is Button button && button.Tag is string sceneTag && !string.IsNullOrEmpty(sceneTag))
+            {
+                AppStateManager.MainWindowInstance.OnCommonStyleChanged(sceneTag); // 切换动作页时更新样式
+            }
             base.Close();
         }
 

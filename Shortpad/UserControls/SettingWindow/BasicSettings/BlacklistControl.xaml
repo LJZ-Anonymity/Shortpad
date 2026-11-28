@@ -144,7 +144,7 @@
                                     <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="15" RenderingBias="Quality" ShadowDepth="1"/>
                                 </Rectangle.Effect>
                             </Rectangle>
-                            <Border Width="240" Background="{DynamicResource WindowBackgroundBrush}" BorderThickness="0" CornerRadius="3" Margin="5">
+                            <Border Width="240" Background="{DynamicResource PopupSurfaceBrush}" BorderThickness="0" CornerRadius="3" Margin="5">
                                 <StackPanel x:Name="AddBlacklistAppsStackPanel" Margin="-1.6,2"/>
                             </Border>
                         </Grid>

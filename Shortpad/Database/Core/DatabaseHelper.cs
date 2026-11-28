@@ -13,7 +13,6 @@ namespace Shortpad.Database.Core
         /// 获取数据库连接字符串
         /// </summary>
         /// <param name="databaseFileName">数据库文件名</param>
-        /// <returns>连接字符串</returns>
         public static string GetConnectionString(string databaseFileName)
         {
             string dbPath = Path.Combine(AppPathHelper.DatabaseFolder, databaseFileName);
@@ -29,7 +28,6 @@ namespace Shortpad.Database.Core
         /// 打开数据库连接
         /// </summary>
         /// <param name="databaseFileName">数据库文件名</param>
-        /// <returns>数据库连接</returns>
         public static SQLiteConnection OpenConnection(string databaseFileName)
         {
             var connection = new SQLiteConnection(GetConnectionString(databaseFileName));

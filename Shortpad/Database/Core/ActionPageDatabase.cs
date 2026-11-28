@@ -28,6 +28,15 @@ namespace Shortpad.Database.Core
             }
         }
 
+        private static string QuoteActionPageTable(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+                throw new ArgumentException("动作页表名不能为空", nameof(tableName));
+
+            string fullTableName = $"{tableName}ActionPage";
+            return "\"" + fullTableName.Replace("\"", "\"\"") + "\"";
+        }
+
         // 初始化数据库
         private static void InitializeDatabase()
         {
@@ -330,17 +339,18 @@ namespace Shortpad.Database.Core
         /// <param name="tableName"> 动作页名称 </param>
         public void CreateActionPageTable(string tableName)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var transaction = connection.BeginTransaction(); // 开启事务
-            string createTableQuery = $@"CREATE TABLE IF NOT EXISTS [{tableName + "ActionPage"}]
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+            string quotedTable = QuoteActionPageTable(tableName);
+            string createTableQuery = $@"CREATE TABLE IF NOT EXISTS {quotedTable}
             (
                 DefaultActionPageName TEXT PRIMARY KEY,
                 ActionPageName TEXT,
                 LastEditTime DATETIME
-            );"; // 创建场景数据表的SQL语句
-            using var command = new SQLiteCommand(createTableQuery, connection); // 创建SQLiteCommand对象
-            command.ExecuteNonQuery(); // 执行创建表的SQL语句
-            transaction.Commit(); // 提交事务
+            );";
+            using var command = new SQLiteCommand(createTableQuery, connection);
+            command.ExecuteNonQuery();
+            transaction.Commit();
         }
 
         /// <summary>
@@ -351,18 +361,19 @@ namespace Shortpad.Database.Core
         /// <param name="actionPageName"> 动作页名称 </param>
         public void UpdateActionPageTable(string tableName, string defaultActionPageName, string actionPageName)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var transaction = connection.BeginTransaction(); // 开启事务
-            string query = $@"INSERT OR REPLACE INTO [{tableName + "ActionPage"}]
-            (DefaultActionPageName, ActionPageName, LastEditTime)
-            VALUES
-            (@DefaultActionPageName, @ActionPageName, @LastEditTime)"; // 更新场景数据表的SQL语句
-            using var command = new SQLiteCommand(query, connection, transaction); // 创建SQLiteCommand对象
-            command.Parameters.AddWithValue("@DefaultActionPageName", defaultActionPageName); // 动作页内置默认名称
-            command.Parameters.AddWithValue("@ActionPageName", actionPageName); // 场景图标路径
-            command.Parameters.AddWithValue("@LastEditTime", DateTime.Now); // 场景数量
-            command.ExecuteNonQuery(); // 执行更新表的SQL语句
-            transaction.Commit(); // 提交事务
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+            string quotedTable = QuoteActionPageTable(tableName);
+            string query = $@"INSERT OR REPLACE INTO {quotedTable}
+    (DefaultActionPageName, ActionPageName, LastEditTime)
+    VALUES
+    (@DefaultActionPageName, @ActionPageName, @LastEditTime)";
+            using var command = new SQLiteCommand(query, connection, transaction);
+            command.Parameters.AddWithValue("@DefaultActionPageName", defaultActionPageName);
+            command.Parameters.AddWithValue("@ActionPageName", actionPageName);
+            command.Parameters.AddWithValue("@LastEditTime", DateTime.Now);
+            command.ExecuteNonQuery();
+            transaction.Commit();
         }
 
         /// <summary>
@@ -372,44 +383,45 @@ namespace Shortpad.Database.Core
         /// <param name="actionPageIndex"> 动作页索引 </param>
         public void DeleteActionPage(string tableName, int actionPageIndex)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var transaction = connection.BeginTransaction(); // 开启事务
-            string query = $@"DELETE FROM [{tableName + "ActionPage"}] WHERE DefaultActionPageName = @DefaultActionPageName"; // 删除动作页数据表的SQL语句
-            using var command1 = new SQLiteCommand(query, connection, transaction); // 创建SQLiteCommand对象
-            command1.Parameters.AddWithValue("@DefaultActionPageName", tableName + actionPageIndex.ToString()); // 添加参数
-            command1.ExecuteNonQuery(); // 执行删除表的SQL语句
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+            string quotedTable = QuoteActionPageTable(tableName);
+            string query = $@"DELETE FROM {quotedTable} WHERE DefaultActionPageName = @DefaultActionPageName";
+            using var command1 = new SQLiteCommand(query, connection, transaction);
+            command1.Parameters.AddWithValue("@DefaultActionPageName", tableName + actionPageIndex.ToString());
+            command1.ExecuteNonQuery();
 
-            string selectQuery = $@"SELECT DefaultActionPageName FROM [{tableName + "ActionPage"}] 
-                    ORDER BY CAST(SUBSTR(DefaultActionPageName, LENGTH(@TableName) + 1) AS INTEGER)"; // 获取所有剩余动作页的 SQL语句
-            using var selectCommand = new SQLiteCommand(selectQuery, connection, transaction); // 创建SQLiteCommand对象
-            selectCommand.Parameters.AddWithValue("@TableName", tableName); // 设置参数
-            using var reader = selectCommand.ExecuteReader(); // 执行查询SQL语句
-            List<string> defaultNames = new List<string>(); // 所有剩余动作页的 DefaultActionPageName
+            string selectQuery = $@"SELECT DefaultActionPageName FROM {quotedTable} 
+            ORDER BY CAST(SUBSTR(DefaultActionPageName, LENGTH(@TableName) + 1) AS INTEGER)";
+            using var selectCommand = new SQLiteCommand(selectQuery, connection, transaction);
+            selectCommand.Parameters.AddWithValue("@TableName", tableName);
+            using var reader = selectCommand.ExecuteReader();
+            List<string> defaultNames = new List<string>();
             while (reader.Read())
             {
-                defaultNames.Add(reader.GetString(0)); // 获取所有剩余动作页的 DefaultActionPageName
+                defaultNames.Add(reader.GetString(0));
             }
 
-            for (int i = 0; i < defaultNames.Count; i++) // 重新编号并更新每个动作页的 DefaultActionPageName
+            for (int i = 0; i < defaultNames.Count; i++)
             {
-                string oldDefaultActionPageName = defaultNames[i]; // 获取旧名称
-                string newDefaultActionPageName = $"{tableName}{i}"; // 设置新名称
+                string oldDefaultActionPageName = defaultNames[i];
+                string newDefaultActionPageName = $"{tableName}{i}";
                 if (oldDefaultActionPageName != newDefaultActionPageName)
                 {
-                    string updateQuery = $@"UPDATE [{tableName + "ActionPage"}]
-                            SET DefaultActionPageName = @NewDefaultActionPageName
-                            WHERE DefaultActionPageName = @OldDefaultActionPageName"; // 更新动作页数据表的SQL语句
-                    using var updateCommand = new SQLiteCommand(updateQuery, connection, transaction); // 创建SQLiteCommand对象
-                    updateCommand.Parameters.AddWithValue("@NewDefaultActionPageName", newDefaultActionPageName); // 设置新名称
-                    updateCommand.Parameters.AddWithValue("@OldDefaultActionPageName", oldDefaultActionPageName); // 设置旧名称
-                    updateCommand.ExecuteNonQuery(); // 执行更新表的SQL语句
+                    string updateQuery = $@"UPDATE {quotedTable}
+                    SET DefaultActionPageName = @NewDefaultActionPageName
+                    WHERE DefaultActionPageName = @OldDefaultActionPageName";
+                    using var updateCommand = new SQLiteCommand(updateQuery, connection, transaction);
+                    updateCommand.Parameters.AddWithValue("@NewDefaultActionPageName", newDefaultActionPageName);
+                    updateCommand.Parameters.AddWithValue("@OldDefaultActionPageName", oldDefaultActionPageName);
+                    updateCommand.ExecuteNonQuery();
                 }
             }
-            query = $@"UPDATE Scenes SET SceneCount = SceneCount - 1 WHERE SceneTag = @SceneTag"; // 更新场景数据表的SQL语句
-            using var command2 = new SQLiteCommand(query, connection, transaction); // 创建SQLiteCommand对象
-            command2.Parameters.AddWithValue("@SceneTag", tableName); // 设置场景类型
-            command2.ExecuteNonQuery(); // 执行更新表的SQL语句
-            transaction.Commit(); // 提交事务
+            query = $@"UPDATE Scenes SET SceneCount = SceneCount - 1 WHERE SceneTag = @SceneTag";
+            using var command2 = new SQLiteCommand(query, connection, transaction);
+            command2.Parameters.AddWithValue("@SceneTag", tableName);
+            command2.ExecuteNonQuery();
+            transaction.Commit();
         }
 
         /// <summary>
@@ -418,9 +430,10 @@ namespace Shortpad.Database.Core
         /// <param name="tableName"> 动作页数据表名称 </param>
         public void DeleteActionPageTable(string tableName)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var command = new SQLiteCommand($"DROP TABLE IF EXISTS [{tableName + "ActionPage"}]", connection); // 创建命令对象
-            command.ExecuteNonQuery(); // 执行删除表格语句
+            using var connection = OpenConnection();
+            string quotedTable = QuoteActionPageTable(tableName);
+            using var command = new SQLiteCommand($"DROP TABLE IF EXISTS {quotedTable}", connection);
+            command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -438,23 +451,24 @@ namespace Shortpad.Database.Core
                 "SELECT 1 FROM sqlite_master WHERE type='table' AND name=@n", connection))
             {
                 check.Parameters.AddWithValue("@n", table);
-                if (check.ExecuteScalar() == null) return null; // 表不存在当作没有数据
+                if (check.ExecuteScalar() == null) return null;
             }
 
-            string selectQuery = $"SELECT * FROM [{table}] WHERE DefaultActionPageName = @DefaultActionPageName";
-            using var command = new SQLiteCommand(selectQuery, connection); // 创建SQLiteCommand对象
-            command.Parameters.AddWithValue("@DefaultActionPageName", tableName + actionPageIndex.ToString()); // 添加参数
-            using var reader = command.ExecuteReader(); // 执行查询SQL语句
+            string quotedTable = QuoteActionPageTable(tableName);
+            string selectQuery = $"SELECT * FROM {quotedTable} WHERE DefaultActionPageName = @DefaultActionPageName";
+            using var command = new SQLiteCommand(selectQuery, connection);
+            command.Parameters.AddWithValue("@DefaultActionPageName", tableName + actionPageIndex.ToString());
+            using var reader = command.ExecuteReader();
             if (reader.Read())
             {
                 return new ActionPageData
                 {
-                    DefaultActionPageName = reader.GetString(0), // 内部默认的动作页名称，例如"Global0"
-                    ActionPageName = reader.GetString(1), // 动作页名称
-                    LastEditTime = reader.GetDateTime(2), // 最后编辑时间
-                }; // 返回动作页数据
+                    DefaultActionPageName = reader.GetString(0),
+                    ActionPageName = reader.GetString(1),
+                    LastEditTime = reader.GetDateTime(2),
+                };
             }
-            return null; // 返回空
+            return null;
         }
 
         /// <summary>
@@ -465,39 +479,37 @@ namespace Shortpad.Database.Core
         /// <param name="index2"> 动作页索引2 </param>
         public void SwapActionPage(string tableName, int index1, int index2)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var transaction = connection.BeginTransaction(); // 开启事务
-            string actionPage1Name = $"{tableName}{index1}"; // 获取第一个动作页的名称
-            string actionPage2Name = $"{tableName}{index2}"; // 获取第二个动作页的名称
-            string tempName = $"{tableName}_temp_swap"; // 生成临时名称
-
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+            string quotedTable = QuoteActionPageTable(tableName);
+            string actionPage1Name = $"{tableName}{index1}";
+            string actionPage2Name = $"{tableName}{index2}";
+            string tempName = $"{tableName}_temp_swap";
             // 更新第一个动作页为临时名称
-            string updateQuery = $@"UPDATE [{tableName + "ActionPage"}]
-                                SET DefaultActionPageName = @TempName
-                                WHERE DefaultActionPageName = @ActionPage1Name"; // 更新第一个动作页的SQL语句
-            using var updateCommand1 = new SQLiteCommand(updateQuery, connection, transaction); // 创建SQLiteCommand对象
-            updateCommand1.Parameters.AddWithValue("@TempName", tempName); // 设置临时名称
-            updateCommand1.Parameters.AddWithValue("@ActionPage1Name", actionPage1Name); // 设置第一个动作页名称
-            updateCommand1.ExecuteNonQuery(); // 执行更新表的SQL语句
-
+            string updateQuery = $@"UPDATE {quotedTable}
+                        SET DefaultActionPageName = @TempName
+                        WHERE DefaultActionPageName = @ActionPage1Name";
+            using var updateCommand1 = new SQLiteCommand(updateQuery, connection, transaction);
+            updateCommand1.Parameters.AddWithValue("@TempName", tempName);
+            updateCommand1.Parameters.AddWithValue("@ActionPage1Name", actionPage1Name);
+            updateCommand1.ExecuteNonQuery();
             // 更新第二个动作页为第一个动作页的原始名称
-            updateQuery = $@"UPDATE [{tableName + "ActionPage"}]
-                        SET DefaultActionPageName = @ActionPage1Name
-                        WHERE DefaultActionPageName = @ActionPage2Name"; // 更新第二个动作页的SQL语句
-            using var updateCommand2 = new SQLiteCommand(updateQuery, connection, transaction); // 创建SQLiteCommand对象
-            updateCommand2.Parameters.AddWithValue("@ActionPage1Name", actionPage1Name); // 设置第一个动作页名称
-            updateCommand2.Parameters.AddWithValue("@ActionPage2Name", actionPage2Name); // 设置第二个动作页名称
-            updateCommand2.ExecuteNonQuery(); // 执行更新表的SQL语句
-
+            updateQuery = $@"UPDATE {quotedTable}
+                SET DefaultActionPageName = @ActionPage1Name
+                WHERE DefaultActionPageName = @ActionPage2Name";
+            using var updateCommand2 = new SQLiteCommand(updateQuery, connection, transaction);
+            updateCommand2.Parameters.AddWithValue("@ActionPage1Name", actionPage1Name);
+            updateCommand2.Parameters.AddWithValue("@ActionPage2Name", actionPage2Name);
+            updateCommand2.ExecuteNonQuery();
             // 更新第一个动作页为第二个动作页的原始名称
-            updateQuery = $@"UPDATE [{tableName + "ActionPage"}]
-                        SET DefaultActionPageName = @ActionPage2Name
-                        WHERE DefaultActionPageName = @TempName"; // 更新第一个动作页的SQL语句
-            using var updateCommand3 = new SQLiteCommand(updateQuery, connection, transaction); // 创建SQLiteCommand对象
-            updateCommand3.Parameters.AddWithValue("@ActionPage2Name", actionPage2Name); // 设置第二个动作页名称
-            updateCommand3.Parameters.AddWithValue("@TempName", tempName); // 设置临时名称
-            updateCommand3.ExecuteNonQuery(); // 执行更新表的SQL语句
-            transaction.Commit(); // 提交事务
+            updateQuery = $@"UPDATE {quotedTable}
+                SET DefaultActionPageName = @ActionPage2Name
+                WHERE DefaultActionPageName = @TempName";
+            using var updateCommand3 = new SQLiteCommand(updateQuery, connection, transaction);
+            updateCommand3.Parameters.AddWithValue("@ActionPage2Name", actionPage2Name);
+            updateCommand3.Parameters.AddWithValue("@TempName", tempName);
+            updateCommand3.ExecuteNonQuery();
+            transaction.Commit();
         }
 
         /// <summary>
@@ -528,14 +540,15 @@ namespace Shortpad.Database.Core
         /// <param name="actionPageIndex"> 动作页索引 </param>
         public void UpdateActionPageLastEditTime(string tableName, int actionPageIndex)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            string query = $@"UPDATE [{tableName + "ActionPage"}]
+            using var connection = OpenConnection();
+            string quotedTable = QuoteActionPageTable(tableName);
+            string query = $@"UPDATE {quotedTable}
             SET LastEditTime = @LastEditTime
-            WHERE DefaultActionPageName = @DefaultActionPageName"; // 更新动作页最后编辑时间的SQL语句
-            using var command = new SQLiteCommand(query, connection); // 创建SQLiteCommand对象
-            command.Parameters.AddWithValue("@LastEditTime", DateTime.Now); // 设置最后编辑时间
-            command.Parameters.AddWithValue("@DefaultActionPageName", tableName + actionPageIndex.ToString()); // 设置动作页名称
-            command.ExecuteNonQuery(); // 执行更新表的SQL语句
+            WHERE DefaultActionPageName = @DefaultActionPageName";
+            using var command = new SQLiteCommand(query, connection);
+            command.Parameters.AddWithValue("@LastEditTime", DateTime.Now);
+            command.Parameters.AddWithValue("@DefaultActionPageName", tableName + actionPageIndex.ToString());
+            command.ExecuteNonQuery();
         }
 
         /// <summary>

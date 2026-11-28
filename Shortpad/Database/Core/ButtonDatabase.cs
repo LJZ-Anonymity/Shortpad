@@ -30,29 +30,41 @@ namespace Shortpad.Database.Core
         }
 
         /// <summary>
+        /// 解析标识符
+        /// </summary>
+        public static string QuoteIdentifier(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+                throw new ArgumentException("表名不能为空", nameof(tableName));
+
+            return "\"" + tableName.Replace("\"", "\"\"") + "\"";
+        }
+
+        /// <summary>
         /// 创建Button表格
         /// </summary>
         /// <param name="tableName"> 要创建的表格名称 </param>
         public void CreateButtonTable(string tableName)
         {
-            var connection = OpenConnection(); // 打开数据库连接
-            string createTableQuery = @"CREATE TABLE IF NOT EXISTS [" + tableName + @"]
-            (
-                ButtonID INTEGER PRIMARY KEY,
-                Title TEXT,
-                Location TEXT,
-                ImagePath TEXT,
-                Data1 TEXT,
-                Data2 TEXT,
-                Data3 TEXT,
-                Description TEXT,
-                CreateTime DATETIME,
-                LatestEditTime DATETIME,
-                ActionType TEXT,
-                UsedTimes INTEGER
-            );";
-            using var command = new SQLiteCommand(createTableQuery, connection); // 创建命令对象
-            command.ExecuteNonQuery(); // 执行创建表格语句
+            using var connection = OpenConnection();
+            string quotedTable = QuoteIdentifier(tableName);
+            string createTableQuery = $@"CREATE TABLE IF NOT EXISTS {quotedTable}
+                (
+                    ButtonID INTEGER PRIMARY KEY,
+                    Title TEXT,
+                    Location TEXT,
+                    ImagePath TEXT,
+                    Data1 TEXT,
+                    Data2 TEXT,
+                    Data3 TEXT,
+                    Description TEXT,
+                    CreateTime DATETIME,
+                    LatestEditTime DATETIME,
+                    ActionType TEXT,
+                    UsedTimes INTEGER
+                );";
+            using var command = new SQLiteCommand(createTableQuery, connection);
+            command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -77,15 +89,16 @@ namespace Shortpad.Database.Core
         /// <param name="buttonID"> 要获取数据的ButtonID </param>
         public ButtonData GetButtonDataByID(int buttonID, string tableName)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var command = new SQLiteCommand($"SELECT * FROM [{tableName}] WHERE ButtonID = @ButtonID", connection); // 创建命令对象
-            command.Parameters.AddWithValue("@ButtonID", buttonID); // 添加参数
-            using var reader = command.ExecuteReader(); // 执行查询语句
+            using var connection = OpenConnection();
+            string quotedTable = QuoteIdentifier(tableName);
+            using var command = new SQLiteCommand($"SELECT * FROM {quotedTable} WHERE ButtonID = @ButtonID", connection);
+            command.Parameters.AddWithValue("@ButtonID", buttonID);
+            using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                return ButtonDataHelper.FromReader(reader); // 返回ButtonData对象
+                return ButtonDataHelper.FromReader(reader);
             }
-            return null; // 如果找不到则返回null
+            return null;
         }
 
         /// <summary>
@@ -94,30 +107,31 @@ namespace Shortpad.Database.Core
         /// <param name="buttonData"> 要更新的动作数据 </param>
         public void UpdateAction(ButtonData buttonData, string tableName)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var transaction = connection.BeginTransaction(); // 开始事务
-            string query = $@"INSERT OR REPLACE INTO [{tableName}]
-            (ButtonID, Title, Location, ImagePath, Data1, Data2, Data3, Description, CreateTime, LatestEditTime, ActionType, UsedTimes)
-            VALUES 
-            (@ButtonID, @Title, @Location, @ImagePath, @Data1, @Data2, @Data3, @Description, @CreateTime, @LatestEditTime, @ActionType, @UsedTimes)"; // 创建SQL语句
-            using var command = new SQLiteCommand(query, connection); // 创建命令对象
-            command.Parameters.AddWithValue("@ButtonID", buttonData.ButtonID); // 动作ID
-            command.Parameters.AddWithValue("@Title", buttonData.Title); // 动作名称
-            command.Parameters.AddWithValue("@Location", buttonData.Location); // 位置
-            command.Parameters.AddWithValue("@ImagePath", buttonData.ImagePath); // 图片路径
-            command.Parameters.AddWithValue("@Data1", buttonData.Data1 ?? ""); // 动作数据1
-            command.Parameters.AddWithValue("@Data2", buttonData.Data2 ?? ""); // 动作数据2
-            command.Parameters.AddWithValue("@Data3", buttonData.Data3 ?? ""); // 动作数据3
-            command.Parameters.AddWithValue("@Description", buttonData.Description); // 对动作的描述
-            command.Parameters.AddWithValue("@CreateTime", buttonData.CreateTime); // 创建时间
-            command.Parameters.AddWithValue("@LatestEditTime", DateTime.Now); // 最近修改时间
-            command.Parameters.AddWithValue("@ActionType", buttonData.ActionType); // 动作类型
-            command.Parameters.AddWithValue("@UsedTimes", buttonData.UsedTimes); // 使用次数
-            command.ExecuteNonQuery(); // 执行更新语句
-            transaction.Commit(); // 提交事务
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+            string quotedTable = QuoteIdentifier(tableName);
+            string query = $@"INSERT OR REPLACE INTO {quotedTable}
+                (ButtonID, Title, Location, ImagePath, Data1, Data2, Data3, Description, CreateTime, LatestEditTime, ActionType, UsedTimes)
+                VALUES 
+                (@ButtonID, @Title, @Location, @ImagePath, @Data1, @Data2, @Data3, @Description, @CreateTime, @LatestEditTime, @ActionType, @UsedTimes)";
+            using var command = new SQLiteCommand(query, connection);
+            command.Parameters.AddWithValue("@ButtonID", buttonData.ButtonID);
+            command.Parameters.AddWithValue("@Title", buttonData.Title);
+            command.Parameters.AddWithValue("@Location", buttonData.Location);
+            command.Parameters.AddWithValue("@ImagePath", buttonData.ImagePath);
+            command.Parameters.AddWithValue("@Data1", buttonData.Data1 ?? "");
+            command.Parameters.AddWithValue("@Data2", buttonData.Data2 ?? "");
+            command.Parameters.AddWithValue("@Data3", buttonData.Data3 ?? "");
+            command.Parameters.AddWithValue("@Description", buttonData.Description);
+            command.Parameters.AddWithValue("@CreateTime", buttonData.CreateTime);
+            command.Parameters.AddWithValue("@LatestEditTime", DateTime.Now);
+            command.Parameters.AddWithValue("@ActionType", buttonData.ActionType);
+            command.Parameters.AddWithValue("@UsedTimes", buttonData.UsedTimes);
+            command.ExecuteNonQuery();
+            transaction.Commit();
 
-            ActionPageDatabase db3 = new(); // 实例化 ActionPageDatabase
-            db3.UpdateActionPageLastEditTime(tableName, buttonData.ButtonID / 100); // 更新动作页面的最后编辑时间
+            ActionPageDatabase db3 = new();
+            db3.UpdateActionPageLastEditTime(tableName, buttonData.ButtonID / 100);
         }
 
         /// <summary>
@@ -126,15 +140,16 @@ namespace Shortpad.Database.Core
         /// <param name="tableName"> Button前缀 </param>
         public List<ButtonData> GetButtonDataByTableName(string tableName)
         {
-            var buttonDataList = new List<ButtonData>(); // 初始化ButtonData列表
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var command = new SQLiteCommand($"SELECT * FROM [{tableName}]", connection); // 创建命令对象
-            using var reader = command.ExecuteReader(); // 执行查询语句
+            var buttonDataList = new List<ButtonData>();
+            using var connection = OpenConnection();
+            string quotedTable = QuoteIdentifier(tableName);
+            using var command = new SQLiteCommand($"SELECT * FROM {quotedTable}", connection);
+            using var reader = command.ExecuteReader();
             while (reader.Read())
             {
-                buttonDataList.Add(ButtonDataHelper.FromReader(reader)); // 添加ButtonData到列表
+                buttonDataList.Add(ButtonDataHelper.FromReader(reader));
             }
-            return buttonDataList; // 返回ButtonData列表
+            return buttonDataList;
         }
 
         /// <summary>
@@ -143,9 +158,10 @@ namespace Shortpad.Database.Core
         /// <param name="tableName"> 要删除的表名 </param>
         public void DeleteButtonTable(string tableName)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var command = new SQLiteCommand($"DROP TABLE IF EXISTS [{tableName}]", connection); // 创建命令对象
-            command.ExecuteNonQuery(); // 执行删除表格语句
+            using var connection = OpenConnection();
+            string quotedTable = QuoteIdentifier(tableName);
+            using var command = new SQLiteCommand($"DROP TABLE IF EXISTS {quotedTable}", connection);
+            command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -156,31 +172,32 @@ namespace Shortpad.Database.Core
         public void DeletePageOfButtons(string tableName, int pageIndex)
         {
             if (!TableExists(tableName)) return;
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var transaction = connection.BeginTransaction(); // 开始事务           
-            List<ButtonData> allButtons = GetButtonDataByTableName(tableName); // 获取所有按钮数据
+            using var connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+            string quotedTable = QuoteIdentifier(tableName);
+            List<ButtonData> allButtons = GetButtonDataByTableName(tableName);
             var currentButtonIDs = allButtons
                 .Where(b => b.ButtonID / 100 == pageIndex)
                 .Select(b => b.ButtonID)
-                .ToList(); // 当前页所有ButtonID
-            if (currentButtonIDs.Count > 0) // 批量删除当前页的按钮
+                .ToList();
+            if (currentButtonIDs.Count > 0)
             {
-                string ids = string.Join(",", currentButtonIDs); // 当前页所有ButtonID
-                using var delCmd = new SQLiteCommand($"DELETE FROM [{tableName}] WHERE ButtonID IN ({ids})", connection, transaction); // 创建删除命令
-                delCmd.ExecuteNonQuery(); // 执行删除语句
+                string ids = string.Join(",", currentButtonIDs);
+                using var delCmd = new SQLiteCommand($"DELETE FROM {quotedTable} WHERE ButtonID IN ({ids})", connection, transaction);
+                delCmd.ExecuteNonQuery();
             }
 
             var subsequentButtons = allButtons
                 .Where(b => b.ButtonID / 100 > pageIndex)
-                .ToList(); // 后续页所有ButtonData
+                .ToList();
             foreach (var button in subsequentButtons)
             {
-                int page = button.ButtonID / 100; // 原页码
-                int bcPart = button.ButtonID % 100; // 目标 ID 的 B 和 C 部分
-                int newButtonID = (page - 1) * 100 + bcPart; // 新的 ButtonID
-                UpdateButtonID(connection, tableName, button.ButtonID, newButtonID); // 更新 ButtonID
+                int page = button.ButtonID / 100;
+                int bcPart = button.ButtonID % 100;
+                int newButtonID = (page - 1) * 100 + bcPart;
+                UpdateButtonID(connection, tableName, button.ButtonID, newButtonID);
             }
-            transaction.Commit(); // 提交事务
+            transaction.Commit();
         }
 
         /// <summary>
@@ -203,16 +220,17 @@ namespace Shortpad.Database.Core
         /// </summary>
         /// <param name="buttonID">要删除的动作ID</param>
         public void DeleteAction(int buttonID, string tableName, SQLiteConnection connection = null)
-        { 
-            if (connection == null) connection = OpenConnection(); // 打开数据库连接
-            using var transaction = connection.BeginTransaction(); // 开始事务
-            using var command = new SQLiteCommand($@"DELETE FROM [{tableName}] WHERE ButtonID = @ButtonID", connection); // 创建命令
-            command.Parameters.AddWithValue("@ButtonID", buttonID); // 绑定参数
-            command.ExecuteNonQuery(); // 执行命令
-            transaction.Commit(); // 提交事务
+        {
+            if (connection == null) connection = OpenConnection();
+            using var transaction = connection.BeginTransaction();
+            string quotedTable = QuoteIdentifier(tableName);
+            using var command = new SQLiteCommand($@"DELETE FROM {quotedTable} WHERE ButtonID = @ButtonID", connection);
+            command.Parameters.AddWithValue("@ButtonID", buttonID);
+            command.ExecuteNonQuery();
+            transaction.Commit();
 
-            ActionPageDatabase db3 = new(); // 实例化 ActionPageDatabase
-            db3.UpdateActionPageLastEditTime(tableName, buttonID / 100); // 更新动作页面的最后编辑时间
+            ActionPageDatabase db3 = new();
+            db3.UpdateActionPageLastEditTime(tableName, buttonID / 100);
         }
 
         /// <summary>
@@ -283,10 +301,11 @@ namespace Shortpad.Database.Core
         /// <param name="newButtonID"> 目标 ButtonID </param>
         private void UpdateButtonID(SQLiteConnection connection, string tableName, int oldButtonID, int newButtonID)
         {
-            using var command = new SQLiteCommand($@"UPDATE [{tableName}] SET ButtonID = @NewButtonID WHERE ButtonID = @OldButtonID", connection);
-            command.Parameters.AddWithValue("@NewButtonID", newButtonID); // 绑定参数
-            command.Parameters.AddWithValue("@OldButtonID", oldButtonID); // 绑定参数
-            command.ExecuteNonQuery(); // 执行更新语句
+            string quotedTable = QuoteIdentifier(tableName);
+            using var command = new SQLiteCommand($@"UPDATE {quotedTable} SET ButtonID = @NewButtonID WHERE ButtonID = @OldButtonID", connection);
+            command.Parameters.AddWithValue("@NewButtonID", newButtonID);
+            command.Parameters.AddWithValue("@OldButtonID", oldButtonID);
+            command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -297,28 +316,29 @@ namespace Shortpad.Database.Core
         /// <param name="targetTable">目标表名</param>
         private void MoveButtonDataToNewTable(SQLiteConnection connection, int buttonID, ButtonData buttonData, string sourceTable, string targetTable)
         {
-            using var transaction = connection.BeginTransaction(); // 开始事务
-            string query = $@"INSERT INTO {targetTable} 
-            (ButtonID, Title, Location, ImagePath, Data1, Data2, Data3, Description, CreateTime, LatestEditTime, ActionType, UsedTimes)
-            VALUES 
-            (@ButtonID, @Title, @Location, @ImagePath, @Data1, @Data2, @Data3, @Description, @CreateTime, @LatestEditTime, @ActionType, @UsedTimes)"; // 创建SQL语句
+            using var transaction = connection.BeginTransaction();
+            string quotedTargetTable = QuoteIdentifier(targetTable);
+            string query = $@"INSERT INTO {quotedTargetTable} 
+                (ButtonID, Title, Location, ImagePath, Data1, Data2, Data3, Description, CreateTime, LatestEditTime, ActionType, UsedTimes)
+                VALUES 
+                (@ButtonID, @Title, @Location, @ImagePath, @Data1, @Data2, @Data3, @Description, @CreateTime, @LatestEditTime, @ActionType, @UsedTimes)";
             using var command = new SQLiteCommand(query, connection);
-            command.Parameters.AddWithValue("@ButtonID", buttonID); // 动作ID
-            command.Parameters.AddWithValue("@Title", buttonData.Title); // 动作名称
-            command.Parameters.AddWithValue("@Location", buttonData.Location); // 位置
-            command.Parameters.AddWithValue("@ImagePath", buttonData.ImagePath); // 图片路径
-            command.Parameters.AddWithValue("@Data1", buttonData.Data1); // 动作数据1
-            command.Parameters.AddWithValue("@Data2", buttonData.Data2); // 动作数据2
-            command.Parameters.AddWithValue("@Data3", buttonData.Data3); // 动作数据3
-            command.Parameters.AddWithValue("@Description", buttonData.Description); // 对动作的描述
-            command.Parameters.AddWithValue("@CreateTime", buttonData.CreateTime); // 创建时间
-            command.Parameters.AddWithValue("@LatestEditTime", buttonData.LatestEditTime); // 最近修改时间
-            command.Parameters.AddWithValue("@ActionType", buttonData.ActionType); // 动作类型
-            command.Parameters.AddWithValue("@UsedTimes", buttonData.UsedTimes); // 使用次数
-            command.ExecuteNonQuery(); // 执行插入语句
-            transaction.Commit(); // 提交事务
+            command.Parameters.AddWithValue("@ButtonID", buttonID);
+            command.Parameters.AddWithValue("@Title", buttonData.Title);
+            command.Parameters.AddWithValue("@Location", buttonData.Location);
+            command.Parameters.AddWithValue("@ImagePath", buttonData.ImagePath);
+            command.Parameters.AddWithValue("@Data1", buttonData.Data1);
+            command.Parameters.AddWithValue("@Data2", buttonData.Data2);
+            command.Parameters.AddWithValue("@Data3", buttonData.Data3);
+            command.Parameters.AddWithValue("@Description", buttonData.Description);
+            command.Parameters.AddWithValue("@CreateTime", buttonData.CreateTime);
+            command.Parameters.AddWithValue("@LatestEditTime", buttonData.LatestEditTime);
+            command.Parameters.AddWithValue("@ActionType", buttonData.ActionType);
+            command.Parameters.AddWithValue("@UsedTimes", buttonData.UsedTimes);
+            command.ExecuteNonQuery();
+            transaction.Commit();
 
-            DeleteAction(buttonID, sourceTable); // 删除源表数据
+            DeleteAction(buttonID, sourceTable);
         }
 
         /// <summary>
@@ -327,10 +347,11 @@ namespace Shortpad.Database.Core
         /// <param name="buttonID"> 要增加的动作ID </param>
         public void IncreaseActionUsedTimes(int buttonID, string tableName)
         {
-            using var connection = OpenConnection(); // 打开数据库连接
-            using var command = new SQLiteCommand($@"UPDATE [{tableName}] SET UsedTimes = UsedTimes + 1 WHERE ButtonID = @ButtonID", connection);
-            command.Parameters.AddWithValue("@ButtonID", buttonID); // 绑定参数
-            command.ExecuteNonQuery(); // 执行更新语句
+            using var connection = OpenConnection();
+            string quotedTable = QuoteIdentifier(tableName);
+            using var command = new SQLiteCommand($@"UPDATE {quotedTable} SET UsedTimes = UsedTimes + 1 WHERE ButtonID = @ButtonID", connection);
+            command.Parameters.AddWithValue("@ButtonID", buttonID);
+            command.ExecuteNonQuery();
         }
 
         /// <summary>
@@ -397,10 +418,11 @@ namespace Shortpad.Database.Core
         public int GetTotalAntionPageIndex(string tableName)
         {
             using var connection = OpenConnection();
-            using var command = new SQLiteCommand($"SELECT MAX(ButtonID) FROM [{tableName}]", connection);
+            string quotedTable = QuoteIdentifier(tableName);
+            using var command = new SQLiteCommand($"SELECT MAX(ButtonID) FROM {quotedTable}", connection);
             var result = command.ExecuteScalar();
 
-            if (result == null || result == DBNull.Value) return 1; // 空表返回 1
+            if (result == null || result == DBNull.Value) return 1;
 
             int maxId = Convert.ToInt32(result);
             return (maxId / 100) + 1;
@@ -499,26 +521,27 @@ namespace Shortpad.Database.Core
         /// <param name="buttonName"> 动作名称 </param>
         public (List<ButtonData> buttonDataList, List<string> tableNames) GetButtonbyName(string buttonName)
         {
-            var buttonDataList = new List<ButtonData>(); // 实例化列表
-            var tableNames = new List<string>(); // 实例化列表
-            var allTableNames = GetAllTableNames(); // 获取所有表名
+            var buttonDataList = new List<ButtonData>();
+            var tableNames = new List<string>();
+            var allTableNames = GetAllTableNames();
             foreach (var tableName in allTableNames)
             {
-                using var connection = OpenConnection(); // 打开数据库连接
-                using var command = new SQLiteCommand($"SELECT * FROM [{tableName}] WHERE Title LIKE @Title", connection); // 创建命令
-                command.Parameters.AddWithValue("@Title", $"%{buttonName}%"); // 绑定参数
-                using var reader = command.ExecuteReader(); // 执行查询语句
+                using var connection = OpenConnection();
+                string quotedTable = QuoteIdentifier(tableName);
+                using var command = new SQLiteCommand($"SELECT * FROM {quotedTable} WHERE Title LIKE @Title", connection);
+                command.Parameters.AddWithValue("@Title", $"%{buttonName}%");
+                using var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    var title = reader["Title"].ToString(); // 标题
-                    if (title.Contains(buttonName, StringComparison.OrdinalIgnoreCase)) // 如果标题包含动作名称
+                    var title = reader["Title"].ToString();
+                    if (title.Contains(buttonName, StringComparison.OrdinalIgnoreCase))
                     {
-                        buttonDataList.Add(ButtonDataHelper.FromReader(reader)); // 构造 ButtonData 并添加到列表
-                        tableNames.Add(tableName); // 记录表名
+                        buttonDataList.Add(ButtonDataHelper.FromReader(reader));
+                        tableNames.Add(tableName);
                     }
                 }
             }
-            return (buttonDataList, tableNames); // 返回动作数据列表和表名列表
+            return (buttonDataList, tableNames);
         }
 
         /// <summary>
@@ -542,11 +565,11 @@ namespace Shortpad.Database.Core
             if (!TableExists(tableName)) return new Dictionary<int, ButtonData>();
             var result = new Dictionary<int, ButtonData>();
             using var connection = OpenConnection();
-            // 利用 ButtonID 的规律，直接用 BETWEEN 或数学运算过滤，避免全表扫描
             int minId = pageIndex * 100;
             int maxId = (pageIndex + 1) * 100;
+            string quotedTable = QuoteIdentifier(tableName);
 
-            using var command = new SQLiteCommand($"SELECT * FROM [{tableName}] WHERE ButtonID >= @MinId AND ButtonID < @MaxId", connection);
+            using var command = new SQLiteCommand($"SELECT * FROM {quotedTable} WHERE ButtonID >= @MinId AND ButtonID < @MaxId", connection);
             command.Parameters.AddWithValue("@MinId", minId);
             command.Parameters.AddWithValue("@MaxId", maxId);
 
@@ -571,7 +594,6 @@ namespace Shortpad.Database.Core
                 return;
             }
 
-            // 规范化为完整路径，尽量统一比较
             string normalizedOld = oldRoot.Trim();
             string normalizedNew = newRoot.Trim();
             if (string.Equals(normalizedOld, normalizedNew, StringComparison.OrdinalIgnoreCase))
@@ -589,15 +611,15 @@ namespace Shortpad.Database.Core
             using var transaction = connection.BeginTransaction();
             foreach (var table in tableNames)
             {
-                // 跳过 SQLite 内部表
                 if (table.StartsWith("sqlite_", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                string sql = "UPDATE [" + table + 
-                    "] SET ImagePath = REPLACE(COALESCE(ImagePath, ''), @OldRoot, @NewRoot) " +
-                    "WHERE ImagePath LIKE @OldLike";
+                string quotedTable = QuoteIdentifier(table);
+                string sql = $"UPDATE {quotedTable} " +
+                             "SET ImagePath = REPLACE(COALESCE(ImagePath, ''), @OldRoot, @NewRoot) " +
+                             "WHERE ImagePath LIKE @OldLike";
 
                 using var cmd = new SQLiteCommand(sql, connection, transaction);
                 cmd.Parameters.AddWithValue("@OldRoot", normalizedOld);

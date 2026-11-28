@@ -496,13 +496,15 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             // 更新全局页面切换按钮
             foreach (Button btn in GlobalButtonPanel.Children.OfType<Button>())
             {
-                btn.Background = btn.Name == $"{GLOBAL_STYLE}{GloblePageIndex}" ? SelectedBrush : UnSelectedBrush;
+                bool isCurrent = btn.Tag is int idx && idx == GloblePageIndex;
+                btn.Background = isCurrent ? SelectedBrush : UnSelectedBrush;
             }
 
             // 更新通用页面切换按钮
             foreach (Button btn in CommonButtonPanel.Children.OfType<Button>())
             {
-                btn.Background = btn.Name == $"{CommonStyle}{CommonPageIndex}" ? SelectedBrush : UnSelectedBrush;
+                bool isCurrent = btn.Tag is int idx && idx == CommonPageIndex;
+                btn.Background = isCurrent ? SelectedBrush : UnSelectedBrush;
             }
         }
 
@@ -548,7 +550,7 @@ namespace Shortpad.Windows.MainWindows.MainWindow
                 Button button = new Button
                 {
                     Style = (Style)FindResource("ActionPageChangeButton"),
-                    Name = $"{prefix}{i}"
+                    Tag = i
                 };
                 button.Background = (i == selectedIndex) ? SelectedBrush : UnSelectedBrush; // 根据 selectedIndex 设置按钮背景色，保留当前选中状态
                 button.Click += clickHandler;
@@ -581,15 +583,15 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         {
             bool isGlobal = gridType == GLOBAL_STYLE;
             int rows = isGlobal ? 3 : 4;
-            string targetName = $"{gridType}{targetIndex}";   // 只拼一次
+            string targetPageName = ControlNameHelper.GetPageName(targetIndex);
 
             // 单次遍历：切可见性 + 判断目标页是否存在
             bool exists = false;
             foreach (UIElement child in parent.Children)
             {
-                if (child is Grid g && g.Name.StartsWith(gridType, StringComparison.Ordinal))
+                if (child is Grid g && ControlNameHelper.TryParsePageIndex(g.Name, out _))
                 {
-                    bool isTarget = g.Name == targetName;
+                    bool isTarget = g.Name == targetPageName;
                     g.Visibility = isTarget ? Visibility.Visible : Visibility.Collapsed;
                     if (isTarget) exists = true;
                 }
@@ -602,7 +604,10 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             foreach (UIElement child in buttonPanel.Children)
             {
                 if (child is Button btn)
-                    btn.Background = btn.Name == targetName ? SelectedBrush : UnSelectedBrush;
+                {
+                    bool isTarget = btn.Tag is int idx && idx == targetIndex;
+                    btn.Background = isTarget ? SelectedBrush : UnSelectedBrush;
+                }
             }
 
             if (!isGlobal) SetCommonTextBlock(targetIndex);
@@ -619,27 +624,10 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <param name="buttonPanel">按钮面板</param>
         private void SwitchToPageGrid(object sender, Panel parent, string gridType, Panel buttonPanel)
         {
-            if (sender is Button clickedButton)
+            if (sender is Button clickedButton && clickedButton.Tag is int pageIndex)
             {
-                int pageIndex = int.Parse(clickedButton.Name.Replace($"{gridType}", ""));
                 ShowTargetPage(parent, gridType, pageIndex, buttonPanel); // 使用公共方法
             }
-        }
-
-        /// <summary>
-        /// 获取当前可见的页面Grid索引
-        /// </summary>
-        /// <param name="parent">父容器</param>
-        /// <param name="gridType">Grid类型</param>
-        /// <returns>当前可见的页面Grid索引</returns>
-        private int GetVisiblePageGridIndex(Panel parent, string gridType)
-        {
-            foreach (Grid grid in parent.Children.OfType<Grid>())
-            {
-                if (grid.Visibility == Visibility.Visible && grid.Name.StartsWith(gridType))
-                    return int.Parse(grid.Name.Replace(gridType, ""));
-            }
-            return 0;
         }
 
         /// <summary>
@@ -709,10 +697,10 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <param name="cols">列数</param>
         private Grid GeneratePageGrid(Panel parent, string gridType, int pageIndex, int rows, int cols)
         {
-            var grid = new Grid { Name = $"{gridType}{pageIndex}" }; // 创建Grid
+            var grid = new Grid { Name = ControlNameHelper.GetPageName(pageIndex) }; // 创建Grid
             AddGridRows(grid, rows); // 行定义
             AddGridColumns(grid, cols); // 列定义
-            // 添加按钮到Grid
+                                        // 添加按钮到Grid
             AddButtonsToGrid(grid, pageIndex, rows, cols, gridType, (Style)FindResource("Button"));
             parent.Children.Add(grid); // 添加到父容器
             return grid;
@@ -793,7 +781,7 @@ namespace Shortpad.Windows.MainWindows.MainWindow
                 for (int col = 0; col < cols; col++)
                 {
                     int buttonIndex = pageIndex * 100 + (row + 1) * 10 + (col + 1);
-                    string buttonName = $"{gridType}{buttonIndex}";
+                    string buttonName = ControlNameHelper.GetButtonName(buttonIndex);
                     Button button = CreateButton(buttonName, style);
 
                     Grid.SetRow(button, row * 2);
@@ -946,7 +934,8 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         {
             if (Keyboard.IsKeyDown(Key.LeftShift))
             {
-                AddActionWindow addWindow = new(int.Parse(button.Name.Replace($"{buttonType}", "")), buttonType, 0); // 创建添加窗口
+                int buttonId = ControlNameHelper.ParseButtonId(button);
+                AddActionWindow addWindow = new(buttonId, buttonType, 0); // 创建添加窗口
                 addWindow.Show(); // 显示添加窗口
                 return true; // 处理Shift键动作
             }
@@ -1079,8 +1068,8 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         // 点击标签打开动作页管理窗口
         private void CommonTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            ActionPageManageWindow actionPageManageWindow = new(CommonStyle); // 创建动作页管理窗口
-            actionPageManageWindow.Show(); // 显示窗口
+            if (e.ChangedButton != MouseButton.Left) return;
+            WindowHelper.OpenTargetWindow("ActionPageManageWindow", CommonStyle);
         }
 
         // 右键锁定 Button 切换菜单
@@ -1092,8 +1081,24 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         /// <param name="sender"> 按钮对象 </param>
         private string GetButtonType(object sender)
         {
-            Button button = sender as Button; // 获取按钮
-            return button.Name.StartsWith(GLOBAL_STYLE) ? GLOBAL_STYLE : CommonStyle; // 获取按钮类型
+            if (sender is not DependencyObject current)
+                return CommonStyle;
+
+            while (current != null)
+            {
+                if (current is Grid grid && ControlNameHelper.TryParsePageIndex(grid.Name, out _))
+                {
+                    DependencyObject? parent = VisualTreeHelper.GetParent(grid) ?? LogicalTreeHelper.GetParent(grid);
+                    if (ReferenceEquals(parent, GlobalGrid))
+                        return GLOBAL_STYLE;
+                    if (ReferenceEquals(parent, CommonGrid))
+                        return CommonStyle;
+                }
+
+                current = VisualTreeHelper.GetParent(current) ?? LogicalTreeHelper.GetParent(current);
+            }
+
+            return CommonStyle;
         }
 
         /// <summary>
@@ -1105,9 +1110,10 @@ namespace Shortpad.Windows.MainWindows.MainWindow
         {
             Grid fatherGrid = tableName == GLOBAL_STYLE ? GlobalGrid : CommonGrid; // 根据表名选择父网格
             int pageIndex = buttonID / 100; // 计算按钮索引
-            string buttonName = $"{tableName}{buttonID}"; // 生成按钮名称
+            string targetPageName = ControlNameHelper.GetPageName(pageIndex);
+            string buttonName = ControlNameHelper.GetButtonName(buttonID); // 生成按钮名称
             var button = fatherGrid.Children.OfType<Grid>()
-                .Where(ug => ug.Name == $"{tableName}{pageIndex}")
+                .Where(ug => ug.Name == targetPageName)
                 .SelectMany(ug => ug.Children.OfType<Button>())
                 .FirstOrDefault(b => b.Name == buttonName); // 查找按钮
 

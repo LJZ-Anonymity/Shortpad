@@ -198,9 +198,9 @@ namespace Shortpad.Windows.MainWindows
                 foreach (var child in grid.Children)
                 {
                     if (child is not Button button) continue;
-                    int buttonId = int.Parse(button.Name.Replace(type, ""));
+                    int buttonId = ControlNameHelper.ParseButtonId(button);
                     var data = db2.GetButtonDataByID(buttonId, type);
-                    buttonManager.RefreshButtonDisplay( button, data, ButtonManager.ManageWindowButtonSize, ButtonManager.ManageWindowTitleMaxWidth);
+                    buttonManager.RefreshButtonDisplay(button, data, ButtonManager.ManageWindowButtonSize, ButtonManager.ManageWindowTitleMaxWidth);
                     button.Background = isDarkModle
                         ? (data != null ? actionDarkModleButtonBrush : blankButtonBrush)
                         : (data != null ? actionButtonBrush : blankButtonBrush);
@@ -237,7 +237,7 @@ namespace Shortpad.Windows.MainWindows
         /// <summary>
         /// 场景类型改变事件
         /// </summary>
-        private void TypeChanged(string targetType)
+        public void TypeChanged(string targetType)
         {
             if (type == targetType) return; // 如果目标类型与当前类型相同，直接返回
             type = targetType; // 设置类型
@@ -593,7 +593,8 @@ namespace Shortpad.Windows.MainWindows
             {
                 for (int col = 0; col < cols; col++)
                 {
-                    string buttonName = $"{style}{canvasIndex}{row + 1}{col + 1}"; // 按钮名称
+                    int buttonId = canvasIndex * 100 + (row + 1) * 10 + (col + 1);
+                    string buttonName = ControlNameHelper.GetButtonName(buttonId); // 按钮名称
                     Button button = new Button // 创建按钮
                     {
                         Style = (Style)FindResource("ActionButton"), // 按钮样式
@@ -602,7 +603,7 @@ namespace Shortpad.Windows.MainWindows
                     BindButtonEvents(button); // 绑定按钮事件
                     uniformGrid.Children.Add(button); // 将按钮添加到画布
 
-                    var data = db2.GetButtonDataByID(int.Parse(buttonName.Replace(style, "")), type); // 获取按钮数据
+                    var data = db2.GetButtonDataByID(buttonId, type); // 获取按钮数据
                     buttonManager.RefreshButtonDisplay(button, data, ButtonManager.ManageWindowButtonSize, ButtonManager.ManageWindowTitleMaxWidth);
 
                     button.Background = isDarkModle
@@ -620,7 +621,7 @@ namespace Shortpad.Windows.MainWindows
         /// <param name="style"> 画布类型 </param>
         private Canvas GenerateCanva(int canvasIndex, string style)
         {
-            string canvasName = $"{style}{canvasIndex}"; // 画布名称
+            string canvasName = ControlNameHelper.GetPageName(canvasIndex); // 画布名称
             Canvas dynamicCanvas = new Canvas // 创建画布
             {
                 Style = (Style)FindResource("ActionPageCanvas"),
@@ -640,7 +641,7 @@ namespace Shortpad.Windows.MainWindows
             Button pageButton = new Button
             {
                 Style = (Style)FindResource("ActionChangePageButton"),
-                Name = $"{style}{canvasIndex}", // 按钮名称
+                Name = ControlNameHelper.GetPageName(canvasIndex), // 按钮名称
             }; // 创建按钮
             pageButton.PreviewMouseMove += ChangePageButton_PreviewMouseMove; // 鼠标移动事件
             pageButton.PreviewMouseLeftButtonUp += buttonManager.Button_PreviewMouseLeftButtonUp; // 鼠标左键抬起事件
@@ -658,7 +659,7 @@ namespace Shortpad.Windows.MainWindows
             Button editPageButton = new Button
             {
                 Style = (Style)FindResource("ActionPageEditButton"),
-                Name = $"Edit{style}{canvasIndex}", // 按钮名称
+                Name = ControlNameHelper.GetEditPageName(canvasIndex), // 按钮名称
             }; // 创建按钮
             editPageButton.Click += OpenEditPopup; // 点击事件
             editPageButton.MouseDoubleClick += EditActionPageInfoButton_Click; // 双击事件
@@ -780,7 +781,8 @@ namespace Shortpad.Windows.MainWindows
             e.Handled = true; // 阻止默认双击事件
             if (sender is Button button && button.Tag != null)
             {
-                AddActionWindow addWindow = new AddActionWindow(int.Parse(button.Name.Replace(type, "")), type, 0); // 创建编辑窗口
+                int buttonId = ControlNameHelper.ParseButtonId(button);
+                AddActionWindow addWindow = new AddActionWindow(buttonId, type, 0); // 创建编辑窗口
                 addWindow.Show(); // 显示编辑窗口
                 addWindow.Activate(); // 激活编辑窗口
             }
@@ -888,12 +890,17 @@ namespace Shortpad.Windows.MainWindows
             int index = button / 100; // 获取按钮所在动作页索引
             var oldCanvas = MainListView.Items[index] as Canvas; // 获取旧的 Canvas
             UniformGrid targetGrid = oldCanvas.Children.Cast<UIElement>().Where(c => c is UniformGrid).First() as UniformGrid; // 获取目标网格
-            foreach(var childs in targetGrid.Children)
+            foreach (var childs in targetGrid.Children)
             {
-                if(childs is Button targetButton && targetButton.Name.Contains(button.ToString()))
+                if (childs is Button targetButton)
                 {
-                    ButtonData data = db2.GetButtonDataByID(int.Parse(targetButton.Name.Replace(type, "")), type); // 获取按钮数据
-                    buttonManager.RefreshButtonDisplay(targetButton, data, ButtonManager.ManageWindowButtonSize, ButtonManager.ManageWindowTitleMaxWidth);
+                    int targetButtonId = ControlNameHelper.ParseButtonId(targetButton);
+                    if (targetButtonId == button)
+                    {
+                        ButtonData data = db2.GetButtonDataByID(targetButtonId, type); // 获取按钮数据
+                        buttonManager.RefreshButtonDisplay(targetButton, data, ButtonManager.ManageWindowButtonSize, ButtonManager.ManageWindowTitleMaxWidth);
+                        break;
+                    }
                 }
             }
 
@@ -927,8 +934,8 @@ namespace Shortpad.Windows.MainWindows
                     string targetCanvasName = targetCanvas.Name; // 获取目标 Canvas 的 Name
                     if (sourceButtonName == targetCanvasName) return; // 如果目标 Canvas 与源 Canvas 相同，则返回
 
-                    int sourceIndex = int.Parse(sourceButtonName.Substring(sourceButtonName.Length - 1)); // 获取源 Button 索引
-                    int targetIndex = int.Parse(targetCanvasName.Substring(targetCanvasName.Length - 1)); // 获取目标 Button 索引
+                    int sourceIndex = ControlNameHelper.ParsePageIndex(sourceButtonName); // 获取源页索引
+                    int targetIndex = ControlNameHelper.ParsePageIndex(targetCanvasName); // 获取目标画布索引
 
                     db2.SwapButtonAValues(type, sourceIndex, targetIndex); // 更新数据库 Button A 值
                     db3.SwapActionPage(type, sourceIndex, targetIndex); // 更新数据库动作页数据
@@ -993,7 +1000,7 @@ namespace Shortpad.Windows.MainWindows
         private void CheckActionPageInfoButton_Click(object sender, RoutedEventArgs e)
         {
             Button bingdingButton = GetBingdingButton(); // 获取绑定按钮
-            int actionPageIndex = int.Parse(bingdingButton.Name.Replace($"Edit{type}", "")); // 获取动作页 ID
+            int actionPageIndex = ControlNameHelper.ParsePageIndex(bingdingButton); // 获取动作页索引
             ActionPageData actionPageData = db3.GetActionPageData(type, actionPageIndex); // 获取动作页信息
             string actionPageSize = db3.GetActionPageSize(type, actionPageIndex); // 获取动作页大小
             string actionPageInfo = $"ID：{actionPageData.DefaultActionPageName}\n" +
@@ -1007,8 +1014,10 @@ namespace Shortpad.Windows.MainWindows
         private void CopyActionPageIDButton_Click(object sender, RoutedEventArgs e)
         {
             Button bingdingButton = GetBingdingButton(); // 获取绑定按钮
-            Clipboard.SetText(bingdingButton.Name.Replace("Edit", "")); // 复制文本到剪贴板
-            ShowToast($"动作页ID已复制到剪贴板：{bingdingButton.Name.Replace("Edit", "")}", ToastType.Common); // 弹出消息提醒
+            int pageIndex = ControlNameHelper.ParsePageIndex(bingdingButton);
+            string actionPageIdText = $"{type}{pageIndex}";
+            Clipboard.SetText(actionPageIdText); // 复制文本到剪贴板
+            ShowToast($"动作页ID已复制到剪贴板：{actionPageIdText}", ToastType.Common); // 弹出消息提醒
         }
 
         // 点击按钮编辑动作页信息
@@ -1025,7 +1034,7 @@ namespace Shortpad.Windows.MainWindows
                     ShowToast("默认通用动作页信息不可修改。", ToastType.Common); // 弹出消息提醒
                     break;
                 default:
-                    string canvasIndex = bingdingButton.Name.Replace("Edit" + type, ""); // 获取画布索引
+                    string canvasIndex = ControlNameHelper.ParsePageIndex(bingdingButton).ToString(); // 获取画布索引
                     EditActionPageInfoWindow editActionPageInfoWindow = new(type, canvasIndex); // 创建编辑动作页信息窗口
                     editActionPageInfoWindow.ShowDialog(); // 显示编辑动作页信息窗口
                     break;
@@ -1036,7 +1045,7 @@ namespace Shortpad.Windows.MainWindows
         private void CreatOpenActionPageActionButton_Click(object sender, RoutedEventArgs e)
         {
             Button bingdingButton = GetBingdingButton(); // 获取绑定按钮
-            string actionPageIndex = bingdingButton.Name.Replace("Edit" + type, ""); // 获取场景名称
+            string actionPageIndex = ControlNameHelper.ParsePageIndex(bingdingButton).ToString(); // 获取动作页索引
             InternalCommandManager.Instance.PublishCommand(new InternalCommand
             {
                 CommandType = InternalCommandType.OpenActionPage,
@@ -1055,11 +1064,10 @@ namespace Shortpad.Windows.MainWindows
             Grid targetGrid = bingdingButton.Parent as Grid; // 获取目标画布
             MainListView.Items.Remove(targetGrid.Parent); // 从主列表视图中移除画布
             // 删除按钮数据页
-            string targetButtonName = bingdingButton.Name.Replace("Edit", ""); // 获取目标按钮名称
-            int canvadIndex = int.Parse(targetButtonName.Replace(type, "")); // 获取画布索引
+            int canvadIndex = ControlNameHelper.ParsePageIndex(bingdingButton); // 获取画布索引
             db2.DeletePageOfButtons(type, canvadIndex); // 删除按钮数据页
             db3.DeleteActionPage(type, canvadIndex); // 删除动作页数据表
-            if(MainListView.Items.Count == 0)
+            if (MainListView.Items.Count == 0)
             {
                 db2.DeleteButtonTable(type); // 如果没有画布，则删除按钮数据表
                 db3.DeleteActionPageTable(type); // 删除动作页数据表
@@ -1139,7 +1147,7 @@ namespace Shortpad.Windows.MainWindows
                 string sourceButtonName = e.Data.GetData("ButtonData")?.ToString(); // 获取传递的 Button Name
                 if (!string.IsNullOrEmpty(sourceButtonName))
                 {
-                    int sourceIndex = int.Parse(sourceButtonName.Replace(type, "")); // 获取源动作页索引
+                    int sourceIndex = ControlNameHelper.ParsePageIndex(sourceButtonName); // 获取源动作页索引
                     if (targetSceneData.SceneCount == 0)
                     {
                         db2.CreateButtonTable(targetSceneData.SceneName); // 创建按钮数据表

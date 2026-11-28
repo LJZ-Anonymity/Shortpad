@@ -162,11 +162,10 @@ namespace Shortpad.Helpers
         /// 打开目标窗口
         /// </summary>
         /// <param name="targetWindow"> 窗口对象 </param>
-        public static void OpenTargetWindow(string targetWindow)
+        public static void OpenTargetWindow(string targetWindow, string sceneType = null)
         {
-            Window window = null; // 窗口对象
-            
-            // 优化窗口查找：直接遍历而不是使用 OfType，避免多次枚举
+            Window window = null;
+
             try
             {
                 foreach (Window w in Application.Current.Windows)
@@ -179,44 +178,46 @@ namespace Shortpad.Helpers
                     else if (targetWindow == "ActionPageManageWindow" && w is ActionPageManageWindow apmw)
                     {
                         window = apmw;
+                        if (!string.IsNullOrEmpty(sceneType))
+                        {
+                            apmw.TypeChanged(sceneType);
+                        }
                         break;
                     }
                 }
             }
-            catch { } // 忽略枚举异常
+            catch { }
 
-            if (window != null) // 窗口对象不为空
+            if (window != null)
             {
-                if (window.WindowState == WindowState.Minimized) // 窗口最小化
-                    window.WindowState = WindowState.Normal; // 窗口恢复
-                nint windowHandle = new WindowInteropHelper(window).Handle; // 获取窗口句柄
-                TryToOpenExitingWindow(null, windowHandle); // 尝试打开已存在的窗口
+                if (window.WindowState == WindowState.Minimized)
+                    window.WindowState = WindowState.Normal;
+                nint windowHandle = new WindowInteropHelper(window).Handle;
+                TryToOpenExitingWindow(null, windowHandle);
             }
             else
             {
-                window = CreateWindow(targetWindow); // 创建窗口对象
+                window = CreateWindow(targetWindow, sceneType);
                 if (window != null)
-                    window.Show(); // 显示窗口
+                    window.Show();
             }
 
-            if(!AppStateManager.MainWindowPinned)
-                AppStateManager.MainWindowInstance.HideWindowSilently();
+            if (!AppStateManager.MainWindowPinned)
+                AppStateManager.MainWindowInstance?.HideWindowSilently();
         }
 
-        /// <summary>
-        /// 创建窗口对象
-        /// </summary>
-        /// <param name="windowType"> 窗口类型 </param>
-        private static Window CreateWindow(string windowType)
+        private static Window CreateWindow(string windowType, string sceneType = null)
         {
             switch (windowType)
             {
                 case "SettingWindow":
-                    return new SettingWindow(); // 创建设置窗口
+                    return new SettingWindow();
                 case "ActionPageManageWindow":
-                    return new ActionPageManageWindow(); // 创建动作页面管理窗口
+                    return string.IsNullOrEmpty(sceneType)
+                        ? new ActionPageManageWindow()
+                        : new ActionPageManageWindow(sceneType);
                 default:
-                    return null; // 窗口类型不存在
+                    return null;
             }
         }
 
