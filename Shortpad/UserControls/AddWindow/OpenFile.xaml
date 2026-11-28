@@ -55,7 +55,7 @@
                                 </Button>
                                 <Button Style="{StaticResource MenuButton}" ToolTip="将剪切板中的文本作为文件打开或作为命令执行" Click="CopyLocation">
                                     <Grid>
-                                        <ui:IconImage Source="/Resources/Images/clipboard-list.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
+                                        <ui:IconImage Source="/Resources/Images/paste_text.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                         <TextBlock Text="变量:剪贴板文本" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                                     </Grid>
                                 </Button>

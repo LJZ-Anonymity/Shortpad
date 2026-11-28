@@ -117,7 +117,7 @@
                                 </StackPanel>
                             </Button.ToolTip>
                             <Grid>
-                                <ui:IconImage Source="/Resources/Images/square-chevron-up.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
+                                <ui:IconImage Source="/Resources/Images/button_float_action.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="悬浮此动作"/>
                             </Grid>
                         </Button>
@@ -129,7 +129,7 @@
                                 </StackPanel>
                             </Button.ToolTip>
                             <Grid>
-                                <ui:IconImage Source="/Resources/Images/circle-chevron-up.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
+                                <ui:IconImage Source="/Resources/Images/button_float_actionpage.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                 <TextBlock Style="{StaticResource MenuButtonTextBlock}" Text="悬浮动作页"/>
                             </Grid>
                         </Button>

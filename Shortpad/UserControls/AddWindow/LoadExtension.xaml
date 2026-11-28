@@ -35,7 +35,7 @@
                         </Button>
                         <Button Style="{StaticResource MenuButton}" Click="CopyLocation" Margin="0,0,0,3">
                             <Grid>
-                                <ui:IconImage Source="/Resources/Images/clipboard-list.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
+                                <ui:IconImage Source="/Resources/Images/paste_text.png" Color="{DynamicResource ImageBrush}" Margin="7,0"/>
                                 <TextBlock Text="插入剪切贴板文本" TextAlignment="Left" VerticalAlignment="Center" Margin="26,0,0,0" FontSize="13"/>
                             </Grid>
                         </Button>

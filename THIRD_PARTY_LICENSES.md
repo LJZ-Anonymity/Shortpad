@@ -20,6 +20,10 @@
 | `action_paste.png` | `clipboard-paste` |
 | `action_run.png` | `play` |
 | `action_start_app.png` | `app-window` |
+| `action_edit.png` | `pencil` |
+| `action_import.png` | `file-input` |
+| `action_open_url.png` | `globe` |
+| `action_paste_text.png` | `clipboard-list` |
 | `button_add.png` | `circle-plus` |
 | `button_add_scene.png` | `plus` |
 | `button_close.png` | `x` |
@@ -30,6 +34,8 @@
 | `button_search.png` | `search` |
 | `button_jump_to_pinned.png` | `arrow-up-to-line` |
 | `button_select_local_image.png` | `image` |
+| `button_float_page.png` | `circle-chevron-up` |
+| `button_float_action.png` | `square-chevron-up` |
 | `icon_info.png` | `info` |
 | `menu_open_panel.png` | `panel-top-open` |
 | `menu_quit_app.png` | `power` |
@@ -51,9 +57,6 @@
 | `state_play.png` | `play` |
 | `window_message.png` | `message-square` |
 | `window_settings.png` | `settings` |
-| `action_edit.png` | `pencil` |
-
-> 注：以上对应关系根据前期讨论整理，部分图标名称（如 `action_edit`、`action_run`、`menu_quit_app`、`settings_tab_main_window`）可能与实际使用的图标不同，请逐个核对。
 
 ### 版权声明与许可
 
