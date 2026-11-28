@@ -428,10 +428,10 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             if (vm == null) return;
 
             // 场景变化：整块通用区重建
-            if (!string.Equals(CommonStyle, commonState, StringComparison.Ordinal))
+            if (!string.Equals(CommonStyle, commonState, StringComparison.Ordinal) && !AppStateManager.Locked)
             {
                 OnCommonStyleChanged(commonState);
-                ClearDirtyByPrefix("page:", "scenes:"); // 场景变了，原表的脏位已无意义
+                ClearDirtyByPrefix("page:", "scenes:");
             }
 
             // 外观变更

@@ -5,6 +5,7 @@ using Shortpad.Database.Core;
 using Shortpad.Helpers;
 using Shortpad.Models;
 using System.Windows;
+using Shortpad.Managers;
 
 namespace Shortpad.Windows.Menus
 {
@@ -81,9 +82,7 @@ namespace Shortpad.Windows.Menus
         private void ChangeActionPage(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            MainWindow mainWindow = Application.Current.Windows.OfType<MainWindow>().FirstOrDefault();
-            if (mainWindow != null)
-                mainWindow.OnCommonStyleChanged(button.Name); // 切换动作页时更新样式
+            AppStateManager.MainWindowInstance.OnCommonStyleChanged(button.Name); // 切换动作页时更新样式
             base.Close();
         }
 
