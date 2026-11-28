@@ -192,7 +192,7 @@ namespace Shortpad.Windows.MainWindows.MainWindow
             var key = (CommonStyle, GridIndex);
             if (!_pageTitleCache.TryGetValue(key, out var name))
             {
-                name = db3.GetActionPageData(CommonStyle, GridIndex).ActionPageName;
+                name = db3.GetActionPageData(CommonStyle, GridIndex)?.ActionPageName ?? DEFAULT_STYLE;
                 _pageTitleCache[key] = name;
             }
             CommonTextBlock.Text = name;

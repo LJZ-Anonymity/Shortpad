@@ -155,6 +155,7 @@ namespace Shortpad.Database.Core
         /// <param name="pageIndex"> 页码 </param>
         public void DeletePageOfButtons(string tableName, int pageIndex)
         {
+            if (!TableExists(tableName)) return;
             using var connection = OpenConnection(); // 打开数据库连接
             using var transaction = connection.BeginTransaction(); // 开始事务           
             List<ButtonData> allButtons = GetButtonDataByTableName(tableName); // 获取所有按钮数据
@@ -538,6 +539,7 @@ namespace Shortpad.Database.Core
         /// </summary>
         public Dictionary<int, ButtonData> GetButtonDataByPage(string tableName, int pageIndex)
         {
+            if (!TableExists(tableName)) return new Dictionary<int, ButtonData>();
             var result = new Dictionary<int, ButtonData>();
             using var connection = OpenConnection();
             // 利用 ButtonID 的规律，直接用 BETWEEN 或数学运算过滤，避免全表扫描
