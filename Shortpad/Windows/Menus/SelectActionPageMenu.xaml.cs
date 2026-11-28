@@ -1,11 +1,7 @@
 ﻿using Shortpad.Windows.MainWindows.MainWindow;
-using System.Windows.Media.Imaging;
 using Shortpad.Contracts.Models;
-using Shortpad.UI.UserControls;
 using System.Windows.Controls;
 using Shortpad.Database.Core;
-using System.Windows.Media;
-using Shortpad.Managers;
 using Shortpad.Helpers;
 using Shortpad.Models;
 using System.Windows;
@@ -35,8 +31,8 @@ namespace Shortpad.Windows.Menus
                 Button button = GenerateButton(data); // 生成切换动作页按钮
                 Grid grid = new(); // 创建按钮容器
                 button.Content = grid; // 设置按钮内容
-                IconImage image = GenerateImage(data); // 生成按钮图片
-                grid.Children.Add(image);
+                FrameworkElement source = SceneIconHelper.CreateSceneImage(data, true);
+                grid.Children.Add(source);
                 TextBlock textBlock = GenerateTextBlock(data); // 生成按钮文字
                 grid.Children.Add(textBlock); // 添加文字到按钮容器
                 ChangeSceneButtonStackPanel.Children.Add(button); // 添加按钮到按钮堆栈
@@ -65,55 +61,6 @@ namespace Shortpad.Windows.Menus
                 Tag = data.SceneName
             };
             return button;
-        }
-
-        /// <summary>
-        /// 生成按钮图标
-        /// </summary>
-        /// <param name="data"> 场景数据 </param>
-        private IconImage GenerateImage(SceneData data)
-        {
-            var icon = new IconImage { Margin = new Thickness(7, 0, 0, 0) };
-            icon.SetResourceReference(IconImage.ColorProperty, "ImageBrush");
-            try
-            {
-                icon.Source = LoadIcon(data.SceneIconPath);
-            }
-            catch (System.IO.IOException)
-            {
-                var toast = new ToastManager();
-                toast.Show("加载场景" + data.SceneName + " 图标失败。", ToastType.Error);
-                icon.Source = LoadIcon("/Resources/Images/app_enabled.png");
-            }
-
-            return icon;
-        }
-
-        private static ImageSource LoadIcon(string path)
-        {
-            Uri uri;
-
-            if (path.StartsWith("/") || path.StartsWith("pack://"))
-            {
-                // 包内资源，统一转成 pack URI
-                uri = new Uri(path.StartsWith("pack://") ? path : "pack://application:,,," + path, UriKind.Absolute);
-            }
-            else
-            {
-                // 磁盘文件，必须先确认存在
-                if (!System.IO.File.Exists(path))
-                    throw new System.IO.FileNotFoundException("图标文件不存在", path);
-
-                uri = new Uri(path, UriKind.Absolute);
-            }
-
-            var bitmap = new BitmapImage();
-            bitmap.BeginInit();
-            bitmap.UriSource = uri;
-            bitmap.CacheOption = BitmapCacheOption.OnLoad; // 立即加载，异常在这里抛出
-            bitmap.EndInit();
-            bitmap.Freeze();
-            return bitmap;
         }
 
         /// <summary>
