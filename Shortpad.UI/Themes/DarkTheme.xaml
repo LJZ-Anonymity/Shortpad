@@ -11,15 +11,18 @@
     <Color x:Key="AccentColor">#FF4D7CF7</Color>
     <Color x:Key="383838Color">#FF383838</Color>
     <Color x:Key="454545Color">#FF454545</Color>
+    <Color x:Key="E0E0E0Color">#FFE0E0E0</Color>
+    <Color x:Key="303030Color">#FF303030</Color>
+    <Color x:Key="2D2D30Color">#FF2D2D30</Color>
 
-    <SolidColorBrush x:Key="TextBrush" Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource E0E0E0Color}"/>
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="#202124"/>
-    <SolidColorBrush x:Key="PopupSurfaceBrush" Color="#303030"/>
+    <SolidColorBrush x:Key="PopupSurfaceBrush" Color="{StaticResource 303030Color}"/>
     <SolidColorBrush x:Key="PopupHighlightedItemBrush" Color="{StaticResource 454545Color}"/>
     <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
     <SolidColorBrush x:Key="ScrollThumbBrush" Color="#BABBBB"/>
     <SolidColorBrush x:Key="SliderBrush" Color="{StaticResource BorderColor}"/>
-    <SolidColorBrush x:Key="ImageBrush" Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="ImageBrush" Color="{StaticResource E0E0E0Color}"/>
     <SolidColorBrush x:Key="DeleteIconBrush" Color="#FFFF6B6B"/>
 
     <!-- 查找应用窗口 -->
@@ -27,7 +30,7 @@
     <SolidColorBrush x:Key="ListItemHoverBrush" Color="{StaticResource 2D2D2DColor}"/>
     <SolidColorBrush x:Key="ListItemSelectedBrush" Color="{StaticResource 3A3A3AColor}"/>
     <SolidColorBrush x:Key="ListHeaderHoverBrush" Color="#14FFFFFF"/>
-    <SolidColorBrush x:Key="ListItemSelectedInactiveBrush" Color="#FF303030"/>
+    <SolidColorBrush x:Key="ListItemSelectedInactiveBrush" Color="{StaticResource 303030Color}"/>
     <SolidColorBrush x:Key="ListItemSelectedHoverBrush" Color="{StaticResource 454545Color}"/>
 
     <!-- 搜索窗口 -->
@@ -41,7 +44,7 @@
     <SolidColorBrush x:Key="Button1HoverBrush" Color="{StaticResource 2B2B2BColor}"/>
     <SolidColorBrush x:Key="Button2HoverBrush" Color="#FF1F1F1F"/>
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
-    
+
     <!-- 按钮 -->
     <SolidColorBrush x:Key="ButtonBrush" Color="#FF1C1C1C"/>
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource BorderColor}"/>
@@ -54,13 +57,13 @@
 
     <!-- 搜索Button -->
     <SolidColorBrush x:Key="SearchButtonHoverBrush" Color="#FF2F3136"/>
-    
+
     <!-- 删除按钮（DeleteBlacklistItem） -->
     <SolidColorBrush x:Key="DeleteButtonHoverBrush" Color="#FF45403B"/>
     <SolidColorBrush x:Key="DeleteButtonPressedBrush" Color="#FF55504A"/>
-    
+
     <!-- ComboBox 专属键 -->
-    <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="#FF2D2D30"/>
+    <SolidColorBrush x:Key="ComboBoxBackgroundBrush" Color="{StaticResource 2D2D30Color}"/>
     <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#FF46464C"/>
     <SolidColorBrush x:Key="ComboBoxBorderHoverBrush" Color="#FF5E5E64"/>
     <SolidColorBrush x:Key="ComboBoxAccentBrush" Color="{StaticResource AccentColor}"/>
@@ -74,7 +77,7 @@
     <Color x:Key="ComboBoxShadowColor">#66000000</Color>
 
     <!-- CheckBox 专属键 -->
-    <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="#FF2D2D30"/>
+    <SolidColorBrush x:Key="CheckBoxBackgroundBrush" Color="{StaticResource 2D2D30Color}"/>
     <SolidColorBrush x:Key="CheckBoxBorderBrush" Color="#FF6A6A70"/>
     <SolidColorBrush x:Key="CheckBoxBorderHoverBrush" Color="#FF8A8A90"/>
     <SolidColorBrush x:Key="CheckBoxCheckedBrush" Color="{StaticResource AccentColor}"/>
@@ -84,4 +87,7 @@
     <SolidColorBrush x:Key="TooltipBackground" Color="#2B2D31"/>
     <SolidColorBrush x:Key="TooltipBorderBrush" Color="#444950"/>
     <Color x:Key="TooltipShadowColor">#66000000</Color>
+
+    <SolidColorBrush x:Key="CheckerLightBrush" Color="#FF4A4A4F"/>
+    <SolidColorBrush x:Key="CheckerDarkBrush" Color="#FF2E2E32"/>
 </ResourceDictionary>

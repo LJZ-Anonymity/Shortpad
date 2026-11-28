@@ -16,5 +16,12 @@ namespace Shortpad.UI.Styles.Button
 
         public static void SetCornerRadius(DependencyObject obj, CornerRadius value)
             => obj.SetValue(CornerRadiusProperty, value);
+
+        public static readonly DependencyProperty IsDropOpenProperty =
+            DependencyProperty.RegisterAttached("IsDropOpen", typeof(bool), typeof(ButtonHelper),
+                new FrameworkPropertyMetadata(false));
+
+        public static bool GetIsDropOpen(DependencyObject d) => (bool)d.GetValue(IsDropOpenProperty);
+        public static void SetIsDropOpen(DependencyObject d, bool value) => d.SetValue(IsDropOpenProperty, value);
     }
 }

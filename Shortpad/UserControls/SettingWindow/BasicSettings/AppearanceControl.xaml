@@ -26,6 +26,45 @@
         <conv:FontWeightConverter x:Key="FontWeightConverter"/>
         <conv:ThicknessConverter x:Key="ThicknessConverter"/>
         <conv:GridWidthConverter x:Key="GridWidthConverter"/>
+        <!-- 棋盘格背景 -->
+        <DrawingBrush x:Key="CheckerboardBrush" TileMode="Tile" Viewport="0,0,8,8" ViewportUnits="Absolute" Stretch="None">
+            <DrawingBrush.Drawing>
+                <DrawingGroup>
+                    <!-- 底色 -->
+                    <GeometryDrawing Brush="{DynamicResource CheckerLightBrush}">
+                        <GeometryDrawing.Geometry>
+                            <RectangleGeometry Rect="0,0,8,8"/>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                    <!-- 错位的深色方块 -->
+                    <GeometryDrawing Brush="{DynamicResource CheckerDarkBrush}">
+                        <GeometryDrawing.Geometry>
+                            <GeometryGroup>
+                                <RectangleGeometry Rect="0,0,4,4"/>
+                                <RectangleGeometry Rect="4,4,4,4"/>
+                            </GeometryGroup>
+                        </GeometryDrawing.Geometry>
+                    </GeometryDrawing>
+                </DrawingGroup>
+            </DrawingBrush.Drawing>
+        </DrawingBrush>
+
+        <!-- 底层：棋盘格 + 边框 -->
+        <Style x:Key="ColorSwatchBorder" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource CheckerboardBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1.5"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Height" Value="16"/>
+            <Setter Property="Width" Value="80"/>
+        </Style>
+
+        <!-- 上层：颜色遮罩 -->
+        <Style x:Key="ColorSwatchOverlay" TargetType="Rectangle">
+            <Setter Property="RadiusX" Value="3"/>
+            <Setter Property="RadiusY" Value="3"/>
+            <Setter Property="Fill" Value="Transparent"/>
+        </Style>
         <!-- 按钮模板 -->
         <Style x:Key="PreviewButtonStyle" TargetType="Button">
             <Setter Property="FontWeight" Value="{Binding ElementName=FontWeightComboBox, Path=SelectedIndex, Converter={StaticResource FontWeightConverter}}"/>
@@ -131,133 +170,109 @@
                                 <!-- 背景 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Left">
                                     <Label Content="背景：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                                    <Button x:Name="BackgroundColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="BackgroundColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="BackgroundColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="BackgroundColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 边框 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,28,0,0">
                                     <Label Content="边框：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="BorderColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="BorderColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="BorderColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="BorderColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 工具栏 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,56,0,0">
                                     <Label Content="工具栏：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="ToolbarColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="ToolbarColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="ToolbarColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="ToolbarColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 工具栏图标 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,84,0,0">
                                     <Label Content="工具栏图标：" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                                    <Button x:Name="ToolbarIconColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="ToolbarIconColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="ToolbarIconColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="ToolbarIconColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 动作按钮 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,112,0,0">
                                     <Label Content="动作按钮：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="ActionButtonColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="ActionButtonColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="ActionButtonColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="ActionButtonColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 动作按钮鼠标悬浮 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,140,0,0">
                                     <Label Content="动作按钮鼠标悬浮：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="ActionButtonMouseOverColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="ActionButtonMouseOverColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="ActionButtonMouseOverColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="ActionButtonMouseOverColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 空白按钮 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,168,0,0">
                                     <Label Content="空白按钮：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="BlankButtonColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="BlankButtonColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="BlankButtonColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="BlankButtonColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 空白按钮鼠标悬浮 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,196,0,0">
                                     <Label Content="空白按钮鼠标悬浮：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="BlankButtonMouseOverColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="BlankButtonMouseOverColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="BlankButtonMouseOverColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="BlankButtonMouseOverColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 按钮文字 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,224,0,0">
                                     <Label Content="按钮文字：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="TextColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="TextColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="TextColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="TextColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 动作矢量图标色 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,252,0,0" Visibility="Collapsed">
                                     <Label Content="动作矢量图标色：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="ActionIconColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="ActionIconColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="ActionIconColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="ActionIconColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 触发键文字颜色 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,280,0,0" Visibility="Collapsed">
                                     <Label Content="触发键文字颜色：" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                                    <Button x:Name="TriggerKeyTextColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click" >
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="TriggerKeyTextColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="TriggerKeyTextColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click" >
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="TriggerKeyTextColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                                 <!-- 其他位置矢量图标色 -->
                                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,308,0,0" Visibility="Collapsed">
                                     <Label Content="其他位置矢量图标色：" FontSize="14" VerticalAlignment="Top" HorizontalAlignment="Left" Width="152"/>
-                                    <Button x:Name="OtherIconColorButton" Style="{StaticResource WhiteButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
-                                        <Rectangle Width="100" Height="16">
-                                            <Rectangle.Fill>
-                                                <Binding ElementName="OtherIconColorButton" Path="Background"/>
-                                            </Rectangle.Fill>
-                                        </Rectangle>
+                                    <Button x:Name="OtherIconColorButton" Style="{StaticResource DropButton}" HorizontalAlignment="Left" Margin="152,0,0,0" VerticalAlignment="Top" Width="120" Height="22" Click="ColorButton_Click">
+                                        <Border Style="{StaticResource ColorSwatchBorder}">
+                                            <Rectangle x:Name="OtherIconColorSwatch" Style="{StaticResource ColorSwatchOverlay}"/>
+                                        </Border>
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -694,7 +709,7 @@
         </Grid>
 
         <!-- 颜色选择器Popup -->
-        <Popup x:Name="ColorPickerPopup" StaysOpen="False" Placement="Bottom" PlacementTarget="{Binding ElementName=BackgroundColorButton}" AllowsTransparency="True" Closed="ColorPickerPopup_Closed">
+        <Popup x:Name="ColorPickerPopup" StaysOpen="False" Placement="Bottom" PlacementTarget="{Binding ElementName=BackgroundColorButton}" AllowsTransparency="True" Opened="ColorPickerPopup_Opened" Closed="ColorPickerPopup_Closed">
             <Border Background="{DynamicResource PopupSurfaceBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="3">
                 <colorpicker:ColorPicker x:Name="PopupColorPicker" Width="245" Height="280" SelectedColorChanged="PopupColorPicker_SelectedColorChanged"/>
             </Border>

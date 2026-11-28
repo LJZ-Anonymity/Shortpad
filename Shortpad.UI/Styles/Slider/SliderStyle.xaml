@@ -57,6 +57,9 @@
                                                 <Border.Effect>
                                                     <DropShadowEffect Color="{DynamicResource ShadowEffectBrush}" Direction="0" BlurRadius="6" RenderingBias="Quality" ShadowDepth="1"/>
                                                 </Border.Effect>
+                                                <Border.BorderBrush>
+                                                    <SolidColorBrush Color="Transparent"/>
+                                                </Border.BorderBrush>
                                             </Border>
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsDragging" Value="True">

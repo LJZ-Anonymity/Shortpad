@@ -11,15 +11,16 @@
     <Color x:Key="FAFAColor">#FFFAFAFA</Color>
     <Color x:Key="F4F4Color">#FFF4F4F4</Color>
     <Color x:Key="ABADB3Color">#FFABADB3</Color>
+    <Color x:Key="BlackColor">#FF000000</Color>
 
-    <SolidColorBrush x:Key="TextBrush" Color="Black"/>
+    <SolidColorBrush x:Key="TextBrush" Color="{StaticResource BlackColor}"/>
     <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="PopupSurfaceBrush" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="PopupHighlightedItemBrush" Color="#EAEAEA"/>
     <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
     <SolidColorBrush x:Key="ScrollThumbBrush" Color="Gray"/>
     <SolidColorBrush x:Key="SliderBrush" Color="{StaticResource BorderColor}"/>
-    <SolidColorBrush x:Key="ImageBrush" Color="Black"/>
+    <SolidColorBrush x:Key="ImageBrush" Color="{StaticResource BlackColor}"/>
     <SolidColorBrush x:Key="DeleteIconBrush" Color="#FFD32F2F"/>
 
     <!-- 查找应用窗口 -->
@@ -31,7 +32,7 @@
     <SolidColorBrush x:Key="ListItemSelectedHoverBrush" Color="{StaticResource D3Color}"/>
 
     <!-- 搜索窗口 -->
-    <SolidColorBrush x:Key="SearchBoxForegroundBrush" Color="#FF000000"/>
+    <SolidColorBrush x:Key="SearchBoxForegroundBrush" Color="{StaticResource BlackColor}"/>
     <SolidColorBrush x:Key="SearchBoxPlaceholderBrush" Color="{StaticResource D3Color}"/>
     <SolidColorBrush x:Key="PinButtonHoverBrush" Color="#FFEFEFEF"/>
 
@@ -41,7 +42,7 @@
     <SolidColorBrush x:Key="Button1HoverBrush" Color="{StaticResource F4F4Color}"/>
     <SolidColorBrush x:Key="Button2HoverBrush" Color="{StaticResource FAFAColor}"/>
     <SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}"/>
-    
+
     <!-- 按钮 -->
     <SolidColorBrush x:Key="ButtonBrush" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="{StaticResource BorderColor}"/>
@@ -81,7 +82,10 @@
     <SolidColorBrush x:Key="CheckBoxCheckMarkBrush" Color="{StaticResource WhiteColor}"/>
 
     <!-- ToolTip -->
-    <SolidColorBrush x:Key="TooltipBackground" Color="White"/>
+    <SolidColorBrush x:Key="TooltipBackground" Color="{StaticResource WhiteColor}"/>
     <SolidColorBrush x:Key="TooltipBorderBrush" Color="#C5CFD8"/>
     <Color x:Key="TooltipShadowColor">LightGray</Color>
+
+    <SolidColorBrush x:Key="CheckerLightBrush" Color="{StaticResource WhiteColor}"/>
+    <SolidColorBrush x:Key="CheckerDarkBrush" Color="#FFCCCCCC"/>
 </ResourceDictionary>

@@ -3,13 +3,16 @@ using System.Windows.Media.Effects;
 using System.Windows.Media.Imaging;
 using Point = System.Windows.Point;
 using Shortpad.Windows.ToolWindows;
-using System.Windows.Threading;
 using Shortpad.Contracts.Models;
+using Shortpad.UI.Styles.Button;
+using System.Windows.Threading;
 using Shortpad.Models.Settings;
 using Shortpad.UI.UserControls;
 using System.Windows.Controls;
 using Shortpad.Database.Core;
 using System.ComponentModel;
+using System.Windows.Shapes;
+using Path = System.IO.Path;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Diagnostics;
@@ -46,6 +49,7 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
         // 分享时用它代替本地路径：表示"载体 PNG 本身就是背景图"，避免泄露本机路径又不丢背景
         private const string EmbeddedBackgroundMarker = "<embedded>";
         private Button _currentColorButton;
+        private Button _popupOwnerButton; // 当前拥有颜色弹窗的按钮
         private bool _pendingColorFlush;
 
         // 统一的防抖提交定时器（用于滑块、文本框等非颜色控件）
@@ -244,16 +248,40 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
 
         private void ApplyColorSettings()
         {
-            BackgroundColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.BackgroundColor));
-            BorderColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.BorderColor));
-            ToolbarColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.ToolbarColor));
-            ToolbarIconColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.ToolbarIconColor));
-            ActionButtonColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.ActionButtonColor));
-            ActionButtonMouseOverColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.ActionButtonMouseOverColor));
-            BlankButtonColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.BlankButtonColor));
-            BlankButtonMouseOverColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.BlankButtonMouseOverColor));
-            TextColorButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(settingManager.appearanceConditions.ButtonTextColor));
+            ApplyColorToButton(BackgroundColorButton, settingManager.appearanceConditions.BackgroundColor);
+            ApplyColorToButton(BorderColorButton, settingManager.appearanceConditions.BorderColor);
+            ApplyColorToButton(ToolbarColorButton, settingManager.appearanceConditions.ToolbarColor);
+            ApplyColorToButton(ToolbarIconColorButton, settingManager.appearanceConditions.ToolbarIconColor);
+            ApplyColorToButton(ActionButtonColorButton, settingManager.appearanceConditions.ActionButtonColor);
+            ApplyColorToButton(ActionButtonMouseOverColorButton, settingManager.appearanceConditions.ActionButtonMouseOverColor);
+            ApplyColorToButton(BlankButtonColorButton, settingManager.appearanceConditions.BlankButtonColor);
+            ApplyColorToButton(BlankButtonMouseOverColorButton, settingManager.appearanceConditions.BlankButtonMouseOverColor);
+            ApplyColorToButton(TextColorButton, settingManager.appearanceConditions.ButtonTextColor);
+
             ButtonTextColorBrush = TextColorButton.Background as SolidColorBrush;
+        }
+
+        /// <summary>
+        /// 将指定颜色应用到按钮的背景和颜色样本上
+        /// </summary>
+        private void ApplyColorToButton(Button button, string colorString)
+        {
+            if (button == null || string.IsNullOrWhiteSpace(colorString)) return;
+
+            var color = (Color)ColorConverter.ConvertFromString(colorString);
+            button.Background = new SolidColorBrush(color);
+            SetColorSwatch(button, color);
+        }
+
+        /// <summary>
+        /// 设置按钮的颜色样本
+        /// </summary>
+        private static void SetColorSwatch(Button button, Color color)
+        {
+            if (button?.Content is Border border && border.Child is Rectangle rect)
+            {
+                rect.Fill = new SolidColorBrush(color);
+            }
         }
 
         private void ApplyFontSettings()
@@ -345,14 +373,29 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
         #region 颜色选择
         private void ColorButton_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            if (button == null) return;
-            _currentColorButton = button;
-            _currentBrush = button.Background as SolidColorBrush;
-            if (_currentBrush == null) return;
+            if (sender is not Button button) return;
 
-            PopupColorPicker.ResetColorControls(_currentBrush.Color);
-            PopupColorPicker.SelectedColor = _currentBrush.Color;
+            // 切换按钮时先关闭旧弹窗，由 Closed 负责复位旧按钮
+            if (ColorPickerPopup.IsOpen && _popupOwnerButton != null && !ReferenceEquals(_popupOwnerButton, button))
+            {
+                ColorPickerPopup.IsOpen = false;
+            }
+
+            _currentColorButton = button;
+            _popupOwnerButton = button;
+
+            // 弹窗已打开时 Opened 不会再触发，所以这里直接给新按钮置为展开状态
+            ButtonHelper.SetIsDropOpen(button, true);
+
+            // 从色块 Rectangle.Fill 读取当前颜色（与显示一致），避免拿到模板动画/冻结的 Brush
+            Color color = Colors.Transparent;
+            if (button.Content is Border border && border.Child is Rectangle rect && rect.Fill is SolidColorBrush fillBrush)
+                color = fillBrush.Color;
+            else if (button.Background is SolidColorBrush bgBrush)
+                color = bgBrush.Color;
+
+            PopupColorPicker.ResetColorControls(color);
+            PopupColorPicker.SelectedColor = color;
 
             ColorPickerPopup.PlacementTarget = button;
             ColorPickerPopup.IsOpen = true;
@@ -360,18 +403,27 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
 
         private void PopupColorPicker_SelectedColorChanged(object sender, ColorChangedEventArgs e)
         {
-            if (WritesSuppressed || _currentBrush == null || settingManager == null) return;
+            if (WritesSuppressed || settingManager == null || _currentColorButton == null) return;
 
-            _currentBrush.Color = e.NewColor;
-            UpdateAppearanceColorProperty(_currentBrush, e.NewColor);
+            // 直接新建 Brush，避免修改可能被动画或 Freeze 的旧 Brush
+            _currentColorButton.Background = new SolidColorBrush(e.NewColor);
+            SetColorSwatch(_currentColorButton, e.NewColor);
 
-            if (_currentColorButton != null && _currentColorButton.Name == "TextColorButton")
+            if (_currentColorButton.Name == "TextColorButton")
             {
-                ButtonTextColorBrush.Color = e.NewColor;
+                ButtonTextColorBrush = new SolidColorBrush(e.NewColor);
                 settingManager.appearanceConditions.ButtonTextColor = e.NewColor.ToString();
             }
 
+            UpdateAppearanceColorPropertyByButton(_currentColorButton.Name, e.NewColor);
             ScheduleColorChangeFlush();
+        }
+
+        private void UpdateAppearanceColorPropertyByButton(string buttonName, Color color)
+        {
+            if (buttonName == null) return;
+            if (ColorPropertySetters.TryGetValue(buttonName, out var setter))
+                setter(settingManager.appearanceConditions, color.ToString());
         }
 
         private void ScheduleColorChangeFlush()
@@ -457,6 +509,19 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
             _pendingColorFlush = false;
             _pendingSettingsFlush = false;
 
+            // 页面卸载时如果弹窗还开着，先关闭并复位所属按钮，避免残留引用
+            try
+            {
+                if (ColorPickerPopup.IsOpen)
+                    ColorPickerPopup.IsOpen = false;
+            }
+            catch { }
+
+            if (_popupOwnerButton != null)
+            {
+                ButtonHelper.SetIsDropOpen(_popupOwnerButton, false);
+                _popupOwnerButton = null;
+            }
             GlobalGrid.Children.Clear();
             _currentBrush = null;
             _buttonTextColorBrush = null;
@@ -1402,13 +1467,31 @@ namespace Shortpad.UserControls.SettingWindow.BasicSettings
             if (settingManager.appearanceConditions.EnablePreview)
                 LoadGlobalButtonsForPreview();
         }
+        private void ColorPickerPopup_Opened(object sender, EventArgs e)
+            => ButtonHelper.SetIsDropOpen(ColorPickerPopup.PlacementTarget, true);
 
         private void ColorPickerPopup_Closed(object sender, EventArgs e)
         {
+            if (ColorPickerPopup.IsOpen) return;
+
+            var owner = _popupOwnerButton;
+            if (owner != null)
+            {
+                ButtonHelper.SetIsDropOpen(owner, false);
+                _popupOwnerButton = null;
+            }
+
             if (_colorChangeDebounceTimer != null && _colorChangeDebounceTimer.IsEnabled)
                 _colorChangeDebounceTimer.Stop();
 
-            FlushColorChange();
+            try
+            {
+                FlushColorChange();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"ColorPickerPopup_Closed flush error: {ex.Message}");
+            }
         }
 
         #region 字体列表异步加载及补齐

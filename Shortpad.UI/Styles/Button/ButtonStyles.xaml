@@ -158,6 +158,55 @@
         </Setter>
     </Style>
 
+    <!-- 颜色选择的下拉按钮 -->
+    <Style x:Key="DropButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource ComboBoxBackgroundBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource ComboBoxBorderBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}"/>
+        <Setter Property="styles:ButtonHelper.CornerRadius" Value="3"/>
+        <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Setter Property="BorderThickness" Value="1.5"/>
+        <Setter Property="Padding" Value="6,0,4,0"/>
+        <Setter Property="Height" Value="22"/>
+        <Setter Property="Width" Value="120"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <Border x:Name="border" Background="Transparent" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="{Binding Path=(styles:ButtonHelper.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Grid.Column="0" Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True"/>
+                                <Path x:Name="arrow" Grid.Column="1" Margin="0,0,8,0" Width="8" Height="5" Stretch="Fill" Data="M 0,0 L 4,4 L 8,0" Stroke="{DynamicResource ComboBoxBorderBrush}" StrokeThickness="1.2" StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource ComboBoxBorderHoverBrush}"/>
+                        </Trigger>
+                        <!-- 下拉打开时箭头翻转 -->
+                        <Trigger Property="styles:ButtonHelper.IsDropOpen" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="#FF326CF3"/>
+                            <Setter TargetName="arrow" Property="RenderTransform">
+                                <Setter.Value>
+                                    <RotateTransform Angle="180"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!-- ActionPageManageWindow -->
     <!-- 动作 Button -->
     <Style x:Key="ActionButton" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
