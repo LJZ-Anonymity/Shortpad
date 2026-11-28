@@ -10,262 +10,293 @@ namespace Shortpad.Windows.ToolWindows
     {
         #region Win32 API 声明
 
-        // 获取设备上下文
-        [DllImport("user32.dll")] private static extern IntPtr GetDC(IntPtr hWnd);
+        [LibraryImport("user32.dll")]
+        private static partial IntPtr GetDC(IntPtr hWnd);
 
-        // 释放设备上下文
-        [DllImport("user32.dll")] private static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+        [LibraryImport("user32.dll")]
+        private static partial int ReleaseDC(IntPtr hWnd, IntPtr hDC);
 
-        // 获取像素颜色
-        [DllImport("gdi32.dll")] private static extern uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
+        [LibraryImport("gdi32.dll")]
+        private static partial uint GetPixel(IntPtr hdc, int nXPos, int nYPos);
 
-        // 创建兼容的设备上下文
-        [DllImport("gdi32.dll")] private static extern IntPtr CreateCompatibleDC(IntPtr hdc);
+        [LibraryImport("gdi32.dll")]
+        private static partial IntPtr CreateCompatibleDC(IntPtr hdc);
 
-        // 创建兼容的位图
-        [DllImport("gdi32.dll")] private static extern IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth, int nHeight);
+        [LibraryImport("gdi32.dll")]
+        private static partial IntPtr CreateCompatibleBitmap(IntPtr hdc, int nWidth, int nHeight);
 
-        // 选择对象
-        [DllImport("gdi32.dll")] private static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
+        [LibraryImport("gdi32.dll")]
+        private static partial IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
 
-        // 删除对象
-        [DllImport("gdi32.dll")] private static extern bool DeleteObject(IntPtr hObject);
+        [LibraryImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool DeleteObject(IntPtr hObject);
 
-        // 删除设备上下文
-        [DllImport("gdi32.dll")] private static extern bool DeleteDC(IntPtr hdc);
+        [LibraryImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool DeleteDC(IntPtr hdc);
 
-        // 复制位图
-        [DllImport("gdi32.dll")] private static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth, int nHeight, IntPtr hObjectSource, int nXSrc, int nYSrc, int dwRop);
+        [LibraryImport("gdi32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool BitBlt(IntPtr hObject, int nXDest, int nYDest,
+            int nWidth, int nHeight, IntPtr hObjectSource, int nXSrc, int nYSrc, int dwRop);
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct BITMAPINFOHEADER
+        {
+            public uint biSize;
+            public int biWidth;
+            public int biHeight;
+            public ushort biPlanes;
+            public ushort biBitCount;
+            public uint biCompression;
+            public uint biSizeImage;
+            public int biXPelsPerMeter;
+            public int biYPelsPerMeter;
+            public uint biClrUsed;
+            public uint biClrImportant;
+        }
+
+        [LibraryImport("gdi32.dll")]
+        private static partial int GetDIBits(IntPtr hdc, IntPtr hbmp, uint uStartScan,
+            uint cScanLines, IntPtr lpvBits, ref BITMAPINFOHEADER lpbi, uint uUsage);
 
         #endregion
 
         #region 常量声明
 
-        private const int OFFSET_DISTANCE = 20; // 窗口距离鼠标的偏移距离
-        private const int SRCCOPY = 0x00CC0020; // 位图操作常量，表示直接复制
-        private const int MAGNIFICATION = 8; // 放大倍数
-        private const int CAPTURE_SIZE = 25; // 捕获区域大小（像素），显示 25x25 像素区域
+        private const int OFFSET_DISTANCE = 20;
+        private const int SRCCOPY = 0x00CC0020;
+        private const int CAPTURE_SIZE = 25;
 
         #endregion
 
         #region 属性声明
 
-        public Color SelectedColor { get; private set; } // 选中的颜色
+        public Color SelectedColor { get; private set; }
 
-        private bool _positionInitialized = false; // 位置是否已初始化
-        private double _lastLeft = double.NaN; // 上次窗口位置
+        private double _workLeft, _workTop, _workRight, _workBottom;
+        private double _dpiScaleX = 1, _dpiScaleY = 1;
+        private bool _positionInitialized;
+        private double _lastLeft = double.NaN;
         private double _lastTop = double.NaN;
+        private Screen? _lastScreen;
+        private int _textTick;
+        private int _busy;
 
         #endregion
 
         public ColorPickerMagnifier()
         {
             InitializeComponent();
+            Closed += (_, _) => CompositionTarget.Rendering -= OnRendering;
         }
 
-        private void ColorPickerMagnifier_Loaded(object sender, RoutedEventArgs e) => UpdatePosition(); // 设置窗口位置在鼠标旁边
+        private void ColorPickerMagnifier_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdatePosition();
+            CompositionTarget.Rendering += OnRendering; // 位置跟随交给渲染帧
+        }
+
+        private void OnRendering(object? sender, EventArgs e) => UpdatePosition();
 
         /// <summary>
-        /// 更新窗口位置
+        /// 更新窗口位置。每帧只做一次轻量的光标位置读取，
+        /// 屏幕/DPI 信息只在跨屏时重算。
         /// </summary>
         private void UpdatePosition()
         {
-            // 获取物理像素坐标 (来自 Windows Forms)
             var mousePos = System.Windows.Forms.Control.MousePosition;
+            var screen = System.Windows.Forms.Screen.FromPoint(
+                new System.Drawing.Point(mousePos.X, mousePos.Y));
 
-            // 获取当前屏幕的 DPI 缩放比例
-            var source = PresentationSource.FromVisual(this);
-            if (source == null || source.CompositionTarget == null) return; // 窗口未完全加载或没有可视目标，跳过更新
-
-            // TransformFromDevice.M11/M22 给出的是将物理像素转换为设备独立像素的因子
-            double dpiScaleX = source.CompositionTarget.TransformFromDevice.M11;
-            double dpiScaleY = source.CompositionTarget.TransformFromDevice.M22;
-
-            // 将物理像素坐标转换为设备独立像素 (WPF 单位)
-            double wpfMouseX = mousePos.X * dpiScaleX;
-            double wpfMouseY = mousePos.Y * dpiScaleY;
-
-            // 获取屏幕的设备独立像素尺寸
-            var screenWidth = SystemParameters.PrimaryScreenWidth;
-            var screenHeight = SystemParameters.PrimaryScreenHeight;
-
-            // 计算理想位置（鼠标右下方）
-            double idealLeft = wpfMouseX + OFFSET_DISTANCE;
-            double idealTop = wpfMouseY + OFFSET_DISTANCE;
-
-            // 如果窗口超出右边界，放在鼠标左侧
-            if (idealLeft + Width > screenWidth)
+            if (!ReferenceEquals(screen, _lastScreen))
             {
-                idealLeft = wpfMouseX - Width - OFFSET_DISTANCE;
+                _lastScreen = screen;
+
+                var source = PresentationSource.FromVisual(this);
+                if (source?.CompositionTarget == null) return;
+
+                var m = source.CompositionTarget.TransformFromDevice;
+                _dpiScaleX = m.M11;
+                _dpiScaleY = m.M22;
+
+                var w = screen.WorkingArea;
+                _workLeft = w.Left * _dpiScaleX;
+                _workTop = w.Top * _dpiScaleY;
+                _workRight = w.Right * _dpiScaleX;
+                _workBottom = w.Bottom * _dpiScaleY;
             }
 
-            // 如果窗口超出下边界，放在鼠标上方
-            if (idealTop + Height > screenHeight)
-            {
-                idealTop = wpfMouseY - Height - OFFSET_DISTANCE;
-            }
+            double x = mousePos.X * _dpiScaleX;
+            double y = mousePos.Y * _dpiScaleY;
 
-            // 确保窗口不超出左边界和上边界
-            idealLeft = Math.Max(0, idealLeft);
-            idealTop = Math.Max(0, idealTop);
+            double left = x + OFFSET_DISTANCE;
+            double top = y + OFFSET_DISTANCE;
 
-            // 只在位置真正改变时才更新，避免频繁跳动
+            if (left + Width > _workRight) left = x - Width - OFFSET_DISTANCE;
+            if (top + Height > _workBottom) top = y - Height - OFFSET_DISTANCE;
+
+            left = Math.Max(_workLeft, left);
+            top = Math.Max(_workTop, top);
+
             if (!_positionInitialized ||
-                Math.Abs(idealLeft - _lastLeft) > 1 ||
-                Math.Abs(idealTop - _lastTop) > 1)
+                Math.Abs(left - _lastLeft) > 0.5 ||
+                Math.Abs(top - _lastTop) > 0.5)
             {
-                Left = idealLeft;
-                Top = idealTop;
-                _lastLeft = idealLeft;
-                _lastTop = idealTop;
+                Left = left;
+                Top = top;
+                _lastLeft = left;
+                _lastTop = top;
                 _positionInitialized = true;
             }
         }
 
         /// <summary>
-        /// 更新颜色和放大镜图像（优化：图像生成移到后台）
+        /// 刷新放大图与颜色信息。只负责内容，不负责窗口位置。
         /// </summary>
         public void UpdateColor()
         {
             var mousePos = System.Windows.Forms.Control.MousePosition;
 
-            // 1. 快速更新位置和颜色信息（保持同步，确保 UI 响应）
-            UpdatePosition();
-            var (R, G, B) = GetPixelColor(mousePos.X, mousePos.Y);
-            SelectedColor = Color.FromRgb(R, G, B);
+            if (Interlocked.CompareExchange(ref _busy, 1, 0) != 0)
+                return;
 
-            // 更新预览
-            ColorPreviewBorder.Background = new SolidColorBrush(SelectedColor);
-            HexTextBlock.Text = $"#{SelectedColor.R:X2}{SelectedColor.G:X2}{SelectedColor.B:X2}";
-            RgbTextBlock.Text = $"RGB({SelectedColor.R}, {SelectedColor.G}, {SelectedColor.B})";
-
-            // 2. 将耗时的图像捕获和放大操作移到后台线程执行
-            int centerX = mousePos.X;
-            int centerY = mousePos.Y;
+            int cx = mousePos.X;
+            int cy = mousePos.Y;
 
             Task.Run(() =>
             {
-                var bitmapSource = GenerateMagnifierBitmapSource(centerX, centerY); // 在后台线程中生成 BitmapSource
-                Dispatcher.Invoke(() =>
+                BitmapSource? bitmap = null;
+                Color center = Colors.White;
+                try
                 {
-                    if (bitmapSource != null)
+                    TryCaptureScreenRegion(cx, cy, out bitmap, out center);
+                }
+                finally
+                {
+                    Interlocked.Exchange(ref _busy, 0);
+                }
+
+                if (bitmap == null) return;
+
+                try
+                {
+                    Dispatcher.BeginInvoke(new Action(() =>
                     {
-                        MagnifierImage.Source = bitmapSource;
-                    }
-                }); // 使用 Dispatcher 将更新 UI 的操作（MagnifierImage.Source）调度回主线程
+                        if (!IsVisible) return;
+
+                        MagnifierImage.Source = bitmap;
+                        SelectedColor = center;
+
+                        if (++_textTick % 3 == 0)
+                        {
+                            HexTextBlock.Text = $"#{center.R:X2}{center.G:X2}{center.B:X2}";
+                            RgbTextBlock.Text = $"RGB({center.R}, {center.G}, {center.B})";
+                        }
+
+                        ColorPreviewBorder.Background = new SolidColorBrush(center);
+                    }));
+                }
+                catch
+                {
+                    // 窗口已关闭时 Dispatcher 可能不可用
+                }
             });
         }
 
-        /// <summary>
-        /// 在后台线程中执行屏幕捕获和放大逻辑
-        /// </summary>
-        /// <param name="centerX"> 屏幕中心x坐标（物理像素）</param>
-        /// <param name="centerY"> 屏幕中心y坐标（物理像素）</param>
-        private BitmapSource GenerateMagnifierBitmapSource(int centerX, int centerY)
+        private static bool TryCaptureScreenRegion(int centerX, int centerY,
+            out BitmapSource? bitmap, out Color centerColor)
         {
-            IntPtr screenDC = IntPtr.Zero;
-            IntPtr memDC = IntPtr.Zero;
-            IntPtr bitmap = IntPtr.Zero;
-            IntPtr oldBitmap = IntPtr.Zero;
+            bitmap = null;
+            centerColor = Colors.White;
 
+            IntPtr screenDC = IntPtr.Zero, memDC = IntPtr.Zero, bmp = IntPtr.Zero, oldBmp = IntPtr.Zero;
             try
             {
                 int size = CAPTURE_SIZE;
-                int halfSize = size / 2;
-                int magnifiedSize = size * MAGNIFICATION;
+                int half = size / 2;
 
-                // GDI/Win32 捕获屏幕区域
                 screenDC = GetDC(IntPtr.Zero);
                 memDC = CreateCompatibleDC(screenDC);
-                bitmap = CreateCompatibleBitmap(screenDC, size, size);
-                oldBitmap = SelectObject(memDC, bitmap);
+                bmp = CreateCompatibleBitmap(screenDC, size, size);
+                oldBmp = SelectObject(memDC, bmp);
 
-                // 复制屏幕区域到内存位图
-                BitBlt(memDC, 0, 0, size, size, screenDC, centerX - halfSize, centerY - halfSize, SRCCOPY);
+                if (!BitBlt(memDC, 0, 0, size, size, screenDC,
+                        centerX - half, centerY - half, SRCCOPY))
+                    return false;
 
-                // 读取原始位图数据
-                byte[] sourceData = new byte[size * size * 3];
-                for (int y = 0; y < size; y++)
+                var header = new BITMAPINFOHEADER
                 {
-                    for (int x = 0; x < size; x++)
-                    {
-                        uint pixel = GetPixel(memDC, x, y);
-                        byte r = (byte)(pixel & 0x000000FF);
-                        byte g = (byte)((pixel & 0x0000FF00) >> 8);
-                        byte b = (byte)((pixel & 0x00FF0000) >> 16);
+                    biSize = (uint)Marshal.SizeOf<BITMAPINFOHEADER>(),
+                    biWidth = size,
+                    biHeight = -size, // 负值 = 自上而下
+                    biPlanes = 1,
+                    biBitCount = 32,
+                    biCompression = 0,
+                };
 
-                        int sourceIndex = (y * size + x) * 3;
-                        sourceData[sourceIndex] = b; // BGR 格式
-                        sourceData[sourceIndex + 1] = g;
-                        sourceData[sourceIndex + 2] = r;
-                    }
+                int stride = size * 4;
+                byte[] data = new byte[stride * size];
+
+                var handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+                try
+                {
+                    if (GetDIBits(memDC, bmp, 0, (uint)size,
+                            handle.AddrOfPinnedObject(), ref header, 0) == 0)
+                        return false;
+                }
+                finally
+                {
+                    handle.Free();
                 }
 
-                // 放大像素（最近邻插值），耗时操作
-                byte[] magnifiedData = new byte[magnifiedSize * magnifiedSize * 3];
-                for (int y = 0; y < magnifiedSize; y++)
-                {
-                    int sourceY = y / MAGNIFICATION;
-                    for (int x = 0; x < magnifiedSize; x++)
-                    {
-                        int sourceX = x / MAGNIFICATION;
-                        int sourceIndex = (sourceY * size + sourceX) * 3;
-                        int destIndex = (y * magnifiedSize + x) * 3;
-                        magnifiedData[destIndex] = sourceData[sourceIndex];
-                        magnifiedData[destIndex + 1] = sourceData[sourceIndex + 1];
-                        magnifiedData[destIndex + 2] = sourceData[sourceIndex + 2];
-                    }
-                }
+                int idx = (half * size + half) * 4;
+                centerColor = Color.FromRgb(data[idx + 2], data[idx + 1], data[idx]);
 
-                // 创建 BitmapSource
-                BitmapSource result = BitmapSource.Create(
-                    magnifiedSize, magnifiedSize,
-                    96, 96, // 默认 DPI
-                    PixelFormats.Bgr24, null,
-                    magnifiedData, magnifiedSize * 3);
-
-                result.Freeze(); // 冻结 BitmapSource 以使其能够安全地在 UI 线程中使用
-                return result; // 返回结果
+                var src = BitmapSource.Create(size, size, 96, 96,
+                    PixelFormats.Bgr32, null, data, stride);
+                src.Freeze();
+                bitmap = src;
+                return true;
             }
             catch
             {
-                return null;
+                return false;
             }
-            finally // 清理 GDI 资源
+            finally
             {
-                if (oldBitmap != IntPtr.Zero) SelectObject(memDC, oldBitmap);
-                if (bitmap != IntPtr.Zero) DeleteObject(bitmap);
+                if (oldBmp != IntPtr.Zero) SelectObject(memDC, oldBmp);
+                if (bmp != IntPtr.Zero) DeleteObject(bmp);
                 if (memDC != IntPtr.Zero) DeleteDC(memDC);
-                if (screenDC != IntPtr.Zero) ReleaseDC(IntPtr.Zero, screenDC);
+                if (screenDC != IntPtr.Zero) _ = ReleaseDC(IntPtr.Zero, screenDC);
             }
         }
 
         /// <summary>
-        /// 获取屏幕像素颜色
+        /// 读取屏幕某个物理像素的颜色（确认取色时调用）。
         /// </summary>
-        /// <param name="x"> 像素x坐标 </param>
-        /// <param name="y"> 像素y坐标 </param>
-        private (byte r, byte g, byte b) GetPixelColor(int x, int y)
+        internal static (byte r, byte g, byte b) GetPixelColor(int x, int y)
         {
-            IntPtr hdc = GetDC(IntPtr.Zero);
+            IntPtr hdc = IntPtr.Zero;
             try
             {
+                hdc = GetDC(IntPtr.Zero);
                 uint pixel = GetPixel(hdc, x, y);
-                ReleaseDC(IntPtr.Zero, hdc);
+                if (pixel == 0xFFFFFFFF) return (255, 255, 255);
 
-                // GetPixel 返回的 COLORREF 格式是 0x00BBGGRR（BGR格式）
-                // 低字节 = R（红色），中字节 = G（绿色），高字节 = B（蓝色）
-                byte r = (byte)(pixel & 0x000000FF);        // 低字节 = R
-                byte g = (byte)((pixel & 0x0000FF00) >> 8);  // 中字节 = G
-                byte b = (byte)((pixel & 0x00FF0000) >> 16); // 高字节 = B
-
-                // 返回 RGB 格式：(R, G, B)
-                return (r, g, b);
+                return (
+                    (byte)(pixel & 0x000000FF),
+                    (byte)((pixel & 0x0000FF00) >> 8),
+                    (byte)((pixel & 0x00FF0000) >> 16));
             }
             catch
             {
-                ReleaseDC(IntPtr.Zero, hdc);
-                return (255, 255, 255); // 默认白色
+                return (255, 255, 255);
+            }
+            finally
+            {
+                if (hdc != IntPtr.Zero) _ = ReleaseDC(IntPtr.Zero, hdc);
             }
         }
     }

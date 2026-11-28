@@ -1,0 +1,44 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    x:Class="Shortpad.Windows.ToolWindows.ScreenColorPickerWindow"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    
+    WindowStartupLocation="Manual"
+    AllowsTransparency="False"
+    ShowInTaskbar="False"
+    ResizeMode="NoResize"
+    Background="Black"
+    WindowStyle="None"
+    Topmost="True"
+    Cursor="Cross"
+    
+    PreviewKeyDown="OnPreviewKeyDown"
+    Loaded="OnLoaded"
+>
+
+    <Grid>
+        <!-- 冻结的全屏截图，Stretch=Fill 让物理像素铺满 DIP 尺寸的窗口 -->
+        <Image x:Name="ScreenImage" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+        <!-- 放大镜在窗口内部移动，不涉及窗口位置 -->
+        <Canvas x:Name="OverlayCanvas">
+            <Border x:Name="MagnifierBorder" Width="200" BorderBrush="{DynamicResource BorderBush}" BorderThickness="1" Background="{DynamicResource PopupSurfaceBrush}">
+                <StackPanel>
+                    <Border Width="200" Height="200">
+                        <Grid>
+                            <Image x:Name="MagnifierImage" Stretch="Fill" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                            <Canvas>
+                                <Rectangle x:Name="PixelIndicator" Width="8" Height="8" Stroke="Red" StrokeThickness="2" Fill="Transparent"/>
+                                <Line x:Name="CrosshairH" Stroke="Red" StrokeThickness="1" Opacity="0.6"/>
+                                <Line x:Name="CrosshairV" Stroke="Red" StrokeThickness="1" Opacity="0.6"/>
+                            </Canvas>
+                        </Grid>
+                    </Border>
+
+                    <Border x:Name="ColorPreviewBorder" Height="14" Margin="4,4,4,2" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"/>
+                    <TextBlock x:Name="HexTextBlock" TextAlignment="Center" Foreground="{DynamicResource TextBrush}" FontFamily="Consolas" FontSize="12"/>
+                    <TextBlock x:Name="RgbTextBlock" TextAlignment="Center" Foreground="{DynamicResource TextBrush}" FontSize="10" Margin="0,0,0,4"/>
+                </StackPanel>
+            </Border>
+        </Canvas>
+    </Grid>
+</Window>

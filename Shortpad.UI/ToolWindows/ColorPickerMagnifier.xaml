@@ -3,9 +3,9 @@
     x:Class="Shortpad.Windows.ToolWindows.ColorPickerMagnifier"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     
-    SizeToContent="WidthAndHeight"
     Background="Transparent"
     AllowsTransparency="True"
+    SizeToContent="Manual"
     ShowInTaskbar="False"
     ResizeMode="NoResize"
     WindowStyle="None"
@@ -26,7 +26,7 @@
             <!-- 放大区域 -->
             <Border Grid.Row="1" Width="200" Height="200" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="10">
                 <Grid>
-                    <Image x:Name="MagnifierImage" Stretch="UniformToFill"/>
+                    <Image x:Name="MagnifierImage" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="NearestNeighbor"/>
                     <!-- 标识当前选中像素的方框 -->
                     <Canvas>
                         <Rectangle x:Name="PixelIndicator" Width="8" Height="8" Stroke="#FFFF0000" StrokeThickness="2" Canvas.Left="96" Canvas.Top="96" Fill="Transparent"/>
@@ -40,8 +40,8 @@
             <!-- 颜色信息 -->
             <StackPanel Grid.Row="2" Margin="10,5" HorizontalAlignment="Center">
                 <Border x:Name="ColorPreviewBorder" Width="100" Height="20" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" Margin="0,5"/>
-                <TextBlock x:Name="HexTextBlock" TextAlignment="Center" FontFamily="Consolas" FontSize="12" Margin="0,5"/>
-                <TextBlock x:Name="RgbTextBlock" TextAlignment="Center" FontSize="10"/>
+                <TextBlock x:Name="HexTextBlock" Width="160" TextAlignment="Center" FontFamily="Consolas" FontSize="12" Margin="0,5"/>
+                <TextBlock x:Name="RgbTextBlock" Width="160" TextAlignment="Center" FontSize="10"/>
             </StackPanel>
         </Grid>
     </Border>
